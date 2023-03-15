@@ -33,6 +33,7 @@
 
 </script>
 
-<style scoped>
-@import '../assets/styles/trending.css';
+<style lang="scss" scoped>
+@import "@/assets/styles/colors.scss";
+@import '../assets/styles/pages/trending.scss';
 </style>
