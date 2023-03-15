@@ -1,10 +1,70 @@
-<script setup>
-
-</script>
-
 <template>
     <section>
+        <div class="section-title">
+            <h1>Trending movies</h1>
+        </div>
+
         <div class="card-container">
+            <div class="card">
+                <div class="movie-image-container">
+                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
+                </div>
+                <div class="info-box">
+                    <h1>Halloween Kills</h1>
+                    <hr/>
+                    <p>Released at: 1978-04-17</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="movie-image-container">
+                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
+                </div>
+                <div class="info-box">
+                    <h1>Halloween Kills</h1>
+                    <hr/>
+                    <p>Released at: 1978-04-17</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="movie-image-container">
+                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
+                </div>
+                <div class="info-box">
+                    <h1>Halloween Kills</h1>
+                    <hr/>
+                    <p>Released at: 1978-04-17</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="movie-image-container">
+                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
+                </div>
+                <div class="info-box">
+                    <h1>Halloween Kills</h1>
+                    <hr/>
+                    <p>Released at: 1978-04-17</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="movie-image-container">
+                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
+                </div>
+                <div class="info-box">
+                    <h1>Halloween Kills</h1>
+                    <hr/>
+                    <p>Released at: 1978-04-17</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="movie-image-container">
+                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
+                </div>
+                <div class="info-box">
+                    <h1>Halloween Kills</h1>
+                    <hr/>
+                    <p>Released at: 1978-04-17</p>
+                </div>
+            </div>
             <div class="card">
                 <div class="movie-image-container">
                     <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
@@ -28,10 +88,6 @@
         </div>
     </section>
 </template>
-
-<script>
-
-</script>
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";

@@ -5,14 +5,41 @@ section {
   display: flex;
   padding-top: 10px;
   padding-bottom: 10px;
+  overflow: visible;
+
+  .section-title{
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+
+    h1{
+      color: $outline;
+      font-weight: $bold;
+      font-size: 12px;
+      letter-spacing: .8px;
+      margin: 0 0 0 5px;
+      clear:both;
+    }
+  }
 
   .card-container {
+    overflow: visible;
     display: grid;
+    grid-auto-flow: column;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x mandatory;
+
     gap: 5px;
+    margin: 30px 0 0 10px;
   
     .card {
-      position: relative;
-      overflow: visible;
+      scroll-snap-align: start;
+      
+      margin: 10px 0 10px 0;
+
       display: block;
       width: 120px;
       height: auto;
@@ -48,10 +75,10 @@ section {
   
     h1 {
       color: $outline;
-      font-weight: $bold;
+      font-weight: $medium;
       font-size: 11px;
       letter-spacing: .2px;
-      margin: 7px 0 0 3px;
+      margin: 6.8px 0 0 3px;
     }
     hr {
       opacity: 0.9;
@@ -69,48 +96,66 @@ section {
       margin: 4px 0 4px 3px;
     }
   }
+
+ /* width */
+::-webkit-scrollbar {
+  height: 2px;
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $background;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
 }
 
 
 
-@media screen and (min-width: 320px) {
-  .card-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+// @media screen and (min-width: 320px) {
+//   .card-container {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+// }
 
-@media screen and (min-width: 375px) {
-  .card-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+// @media screen and (min-width: 375px) {
+//   .card-container {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+// }
 
-@media screen and (min-width: 425px) {
-  .card-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+// @media screen and (min-width: 425px) {
+//   .card-container {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+// }
 
-@media screen and (min-width: 768px) {
-  .card-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+// @media screen and (min-width: 768px) {
+//   .card-container {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+// }
 
-@media screen and (min-width: 992px) {
-  .card-container {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+// @media screen and (min-width: 992px) {
+//   .card-container {
+//     grid-template-columns: repeat(3, 1fr);
+//   }
+// }
 
-@media screen and (min-width: 1440px) {
-  .card-container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
+// @media screen and (min-width: 1440px) {
+//   .card-container {
+//     grid-template-columns: repeat(4, 1fr);
+//   }
+// }
 
-@media screen and (min-width: 1660px) {
-  .card-container {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+// @media screen and (min-width: 1660px) {
+//   .card-container {
+//     grid-template-columns: repeat(3, 1fr);
+//   }
+// }
