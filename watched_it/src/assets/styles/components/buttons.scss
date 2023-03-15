@@ -1,0 +1,11 @@
+@use "@material/button/styles";
+@import "@/assets/styles/colors.scss";
+.mdc-button--raised{
+  background-color: $black !important;
+  color: $white;
+  border-radius: 50px;
+  .mdc-button__touch,
+  .mdc-button__ripple{
+    border-radius: 50px;
+  }
+}
