@@ -2,6 +2,7 @@
 import {MDCTextField} from '@material/textfield';
 import {MDCRipple} from '@material/ripple';
 import { onMounted } from 'vue';
+
 onMounted(() => { 
   const inputs = document.getElementsByClassName('mdc-text-field');
   const btn = document.querySelector('.mdc-button');
@@ -31,7 +32,7 @@ onMounted(() => {
         <form @submit.prevent="submit">
           <div class="col-md-12">
             <div class="input-wrapper">
-              <label class="mdc-text-field mdc-text-field--outlined">
+              <label :class="errEmailClass" class="mdc-text-field mdc-text-field--outlined">
                 <span class="mdc-notched-outline">
                   <span class="mdc-notched-outline__leading"></span>
                   <span class="mdc-notched-outline__notch">
@@ -39,8 +40,20 @@ onMounted(() => {
                   </span>
                   <span class="mdc-notched-outline__trailing"></span>
                 </span>
-                <input type="email" class="mdc-text-field__input" aria-labelledby="my-label-id">
+                <input 
+                  type="email" 
+                  class="mdc-text-field__input" 
+                  required 
+                  aria-labelledby="my-label-id"
+                  aria-controls="email-helper-id"
+                  aria-describedby="email-helper-id"
+                  v-model="email">
               </label>
+              <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
+                  {{ emailError }}
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-md-12">
@@ -53,7 +66,12 @@ onMounted(() => {
                   </span>
                   <span class="mdc-notched-outline__trailing"></span>
                 </span>
-                <input type="password" class="mdc-text-field__input" aria-labelledby="my-label-id">
+                <input 
+                  type="password" 
+                  class="mdc-text-field__input" 
+                  required 
+                  aria-labelledby="my-label-id"
+                  v-model="password">
               </label>
             </div>
           </div>
@@ -80,19 +98,36 @@ onMounted(() => {
 </template>
 
 <script lang="ts">
-export default{
+import { defineComponent } from 'vue';
+import { validateEmail, errEmailEmp, errEmail } from '@/assets/javascript/validation';
+
+export default defineComponent({
   data() {
     return {
       email: '',
-      password: ''
+      emailError: '',
+      errEmailClass: '',
+      password: '',
+      errPass: '',
     }
   },
   methods: {
     submit(){
       console.log("hi")
+      this.checkEmail()
+    },
+    checkEmail(){
+      this.emailError = this.email.length == 0 ? errEmailEmp() : 
+      (validateEmail(this.email) ? '' : errEmail(this.email))
+      if(this.emailError){
+        this.errEmailClass = 'mdc-text-field--invalid'
+      }
+      else{
+        this.errEmailClass = 'mdc-text-field--invalid'
+      }
     }
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>
