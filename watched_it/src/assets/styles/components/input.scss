@@ -5,8 +5,3 @@
 @import "@/assets/styles/colors.scss";
 @include textfield.core-styles;
 
-.mdc-button--raised{
-  background-color: $black !important;
-  color: $white;
-  border-radius: 50px;
-}

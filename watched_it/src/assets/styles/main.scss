@@ -1,0 +1,15 @@
+@import "./fonts/roboto.scss";
+html, body, p, span, a{
+  font-family: $family, sans-serif;
+  font-size: 15px;
+  font-weight: $regular;
+  font-style: normal;
+  letter-spacing: 1px;
+}
+h1,h2,h3,h4,h5,h6{
+  font-family: $family, sans-serif; 
+  font-size: 25px;
+  font-weight: $medium;
+  font-style: normal;
+  letter-spacing: 1.5px;
+}

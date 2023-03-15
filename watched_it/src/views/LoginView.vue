@@ -3,11 +3,11 @@ import {MDCTextField} from '@material/textfield';
 import {MDCRipple} from '@material/ripple';
 import { onMounted } from 'vue';
 onMounted(() => { 
-  const inputs = document.getElementsByClassName('.mdc-text-field');
+  const inputs = document.getElementsByClassName('mdc-text-field');
   const btn = document.querySelector('.mdc-button');
   if(inputs){
     for(let input of inputs){
-      new MDCTextField(input);
+      let textField = new MDCTextField(input);
     }
   }
   if(btn){
@@ -18,7 +18,7 @@ onMounted(() => {
 
 <template>
   <section class="login">
-    <div class="comtainer">
+    <div class="container">
       <div class="row">
         <div class="col-md-12">
           <div class="logo-wrapper">
@@ -76,7 +76,8 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@use "@material/button/styles";
 @import "@/assets/styles/colors.scss";
-@import "@/assets/styles/input.scss";
+@import "@/assets/styles/components/buttons.scss";
+@import "@/assets/styles/components/input.scss";
+@import "@/assets/styles/pages/login.scss"
 </style>
