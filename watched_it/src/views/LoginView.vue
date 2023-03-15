@@ -83,7 +83,8 @@ onMounted(() => {
 export default{
   data() {
     return {
-      
+      email: '',
+      password: ''
     }
   },
   methods: {
