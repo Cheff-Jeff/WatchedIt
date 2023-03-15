@@ -5,3 +5,13 @@
 @import "@/assets/styles/colors.scss";
 @include textfield.core-styles;
 
+label.mdc-text-field--focused{
+  .mdc-notched-outline__trailing,
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch{
+    border-color: $outline !important;
+  }
+  span.mdc-floating-label{
+    color: $black !important;
+  }
+}
