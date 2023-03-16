@@ -226,11 +226,12 @@ export default defineComponent({
           if(result?.code == 201 && result.data.id){
             let newUser: User = result.data
             newUser.password = this.password
-            
+
             const res = await signIn(newUser)
 
             if(res?.code == 200 && res.data.id){
               localStorage.setItem('user', res.data.id?.toString())
+              this.$router.push('account');
             }else{
               console.log(res)
             }

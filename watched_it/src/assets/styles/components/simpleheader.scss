@@ -38,3 +38,16 @@
         fill: $black;
     }
 }
+
+.menu{
+    position: fixed;
+    left: 0;
+    top: 5px;
+    width: 100%;
+    border-radius: 0px 20px 20px 0px;
+    transform: rotate(9.99deg);
+    margin-left: -155px;
+    background-color: red;
+    min-height: 100vh;
+    z-index: 999999999999;
+}

@@ -33,10 +33,13 @@ const props = defineProps({
         </div>
 
     </div>
+    <div class="menu">
+        hi
+    </div>
 </template>
 
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
-@import '../assets/styles/components/simpleheader.scss';
+@import '@/assets/styles/components/simpleheader.scss';
 </style>

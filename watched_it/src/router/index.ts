@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
+import { CheckLogin } from '@/assets/javascript/guard'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -13,16 +14,33 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/SignUpView.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/account',
+    name: 'account',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/AccountView.vue')
   },
   {
     path: '/trending',
     name: 'trending',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
     component: () => import('../views/TrendingView.vue')
   }
 ]
