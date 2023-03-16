@@ -1,4 +1,5 @@
 @import "../fonts/roboto.scss";
+@import "../colors.scss";
 
 .header-container {
     position: fixed;
@@ -39,15 +40,62 @@
     }
 }
 
-.menu{
+.menu-wrapper{
     position: fixed;
     left: 0;
-    top: 5px;
+    top: -15px;
     width: 100%;
-    border-radius: 0px 20px 20px 0px;
-    transform: rotate(9.99deg);
-    margin-left: -155px;
-    background-color: red;
-    min-height: 100vh;
+    background: $backDrop;
     z-index: 999999999999;
+    .menu{
+        width: 100%;
+        border-radius: 0px 20px 20px 0px;
+        transform: rotate(10deg);
+        margin-left: -180px;
+        margin-top: 5px;
+        background-color: $outline;
+        min-height: calc(100vh + 25px);
+        position: relative;
+        box-shadow: 4px 1px 8px rgba(0, 0, 0, 0.5);
+        .close-wrapper{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            transform: rotate(-10deg);
+            svg{
+                width: 35px;
+                height: 35px;
+            }
+        }
+        .inner-wrap{
+            width: calc(100% - 180px);
+            margin-left: 145px;
+            padding-top: 60px;
+            transform: rotate(-10deg);
+            .logo-wrap{
+                width: 40%;
+                margin: auto;
+                margin-left: 40px;
+                padding-bottom: 70px;
+            }
+            nav{
+                ul{
+                    list-style: none;
+                    margin: 0;
+                    padding-left: 10px;
+
+                    li{
+                        margin: 20px 0 20px;
+                        a{
+                            font-size: 23px;
+                            color: $black;
+                            text-decoration: none !important;
+                            font-weight: $medium;
+                            letter-spacing: 1.5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
