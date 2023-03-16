@@ -2,12 +2,13 @@
 import {MDCTextField} from '@material/textfield';
 import {MDCRipple} from '@material/ripple';
 import { onMounted } from 'vue';
+
 onMounted(() => { 
-  const inputs = document.getElementsByClassName('.mdc-text-field');
+  const inputs = document.getElementsByClassName('mdc-text-field');
   const btn = document.querySelector('.mdc-button');
   if(inputs){
     for(let input of inputs){
-      new MDCTextField(input);
+      let textField = new MDCTextField(input);
     }
   }
   if(btn){
@@ -18,56 +19,80 @@ onMounted(() => {
 
 <template>
   <section class="login">
-    <div class="comtainer">
+    <div class="container">
       <div class="row">
         <div class="col-md-12">
           <div class="logo-wrapper">
-            <img src="" alt="logo">
+            <img src="@/assets/logo.png" alt="logo">
           </div>
           <div class="title-wrap">
             <h1>Sign in</h1>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="input-wrapper">
-            <label class="mdc-text-field mdc-text-field--outlined">
-              <span class="mdc-notched-outline">
-                <span class="mdc-notched-outline__leading"></span>
-                <span class="mdc-notched-outline__notch">
-                  <span class="mdc-floating-label" id="my-label-id">Email</span>
+        <form @submit.prevent="submit">
+          <div class="col-md-12">
+            <div class="input-wrapper">
+              <label :class="errEmailClass" class="mdc-text-field mdc-text-field--outlined">
+                <span class="mdc-notched-outline">
+                  <span class="mdc-notched-outline__leading"></span>
+                  <span class="mdc-notched-outline__notch">
+                    <span class="mdc-floating-label" id="my-label-id">Email</span>
+                  </span>
+                  <span class="mdc-notched-outline__trailing"></span>
                 </span>
-                <span class="mdc-notched-outline__trailing"></span>
-              </span>
-              <input type="email" class="mdc-text-field__input" aria-labelledby="my-label-id">
-            </label>
+                <input 
+                  type="email" 
+                  class="mdc-text-field__input" 
+                  required 
+                  aria-labelledby="my-label-id"
+                  v-model="email">
+              </label>
+              <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
+                  {{ emailError }}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col-md-12">
-          <div class="input-wrapper">
-            <label class="mdc-text-field mdc-text-field--outlined">
-              <span class="mdc-notched-outline">
-                <span class="mdc-notched-outline__leading"></span>
-                <span class="mdc-notched-outline__notch">
-                  <span class="mdc-floating-label" id="my-label-id">Password</span>
+          <div class="col-md-12">
+            <div class="input-wrapper">
+              <label class="mdc-text-field mdc-text-field--outlined">
+                <span class="mdc-notched-outline">
+                  <span class="mdc-notched-outline__leading"></span>
+                  <span class="mdc-notched-outline__notch">
+                    <span class="mdc-floating-label" id="my-label-id">Password</span>
+                  </span>
+                  <span class="mdc-notched-outline__trailing"></span>
                 </span>
-                <span class="mdc-notched-outline__trailing"></span>
-              </span>
-              <input type="password" class="mdc-text-field__input" aria-labelledby="my-label-id">
-            </label>
+                <input 
+                  type="password" 
+                  class="mdc-text-field__input" 
+                  required 
+                  aria-labelledby="my-label-id"
+                  v-model="password">
+              </label>
+              <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
+                  {{ passwordError }}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col-md-12">
-          <div class="mdc-touch-target-wrapper">
-            <button class="mdc-button mdc-button--raised">
-              <span class="mdc-button__ripple"></span>
-              <span class="mdc-button__touch"></span>
-              <span class="mdc-button__label">Sign in</span>
-            </button>
+          <div class="col-md-12">
+            <div class="mdc-touch-target-wrapper btn-wrap">
+              <button class="mdc-button mdc-button--raised">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__touch"></span>
+                <span class="mdc-button__label">Sign in</span>
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
         <div class="col-md-12">
           <div class="link-wrapper">
-            <a href="#">Sign up</a>
+            <router-link :to="{name: 'signUp'}" class="link">
+              Sign up
+            </router-link>
           </div>
         </div>
       </div>
@@ -75,8 +100,49 @@ onMounted(() => {
   </section>
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { validateEmail, errEmailEmp, errEmail, errPassEmp } from '@/assets/javascript/validation';
+
+export default defineComponent({
+  data() {
+    return {
+      email: '',
+      emailError: 'Invalid email.',
+      errEmailClass: '',
+      password: '',
+      passwordError: 'Invalid password',
+      errPasswordClass: '',
+    }
+  },
+  methods: {
+    submit(){
+      this.checkEmail()
+      this.checkPassword()
+      if(this.emailError == '', this.passwordError == ''){
+        //api call
+      }
+    },
+    checkEmail(){
+      this.emailError = this.email.length == 0 ? errEmailEmp() : 
+      (validateEmail(this.email) ? '' : errEmail(this.email))
+      if(this.emailError){
+        this.errEmailClass = 'field-error'
+      }
+      else{
+        this.errEmailClass = ''
+      }
+    },
+    checkPassword(){
+      this.passwordError = this.password.length == 0 ? errPassEmp(): ''
+    }
+  },
+})
+</script>
+
 <style lang="scss" scoped>
-@use "@material/button/styles";
 @import "@/assets/styles/colors.scss";
-@import "@/assets/styles/input.scss";
+@import "@/assets/styles/components/buttons.scss";
+@import "@/assets/styles/components/input.scss";
+@import "@/assets/styles/pages/login.scss";
 </style>
