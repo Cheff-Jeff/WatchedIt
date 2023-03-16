@@ -3,7 +3,7 @@ import SimpleHeader from '../components/SimpleHeader.vue';
 </script>
 
 <template>
-    <SimpleHeader/>
+    <SimpleHeader :currentTitle="title" />
     <section>
         <div class="section-title">
             <h1>Trending movies</h1>
@@ -180,6 +180,16 @@ import SimpleHeader from '../components/SimpleHeader.vue';
         </div>
     </section>
 </template>
+
+<script lang="ts">
+export default {
+    data() {
+        return {
+            title: "Trending"
+        }
+    },
+}
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";

@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { defineProps } from 'vue';
+
+const props = defineProps({
+    currentTitle: {
+        type: String,
+        required: true
+    }
+})
+</script>
+
 <template>
     <div class="header-container">
 
@@ -18,11 +29,12 @@
         </div>
 
         <div class="header-text">
-            <h1>Trending</h1>
+            <h1>{{ props.currentTitle }}</h1>
         </div>
 
     </div>
 </template>
+
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
