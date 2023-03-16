@@ -45,8 +45,6 @@ onMounted(() => {
                   class="mdc-text-field__input" 
                   required 
                   aria-labelledby="my-label-id"
-                  aria-controls="email-helper-id"
-                  aria-describedby="email-helper-id"
                   v-model="email">
               </label>
               <div class="mdc-text-field-helper-line">
@@ -73,6 +71,11 @@ onMounted(() => {
                   aria-labelledby="my-label-id"
                   v-model="password">
               </label>
+              <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
+                  {{ passwordError }}
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-md-12">
@@ -99,32 +102,39 @@ onMounted(() => {
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { validateEmail, errEmailEmp, errEmail } from '@/assets/javascript/validation';
+import { validateEmail, errEmailEmp, errEmail, errPassEmp } from '@/assets/javascript/validation';
 
 export default defineComponent({
   data() {
     return {
       email: '',
-      emailError: '',
+      emailError: 'Invalid email.',
       errEmailClass: '',
       password: '',
-      errPass: '',
+      passwordError: 'Invalid password',
+      errPasswordClass: '',
     }
   },
   methods: {
     submit(){
-      console.log("hi")
       this.checkEmail()
+      this.checkPassword()
+      if(this.emailError == '', this.passwordError == ''){
+        //api call
+      }
     },
     checkEmail(){
       this.emailError = this.email.length == 0 ? errEmailEmp() : 
       (validateEmail(this.email) ? '' : errEmail(this.email))
       if(this.emailError){
-        this.errEmailClass = 'mdc-text-field--invalid'
+        this.errEmailClass = 'field-error'
       }
       else{
-        this.errEmailClass = 'mdc-text-field--invalid'
+        this.errEmailClass = ''
       }
+    },
+    checkPassword(){
+      this.passwordError = this.password.length == 0 ? errPassEmp(): ''
     }
   },
 })
