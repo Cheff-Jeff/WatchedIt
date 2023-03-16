@@ -103,6 +103,8 @@ onMounted(() => {
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { validateEmail, errEmailEmp, errEmail, errPassEmp } from '@/assets/javascript/validation';
+import { signIn } from '@/assets/javascript/api';
+import { User } from '@/assets/javascript/Models/UserInterface';
 
 export default defineComponent({
   data() {
@@ -116,11 +118,26 @@ export default defineComponent({
     }
   },
   methods: {
-    submit(){
+    async submit(){
       this.checkEmail()
       this.checkPassword()
       if(this.emailError == '', this.passwordError == ''){
-        //api call
+        const user: User = {
+          id: null,
+          name: null,
+          email: this.email,
+          password: this.password,
+          phone: null
+        }
+
+        const result = await signIn(user)
+
+        if(result?.code == 200 && result.data.id){
+          localStorage.setItem('user', result.data.id?.toString())
+        }
+        else{
+          console.log(result)
+        }
       }
     },
     checkEmail(){

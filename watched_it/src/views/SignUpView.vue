@@ -179,6 +179,8 @@ import { defineComponent } from 'vue';
 import { validateName, validateEmail, validatePhone, errNameEmp, errName,
   errEmailEmp, errEmail, errPhoneEmp, errPhone, errPassEmp, errPass, errConfirmPass 
 } from '@/assets/javascript/validation';
+import { signUp, signIn } from '@/assets/javascript/api';
+import { User } from '@/assets/javascript/Models/UserInterface';
 
 export default defineComponent({
   data() {
@@ -201,7 +203,7 @@ export default defineComponent({
     }
   },
   methods: {
-    submit(){
+    async submit(){
       this.checkName()
       this.checkEmail()
       this.checkPhone()
@@ -211,7 +213,31 @@ export default defineComponent({
       if(this.nameError == '', this.emailError == '', 
         this.phoneError == '', this.passwordError == '', 
         this.confirmError == ''){
-          //api call
+          const user: User = {
+            id: null,
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            password: this.password
+          }
+
+          const result = await signUp(user);
+
+          if(result?.code == 201 && result.data.id){
+            let newUser: User = result.data
+            newUser.password = this.password
+            
+            const res = await signIn(newUser)
+
+            if(res?.code == 200 && res.data.id){
+              localStorage.setItem('user', res.data.id?.toString())
+            }else{
+              console.log(res)
+            }
+          }
+          else{
+            console.log(result)
+          }
       }
     },
     checkName(){
