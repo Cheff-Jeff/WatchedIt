@@ -2,25 +2,19 @@
 
 section {
   background: $background;
-  display: flex;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  overflow: visible;
+  top: 0;
+  height: 100vh;
 
-  .section-title{
-    z-index: 2;
-    position: absolute;
-    width: 100%;
+  .section-title {
     height: auto;
-    margin-top: 10px;
+    padding: 25px 0 0 5px;
 
-    h1{
+    h1 {
       color: $outline;
       font-weight: $bold;
-      font-size: 12px;
-      letter-spacing: .8px;
-      margin: 0 0 0 5px;
-      clear:both;
+      font-size: 14px;
+      letter-spacing: 1px;
+      margin-bottom: -2px;
     }
   }
 
@@ -33,25 +27,25 @@ section {
     scroll-snap-type: x mandatory;
 
     gap: 5px;
-    margin: 30px 0 0 10px;
-  
+    margin: 0 0 0 10px;
+
+
     .card {
       scroll-snap-align: start;
-      
       margin: 10px 0 10px 0;
-
       display: block;
       width: 120px;
       height: auto;
       border: none;
       border-radius: 0;
       background: $background;
-  
+
       .movie-image-container {
         width: 85%;
         height: 150px;
-        left: 0; 
+        left: 0;
       }
+
       .movie-image {
         border-radius: 2px;
         width: 100%;
@@ -60,7 +54,7 @@ section {
       }
     }
   }
-  
+
   .info-box {
     position: inherit;
     background-color: rgba(2, 0, 0, 0.2);
@@ -72,7 +66,7 @@ section {
     margin-top: -20px;
     margin-left: 15px;
     text-align: left;
-  
+
     h1 {
       color: $outline;
       font-weight: $medium;
@@ -80,6 +74,7 @@ section {
       letter-spacing: .2px;
       margin: 6.8px 0 0 3px;
     }
+
     hr {
       opacity: 0.9;
       background-color: $outline;
@@ -87,6 +82,7 @@ section {
       width: 22%;
       margin: 0 0 0 4px;
     }
+
     p {
       z-index: 1;
       color: $black;
@@ -97,23 +93,23 @@ section {
     }
   }
 
- /* width */
-::-webkit-scrollbar {
-  height: 2px;
-  width: 20px;
-}
+  /* width */
+  ::-webkit-scrollbar {
+    height: 2px;
+    width: 20px;
+  }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: $background;
-  border-radius: 10px;
-}
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: $background;
+    border-radius: 10px;
+  }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 10px;
-}
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+  }
 }
 
 
