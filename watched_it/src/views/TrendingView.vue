@@ -1,6 +1,10 @@
+<script setup lang="ts">
+import SimpleHeader from '../components/SimpleHeader.vue';
+</script>
+
 <template>
+    <SimpleHeader/>
     <section>
-        
         <div class="section-title">
             <h1>Trending movies</h1>
         </div>
