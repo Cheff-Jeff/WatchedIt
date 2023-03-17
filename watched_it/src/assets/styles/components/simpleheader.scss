@@ -17,6 +17,9 @@
         width: 28px;
         padding: 7px;
         fill: $black;
+        &:hover{
+            cursor: pointer;
+        }
     }
 
     .header-text {
@@ -44,9 +47,19 @@
     position: fixed;
     left: 0;
     top: -15px;
-    width: 100%;
+    width: 0px;
     background: $backDrop;
     z-index: 999999999999;
+    overflow: hidden;
+    transition: width .35s ease-in-out;
+    &:hover{
+        cursor: pointer;
+    }
+    &.open{
+        width: 100%;
+        transition: width .35s ease-in-out;
+    }
+
     .menu{
         width: 100%;
         border-radius: 0px 20px 20px 0px;
@@ -62,6 +75,9 @@
             top: 10px;
             right: 10px;
             transform: rotate(-10deg);
+            &:hover{
+                cursor: pointer;
+            }
             svg{
                 width: 35px;
                 height: 35px;
@@ -92,6 +108,15 @@
                             text-decoration: none !important;
                             font-weight: $medium;
                             letter-spacing: 1.5px;
+                            transition: color .3s ease-in-out;
+                            &:hover{
+                                color: $purple;
+                                transition: color .3s ease-in-out;
+                            }
+                            &.router-link-active{
+                                color: $purple;
+                                transition: color .3s ease-in-out;
+                            }
                         }
                     }
                 }

@@ -12,7 +12,7 @@ const props = defineProps({
 <template>
     <div class="header-container">
 
-        <div class="icon-left">
+        <div class="icon-left" @click="openMenu">
             <svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                 <path
@@ -33,9 +33,9 @@ const props = defineProps({
         </div>
 
     </div>
-    <div class="menu-wrapper">
+    <div :class="menuToggle" class="menu-wrapper" @click="closeMenu">
         <div class="menu">
-            <div class="close-wrapper">
+            <div class="close-wrapper" @click="closeMenu">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                     <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
                 </svg>
@@ -47,20 +47,24 @@ const props = defineProps({
                 <nav>
                     <ul>
                         <li>
-                            <RouterLink :to="{name: 'account'}">
+                            <router-link :to="{name: 'account'}">
                                 Account
-                            </RouterLink>
+                            </router-link>
                         </li>
                         <li>
-                            <RouterLink :to="{name: 'trending'}">
+                            <router-link :to="{name: 'trending'}">
                                 Trending
-                            </RouterLink>
+                            </router-link>
                         </li>
                         <li>
-                            <a href="#">Watch list</a>
+                            <router-link to="/test">
+                                Watch list
+                            </router-link>
                         </li>
                         <li>
-                            <a href="#">Comig soon</a>
+                            <router-link to="/test">
+                                Comig soon
+                            </router-link>
                         </li>
                     </ul>
                 </nav>
@@ -69,6 +73,24 @@ const props = defineProps({
     </div>
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+    data() {
+        return {
+            menuToggle: ''
+        }
+    },
+    methods: {
+        closeMenu(){
+            this.menuToggle = ''
+        },
+        openMenu(){
+            this.menuToggle = 'open'
+        }
+    },
+})
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
