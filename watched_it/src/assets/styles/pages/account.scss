@@ -1,0 +1,44 @@
+@import "../fonts/roboto.scss";
+section.section-pagewrap{
+  min-height: 100vh;
+  width: 100%;
+  background: $background;
+  padding-top: 55px;
+  padding-bottom: 20px;
+  .greed{
+    margin-top: 20px;
+    .person{
+      h1{
+        font-size: 28px;
+        letter-spacing: 2px;
+        font-weight: $medium;
+        margin-bottom: 0px;
+      }
+      span{
+        font-size: 21px;
+        letter-spacing: 2px;
+        font-weight: $medium;
+        margin-bottom: 0px;
+        margin-left: 10px;
+      }
+    }
+    .btn-wrap{
+      margin-bottom: 10px;
+    }
+  }
+  .nav{
+    margin-top: 30px;
+    .link-wrapper{
+      margin: 30px auto 0 30px;
+      margin-left: 15px;
+      a{
+        font-weight: $medium;
+        font-size: 18px;
+      }
+    }
+  }
+  .movies{
+    margin-top:70px;
+    margin-bottom: 30px;
+  }
+}

@@ -134,6 +134,7 @@ export default defineComponent({
 
         if(result?.code == 200 && result.data.id){
           localStorage.setItem('user', result.data.id?.toString())
+          this.$router.push('account');
         }
         else{
           console.log(result)

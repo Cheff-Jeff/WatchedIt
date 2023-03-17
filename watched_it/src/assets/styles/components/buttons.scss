@@ -9,3 +9,25 @@
     border-radius: 50px;
   }
 }
+
+.btn-wrap{
+  width: 100%;
+  display: block;
+  margin-bottom: 20px;
+  &.white{
+    .mdc-button--raised .mdc-button__ripple::after{
+      background-color: var(--mdc-protected-button-hover-state-layer-color, var(--mdc-theme-on-primary, #000));
+    }
+
+    button{
+      background-color: $gray !important;
+      color: $black;
+    }
+  }
+  button{
+    width: 100%;
+    span{
+      text-transform: none;
+    }
+  }
+}
