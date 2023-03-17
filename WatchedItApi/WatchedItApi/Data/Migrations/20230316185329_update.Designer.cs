@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchedItApi.Data;
 
@@ -11,9 +12,11 @@ using WatchedItApi.Data;
 namespace WatchedItApi.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230316185329_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,12 +67,12 @@ namespace WatchedItApi.Data.Migrations
                     b.Property<int>("ExternId")
                         .HasColumnType("int");
 
-                    b.Property<int>("movieListId")
+                    b.Property<int?>("MovieListid")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("movieListId");
+                    b.HasIndex("MovieListid");
 
                     b.ToTable("Movies");
                 });
@@ -82,16 +85,11 @@ namespace WatchedItApi.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("MovieLists");
                 });
@@ -148,26 +146,12 @@ namespace WatchedItApi.Data.Migrations
                 {
                     b.HasOne("WatchedItApi.Models.MovieList", null)
                         .WithMany("Movies")
-                        .HasForeignKey("movieListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WatchedItApi.Models.MovieList", b =>
-                {
-                    b.HasOne("WatchedItApi.Models.User", null)
-                        .WithMany("MovieLists")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("MovieListid");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.MovieList", b =>
                 {
                     b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("WatchedItApi.Models.User", b =>
-                {
-                    b.Navigation("MovieLists");
                 });
 #pragma warning restore 612, 618
         }
