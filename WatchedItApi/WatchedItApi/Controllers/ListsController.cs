@@ -13,16 +13,16 @@ namespace WatchedItApi.Controllers
 
 
         [HttpGet]
-        public async Task<IEnumerable<MovieList>> GetAll()
-            => await _context.MovieLists.ToListAsync();
+        public async Task<IEnumerable<MovieList>> GetAllByUserId(int id)
+            => await _context.MovieLists.Include(m => m.Movies).Where(u => u.userId == id).ToListAsync();
+
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetMovieList(int id)
+        public async Task<IActionResult> GetMovieListById(int id)
         {
             MovieList? movielist = await _context.MovieLists.Include(m => m.Movies).FirstOrDefaultAsync(l => l.id == id);
-
 
             return movielist == null ? NotFound() : Ok(movielist);
         }
@@ -61,6 +61,23 @@ namespace WatchedItApi.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok("movie added");
+            }
+
+            return BadRequest("no info found");
+        }
+
+        [HttpDelete("removemoviefromlist")]
+        [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RemoveMovieFromList(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie != null)
+            {
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+
+                return Ok("removed");
             }
 
             return BadRequest("no info found");

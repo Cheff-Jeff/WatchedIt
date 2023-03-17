@@ -9,6 +9,8 @@
         public string Password { get; set; } = "";
         public string Salt { get; set; } = "";
 
+        public ICollection<MovieList>? MovieLists { get; set; }
+
         public User() { }
 
         public User(UserDto dto)
