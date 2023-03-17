@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SimpleHeader from '../components/SimpleHeader.vue';
+import SimpleHeader from '@/components/SimpleHeader.vue';
 </script>
 
 <template>

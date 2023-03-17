@@ -70,6 +70,9 @@
         min-height: calc(100vh + 25px);
         position: relative;
         box-shadow: 4px 1px 8px rgba(0, 0, 0, 0.5);
+        &:hover{
+            cursor: default;
+        }
         .close-wrapper{
             position: absolute;
             top: 10px;
