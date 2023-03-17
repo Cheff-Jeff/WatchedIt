@@ -1,8 +1,9 @@
 const reName = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]*$/;
-const reEmail = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+const reEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 const reTitle = /^[a-zA-Z0-9_ #--():]*$/;
 const reDescription = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-?!"()#&+—’”“]*$/;
 const reId = /^[0-9]*$/;
+const rePhone = /^([0|+[0-9]{1,5})?([0-9]{10})$/
 
 export const validateName = (name: string): boolean => {
   return reName.test(name);
@@ -18,6 +19,9 @@ export const validateDescription = (description: string): boolean => {
 }
 export const validateId = (id: string): boolean => {
   return reId.test(id);
+}
+export const validatePhone = (phone: string): boolean => {
+  return rePhone.test(phone)
 }
 
 //errors
@@ -44,3 +48,5 @@ export const errPublicherIdEmp = () => { return 'Please select a publicher.' }
 export const errPublicherId = () => { return `That is not a publicher.` }
 export const errImageEmp = () => { return `Image can not be empty.` }
 export const errImage = () => { return `This is not an image.` }
+export const errPhoneEmp = () => {return 'Phone number can not be empty.'}
+export const errPhone = (e: string) => {return `${e} is not a valid phone number.`}

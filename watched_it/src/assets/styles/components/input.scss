@@ -15,3 +15,7 @@ label.mdc-text-field--focused{
     color: $black !important;
   }
 }
+
+.field-error{
+  @extend .mdc-text-field--invalid
+}
