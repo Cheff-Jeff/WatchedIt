@@ -1,5 +1,15 @@
+<script setup lang="ts">
+import SimpleHeader from '@/components/SimpleHeader.vue';
+</script>
+
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <SimpleHeader currentTitle="Account" />
+  <section class="section-pagewrap">
+    <h1>Hi</h1>
+  </section>
 </template>
+
+<style lang="scss" scoped>
+@import "@/assets/styles/colors.scss";
+@import "@/assets/styles/pages/account.scss";
+</style>

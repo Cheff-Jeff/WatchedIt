@@ -4,7 +4,7 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
 
 <template>
     <SimpleHeader :currentTitle="title" />
-    <section>
+    <section class="wrapper">
         <div class="section-title">
             <h1>Trending movies</h1>
         </div>
