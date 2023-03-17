@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
       }
     },
     component: () => import('../views/TrendingView.vue')
-  }
+  },
 ]
 
 const router = createRouter({

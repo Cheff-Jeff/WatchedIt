@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SimpleHeader from '@/components/SimpleHeader.vue';
+import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
 </script>
 
 <template>
@@ -41,6 +42,7 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
             </div>
         </div>
     </section>
+    <CardSwipePopUp/>
 </template>
 
 <script lang="ts">
