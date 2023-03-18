@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SimpleHeader from '@/components/SimpleHeader.vue';
-import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
 </script>
 
 <template>
@@ -13,7 +12,7 @@ import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
         <div class="card-container">
             <div class="card" v-for="movie in trendingMovieList" :key="movie.id">
                 <div class="movie-image-container">
-                    <img v-if="movie.backdrop_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.backdrop_path">
+                    <img v-if="movie.poster_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.poster_path">
                     <img v-else class="movie-image" src="../assets/stockBackground.png">
                 </div>
                 <div class="info-box">
@@ -31,7 +30,7 @@ import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
         <div class="card-container">
             <div class="card" v-for="show in trendingShowList" :key="show.id">
                 <div class="movie-image-container">
-                    <img v-if="show.backdrop_path" class="movie-image" :src="'https://image.tmdb.org/t/p/w1280' + show.backdrop_path">
+                    <img v-if="show.poster_path" class="movie-image" :src="'https://image.tmdb.org/t/p/w1280' + show.poster_path">
                     <img v-else class="movie-image" src="../assets/stockBackground.png">
                 </div>
                 <div class="info-box">
@@ -42,15 +41,19 @@ import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
             </div>
         </div>
     </section>
-    <CardSwipePopUp/>
+
+    <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp"></component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getExternTrendingMovies, getExternTrendingShows } from '@/assets/javascript/api';
+import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
 export default defineComponent({
     data() {
         return {
+            compToRender: 'CardSwipePopUp',
+
             title: "Trending",
 
             trendingMovieList: [] as any,
@@ -60,6 +63,14 @@ export default defineComponent({
     async mounted() {
         this.trendingMovieList = await getExternTrendingMovies();
         this.trendingShowList = await getExternTrendingShows();
+    },
+    components: {
+        CardSwipePopUp
+    },
+    methods: {
+        closeCardSwipePopUp(){
+            this.compToRender = ''
+        }
     }
 })
 </script>

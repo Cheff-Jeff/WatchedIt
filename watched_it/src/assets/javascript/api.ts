@@ -105,7 +105,7 @@ export const getExternTrendingMovies = async () => {
           for (let i = 0; i < response.data.results.length; i++) {
             const movie: TrendingMovie = {
               id: response.data.results[i]["id"],
-              backdrop_path: response.data.results[i]["backdrop_path"],
+              poster_path: response.data.results[i]["poster_path"],
               title: response.data.results[i]["title"],
               release_date: response.data.results[i]["release_date"],
             }
@@ -133,7 +133,7 @@ export const getExternTrendingShows = async () => {
           for (let i = 0; i < response.data.results.length; i++) {
             const show: TrendingShow = {
               id: response.data.results[i]["id"],
-              backdrop_path: response.data.results[i]["backdrop_path"],
+              poster_path: response.data.results[i]["poster_path"],
               name: response.data.results[i]["name"],
               first_air_date: response.data.results[i]["first_air_date"],
             }
