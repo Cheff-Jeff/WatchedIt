@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-import { CheckLogin, CheckTitle } from '@/assets/javascript/guard'
+import { CheckLogin, CheckTitle, Checkshow } from '@/assets/javascript/guard'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AccountView.vue')
   },
   {
-    path: '/title/:id/:type',
+    path: '/title/:type/:id',
     name: 'details',
     beforeEnter: async (to,from,next) => {
       if(!CheckLogin()){
@@ -37,8 +37,18 @@ const routes: Array<RouteRecordRaw> = [
         return false
       }
       else{
-        if(to.params.type == 'movie' || to.params.type == 'show'){
+        if(to.params.type == 'movie'){
           if(await CheckTitle(to.params.id.toString())){
+            next();
+            return true
+          }
+          else{
+            next({ name: 'login' })
+            return false
+          }
+        }
+        else if(to.params.type == 'show'){
+          if(await Checkshow((to.params.id.toString())) ){
             next();
             return true
           }
@@ -53,7 +63,7 @@ const routes: Array<RouteRecordRaw> = [
         }
       }
     },
-    component: () => import('../views/AccountView.vue')
+    component: () => import('../views/DetailView.vue')
   },
   {
     path: '/trending',

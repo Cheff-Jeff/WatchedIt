@@ -180,7 +180,7 @@ export const getExternTrendingShows = async () => {
 }
 
 export const fetchMovie = async (id: string) => {
-  const result: Ref<titleDetails | null> = ref(null)
+  const result: Ref<{code: number, data: titleDetails} | null> = ref(null)
   const details: titleDetails = {id: 0, genres: [{id: 0, name: 'string'}], language: 'string', title: 'string',
     overview: 'string', vote_average: 0, poster: 'string', backdrop: 'string', providers: [{logo: 'string', name: 'string'}],
     cast: [{name: 'string', photo: 'string'}], first_air_date: 'string', director: 'string'
@@ -247,17 +247,23 @@ export const fetchMovie = async (id: string) => {
         }
       }
     }).then(()=>{
-      result.value = details
+      result.value = {
+        code: 200,
+        data: details
+      }
       console.log(details)
     })
-  } catch (error) {
-    console.log("error", error)
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
   }
   return result
 }
 
 export const fetchShow = async (id: string) => {
-  const result: Ref<titleDetails | null> = ref(null)
+  const result: Ref<{code: number, data: titleDetails} | null> = ref(null)
   const details: titleDetails = {id: 0, genres: [{id: 0, name: 'string'}], language: 'string', title: 'string',
     overview: 'string', vote_average: 0, poster: 'string', backdrop: 'string', providers: [{logo: 'string', name: 'string'}],
     cast: [{name: 'string', photo: 'string'}], first_air_date: 'string', director: 'string'
@@ -324,11 +330,17 @@ export const fetchShow = async (id: string) => {
         }
       }
     }).then(()=>{
-      result.value = details
+      result.value = {
+        code: 200,
+        data: details
+      }
       console.log(details)
     })
-  } catch (error) {
-    console.log("error", error)
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
   }
   return result
 }
