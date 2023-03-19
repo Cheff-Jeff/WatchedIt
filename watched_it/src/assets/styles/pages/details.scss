@@ -1,0 +1,179 @@
+@import "../fonts/roboto.scss";
+.page-wrap{
+  min-height: 100vh;
+  width: 100%;
+  background: $background;
+  padding-bottom: 20px;
+}
+
+.banner{
+  position: relative;
+  min-height: 250px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  .background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 250px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  .top-bar{
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    .back{
+      width: 25px;
+      svg{
+        fill: $outline;
+      }
+    }
+    .rating{
+      display: flex;
+      align-items: center;
+      svg{
+        width: 25px;
+        fill: $outline;
+        margin-right: 5px;
+      }
+      p{
+        color: $outline;
+        margin-bottom: 0px;
+        font-weight: $bold;
+        font-size: 20px;
+        display: table;
+        span{
+          color: $outline;
+          font-weight: $bold;
+          font-size: 13px;
+          display: table-cell;
+          padding-left: 5px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  .icon{
+    width: 30px;
+    margin-bottom: 8px;
+    svg{
+      fill: $red;
+    }
+  }
+  .setHeight{
+    min-height: 250px;
+  }
+  .title-wrap{
+    margin-top: auto;
+    h1{
+      color: $outline;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+  }
+}
+
+.details{
+  .poster{
+    margin-top: -75px;
+    border: solid 1px $gray;
+  }
+
+  .detail-wrap{
+    margin-top: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    p,span{
+      font-size: 12px;
+      font-style: italic;
+      font-weight: $bold;
+      margin: 0;
+    }
+    span{
+      width: fit-content;
+      margin: 0;
+      display: inline-block;
+    }
+    hr{
+      opacity: 0.9;
+      background-color: $outline;
+      border: .7px solid $outline;
+      width: 37%;
+      min-width: 55px;
+      margin: 7px 0 0 0px;
+    }
+  }
+
+  .overview{
+    margin-top: 20px;
+    p{
+      font-size: 14px;
+      font-weight: $medium;
+      letter-spacing: 1px;
+    }
+  }
+
+  .providers{
+    margin: 30px 0;
+    .btn-wrap{
+      width: fit-content;
+      display: inline-block;
+      padding-right: 10px;
+    }
+  }
+}
+
+.cast{
+  h2{
+    color: $outline;
+    font-size: 25px;
+    letter-spacing: 2px;
+  }
+  .cast-wrap{
+    display: flex;
+    flex-direction: row;
+    overflow: scroll;
+    flex: auto;
+    .cast-member{
+      min-width: 35%;
+      display: block;
+      margin-right: 40px;
+      &:first-child {
+        min-width: 37.5%;
+        padding-left: 2.5%;
+      }
+      img{
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+      }
+      span{
+        font-weight: $medium;
+        font-size: 15px;
+        z-index: 99;
+        display: block;
+        width: fit-content;
+        background: $boxBackground;
+        padding: 5px;
+        border: solid 1px $outline;
+        color: $outline;
+        letter-spacing: 0px;
+        margin-left: auto;
+        position: relative;
+        margin-top: -10px;
+        margin-right: -15px;
+        margin-top: -15px;
+        margin-right: -20px;
+      }
+    }
+  }
+}
+
+.addList{
+  margin-top: 20px;
+}

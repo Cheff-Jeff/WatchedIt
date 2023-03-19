@@ -24,12 +24,20 @@ section.section-pagewrap{
     }
     .btn-wrap{
       margin-bottom: 10px;
+      button{
+        span{
+          &.mdc-button__label{
+            font-size: 11px;
+            letter-spacing: 0px;
+          }
+        }
+      }
     }
   }
   .nav{
-    margin-top: 30px;
+    margin-top: 5px;
     .link-wrapper{
-      margin: 30px auto 0 30px;
+      margin: 30px 0 0 0;
       margin-left: 15px;
       a{
         font-weight: $medium;
@@ -38,7 +46,7 @@ section.section-pagewrap{
     }
   }
   .movies{
-    margin-top:70px;
-    margin-bottom: 30px;
+    margin-top:40px;
+    margin-bottom: 20px;
   }
 }
