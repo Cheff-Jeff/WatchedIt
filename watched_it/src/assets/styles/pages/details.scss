@@ -78,6 +78,8 @@
 }
 
 .details{
+  position: relative;
+  z-index: 99;
   .poster{
     margin-top: -75px;
     border: solid 1px $gray;
@@ -120,7 +122,7 @@
   }
 
   .providers{
-    margin: 30px 0;
+    margin: 30px 0 10px;
     .btn-wrap{
       width: fit-content;
       display: inline-block;
