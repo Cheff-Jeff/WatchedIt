@@ -93,6 +93,35 @@ export const signUp = async (user: User) => {
   return result
 }
 
+export const fetchUser = async (id: string) => {
+  const result: Ref<{ code: number, data: User } | null> = ref(null)
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Users/${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 200) {
+        const user: User = {
+          id: response.data['id'],
+          name: response.data['name'],
+          email: response.data['email'],
+          phone: response.data['phone'],
+          password: response.data['password'],
+        }
+        result.value = {
+          code: response.status,
+          data: user
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
 export const getExternTrendingMovies = async () => {
   const result: Ref<TrendingMovie[] | null> = ref(null)
   const movies: TrendingMovie[] = []
@@ -105,7 +134,7 @@ export const getExternTrendingMovies = async () => {
           for (let i = 0; i < response.data.results.length; i++) {
             const movie: TrendingMovie = {
               id: response.data.results[i]["id"],
-              backdrop_path: response.data.results[i]["backdrop_path"],
+              backdrop_path: response.data.results[i]["poster_path"],
               title: response.data.results[i]["title"],
               release_date: response.data.results[i]["release_date"],
             }
@@ -125,6 +154,7 @@ export const getExternTrendingShows = async () => {
   const result: Ref<TrendingShow[] | null> = ref(null)
   const shows: TrendingShow[] = []
   try {
+    console.log(process.env.VUE_APP_API_EXTERNHOSTV3)
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}tv/popular?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=1`, {
       headers: { 'Content-type': 'application/json' }
     }).then(
@@ -133,7 +163,7 @@ export const getExternTrendingShows = async () => {
           for (let i = 0; i < response.data.results.length; i++) {
             const show: TrendingShow = {
               id: response.data.results[i]["id"],
-              backdrop_path: response.data.results[i]["backdrop_path"],
+              backdrop_path: response.data.results[i]["poster_path"],
               name: response.data.results[i]["name"],
               first_air_date: response.data.results[i]["first_air_date"],
             }

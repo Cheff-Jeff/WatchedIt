@@ -1,7 +1,18 @@
 <script setup lang="ts">
+import { fetchUser } from '@/assets/javascript/api';
+import { User } from '@/assets/javascript/Models/UserInterface';
 import SimpleHeader from '@/components/SimpleHeader.vue';
 import {MDCRipple} from '@material/ripple';
-import { onMounted } from 'vue';
+import { onMounted, defineExpose } from 'vue';
+const id: string | null = localStorage.getItem('user')
+let user: User | undefined
+
+if(id){
+    const result = await fetchUser(id)
+    console.log(result)
+    user = result.value?.data
+  }
+
 onMounted(() => { 
   const buttons = document.getElementsByClassName('mdc-button');
   if(buttons){
@@ -10,18 +21,20 @@ onMounted(() => {
     }
   }
 });
+
+defineExpose({user})
 </script>
 
 <template>
   <SimpleHeader currentTitle="Account" />
-  <section class="section-pagewrap">
+  <section class="section-pagewrap" >
     <div class="container">
-      <section class="greed">
+      <section class="greed" v-if="user">
         <div class="row">
           <div class="col-8">
             <div class="person">
               <h1>Hello there,</h1>
-              <span>Jeffrey Nijkamp</span>
+              <span>{{ user.name }}</span>
             </div>
           </div>
           <div class="col-4">
@@ -33,7 +46,7 @@ onMounted(() => {
               </button>
             </div>
             <div class="mdc-touch-target-wrapper btn-wrap">
-              <button class="mdc-button mdc-button--raised">
+              <button class="mdc-button mdc-button--raised" @click="download">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__touch"></span>
                 <span class="mdc-button__label">Download app</span>
@@ -214,9 +227,21 @@ onMounted(() => {
   </section>
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  methods: {
+    download(){
+      this.$emit('download')
+    }
+  },
+})
+</script>
+
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
 @import "@/assets/styles/components/buttons.scss";
 @import "@/assets/styles/pages/account.scss";
-@import "@/assets/styles/components/cards.scss"
+@import "@/assets/styles/components/cards.scss";
 </style>
