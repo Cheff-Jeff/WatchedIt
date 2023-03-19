@@ -214,11 +214,13 @@ export const fetchMovie = async (id: string) => {
       })
       if(providers.status == 200){
         const streamers: {logo: string,name: string}[] = Array<{logo: string,name: string}>()
-        for(let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++){
-          streamers.push({
-            logo: providers.data['results']['NL']['flatrate'][i]['logo_path'], 
-            name: providers.data['results']['NL']['flatrate'][i]['provider_name']
-          })
+        if(providers.data['results']['NL'] !== undefined && providers.data['results']['NL'] !== 'undefined' && providers.data['results']['NL']['flatrate']){
+          for(let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++){
+            streamers.push({
+              logo: providers.data['results']['NL']['flatrate'][i]['logo_path'], 
+              name: providers.data['results']['NL']['flatrate'][i]['provider_name']
+            })
+          }
         }
         details.providers = streamers
       }
@@ -297,11 +299,13 @@ export const fetchShow = async (id: string) => {
       })
       if(providers.status == 200){
         const streamers: {logo: string,name: string}[] = Array<{logo: string,name: string}>()
-        for(let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++){
-          streamers.push({
-            logo: providers.data['results']['NL']['flatrate'][i]['logo_path'], 
-            name: providers.data['results']['NL']['flatrate'][i]['provider_name']
-          })
+        if(providers.data['results']['NL'] !== undefined && providers.data['results']['NL'] !== 'undefined' && providers.data['results']['NL']['flatrate']){
+          for(let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++){
+            streamers.push({
+              logo: providers.data['results']['NL']['flatrate'][i]['logo_path'], 
+              name: providers.data['results']['NL']['flatrate'][i]['provider_name']
+            })
+          }
         }
         details.providers = streamers
       }
@@ -337,6 +341,7 @@ export const fetchShow = async (id: string) => {
       console.log(details)
     })
   } catch (error: any) {
+    console.log(error)
     result.value = {
       code: error.response.status,
       data: error.response.data

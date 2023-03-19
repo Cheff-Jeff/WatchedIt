@@ -11,15 +11,17 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
 
         <div class="card-container">
             <div class="card" v-for="movie in trendingMovieList" :key="movie.id">
-                <div class="movie-image-container">
-                    <img v-if="movie.backdrop_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.backdrop_path">
-                    <img v-else class="movie-image" src="../assets/stockBackground.png">
-                </div>
-                <div class="info-box">
-                    <h1>{{ movie.title }}</h1>
-                    <hr />
-                    <p>{{ movie.release_date }}</p>
-                </div>
+                <router-link :to="{name:'details',  params: { type: 'movie', id: movie.id }}">
+                    <div class="movie-image-container">
+                        <img v-if="movie.backdrop_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.backdrop_path">
+                        <img v-else class="movie-image" src="../assets/stockBackground.png">
+                    </div>
+                    <div class="info-box">
+                        <h1>{{ movie.title }}</h1>
+                        <hr />
+                        <p>{{ movie.release_date }}</p>
+                    </div>
+                </router-link>
             </div>
         </div>
 
@@ -29,15 +31,17 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
 
         <div class="card-container">
             <div class="card" v-for="show in trendingShowList" :key="show.id">
-                <div class="movie-image-container">
-                    <img v-if="show.backdrop_path" class="movie-image" :src="'https://image.tmdb.org/t/p/w1280' + show.backdrop_path">
-                    <img v-else class="movie-image" src="../assets/stockBackground.png">
-                </div>
-                <div class="info-box">
-                    <h1>{{ show.name }}</h1>
-                    <hr />
-                    <p>{{ show.first_air_date }}</p>
-                </div>
+                <router-link :to="{name:'details',  params: { type: 'show', id: show.id }}">
+                    <div class="movie-image-container">
+                        <img v-if="show.backdrop_path" class="movie-image" :src="'https://image.tmdb.org/t/p/w1280' + show.backdrop_path">
+                        <img v-else class="movie-image" src="../assets/stockBackground.png">
+                    </div>
+                    <div class="info-box">
+                        <h1>{{ show.name }}</h1>
+                        <hr />
+                        <p>{{ show.first_air_date }}</p>
+                    </div>
+                </router-link>
             </div>
         </div>
     </section>
