@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-import { CheckLogin } from '@/assets/javascript/guard'
+import { CheckLogin, CheckTitle } from '@/assets/javascript/guard'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,6 +24,33 @@ const routes: Array<RouteRecordRaw> = [
       else{
         next();
         return true
+      }
+    },
+    component: () => import('../views/AccountView.vue')
+  },
+  {
+    path: '/title/:id/:type',
+    name: 'details',
+    beforeEnter: async (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        if(to.params.type == 'movie' || to.params.type == 'show'){
+          if(await CheckTitle(to.params.id.toString())){
+            next();
+            return true
+          }
+          else{
+            next({ name: 'login' })
+            return false
+          }
+        }
+        else{
+          next({ name: 'login' })
+          return false
+        }
       }
     },
     component: () => import('../views/AccountView.vue')
