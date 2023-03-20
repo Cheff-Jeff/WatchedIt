@@ -10,7 +10,7 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
         </div>
 
         <div class="card-container">
-            <div class="card" v-for="movie in trendingMovieList" :key="movie.id">
+            <div class="card" v-for="movie in trendingMovieList" :key="movie.id
                 <router-link :to="{name:'details',  params: { type: 'movie', id: movie.id }}">
                     <div class="movie-image-container">
                         <img v-if="movie.backdrop_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.backdrop_path">
@@ -45,14 +45,19 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
             </div>
         </div>
     </section>
+
+    <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp"></component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getExternTrendingMovies, getExternTrendingShows } from '@/assets/javascript/api';
+import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
 export default defineComponent({
     data() {
         return {
+            compToRender: 'CardSwipePopUp',
+
             title: "Trending",
 
             trendingMovieList: [] as any,
@@ -62,6 +67,14 @@ export default defineComponent({
     async mounted() {
         this.trendingMovieList = await getExternTrendingMovies();
         this.trendingShowList = await getExternTrendingShows();
+    },
+    components: {
+        CardSwipePopUp
+    },
+    methods: {
+        closeCardSwipePopUp(){
+            this.compToRender = ''
+        }
     }
 })
 </script>
