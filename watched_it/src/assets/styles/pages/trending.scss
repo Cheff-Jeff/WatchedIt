@@ -6,6 +6,8 @@ section.wrapper {
   height: 100vh;
   padding-bottom: 20px;
   overflow:hidden;
+  position: relative;
+  z-index: 20;
 
   .section-title {
     height: auto;
