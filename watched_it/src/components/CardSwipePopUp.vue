@@ -1,8 +1,9 @@
 <template>
     <section>
-        <Transition name="bounce">
-            <div v-if="show" class="card-container">
 
+        <Transition name="bounce">
+
+            <div v-if="show" class="card-container">        
                 <div class="card" :key="MovieShow.id">
                     <div class="movie-image-container">
                         <img v-if="MovieShow.poster_path" class="movie-image"
@@ -19,8 +20,23 @@
             </div>
         </Transition>
 
+
+
         <div class="interact-box">
-            
+
+            <div class="desc-container">
+                <h1>{{ genre }}</h1>
+                <hr />
+                <p>{{ description }}</p>
+
+                <div class="mdc-touch-target-wrapper btn-wrap white">
+                    <button class="mdc-button mdc-button--raised">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__touch"></span>
+                        <span class="mdc-button__label">View more</span>
+                    </button>
+                </div>
+            </div>
 
             <div class="like" v-on:click="LikeItem()">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -53,11 +69,16 @@ export default defineComponent({
                 id: '',
                 poster_path: '',
                 title: '',
-                release_date: ''
+                release_date: '',
             },
 
+            genre: 'Horror',
+            description: 'ashasjhdjhsda ahadjsjhd ajhsdajhsajhsa jajajwef sdffsdfssgfs fsdfsdfsdf sdfsdfsdfsdfdfs dfsdfsdfsdfsdffs dfsdajaja jajaIt is a long established fact that a reader will be distracted by the readable content of a page when',
+
+            liked: false,
             likedMovieShow: [] as any,
 
+            disliked: false,
             dislikedMovieShow: [] as any,
         }
     },
@@ -69,6 +90,7 @@ export default defineComponent({
 
         const i: number = this.movieshowArray.map((item: { id: any; }) => item.id).indexOf(this.movieshowArray[0].id);
         this.MovieShow = this.movieshowArray[0]
+        this.description = this.truncateString(this.description)
 
         this.movieshowArray.splice(i, 1);
     },
@@ -76,6 +98,8 @@ export default defineComponent({
         LikeItem() {
             if (this.MovieShow.id != null) {
                 this.likedMovieShow.push(this.MovieShow.id)
+
+                this.liked = !this.liked
 
                 if (this.movieshowArray.length != 0) {
                     this.NextItem(this.MovieShow.id)
@@ -88,6 +112,8 @@ export default defineComponent({
         DisLikeItem() {
             if (this.MovieShow.id != null) {
                 this.dislikedMovieShow.push(this.MovieShow.id)
+
+                this.disliked = !this.disliked
 
                 if (this.movieshowArray.length != 0) {
                     this.NextItem(this.MovieShow.id)
@@ -105,6 +131,8 @@ export default defineComponent({
 
             this.MovieShow = item[0]
 
+            this.description = this.truncateString(this.description);
+
             var timer = null
             if (timer) {
                 clearTimeout(timer);
@@ -112,12 +140,14 @@ export default defineComponent({
             }
             timer = setTimeout(async () => {
                 this.show = !this.show
-
             }, 1000);
         },
         closeModal() {
             this.$emit('closeCardSwipePopUp', true)
-        }
+        },
+        truncateString(str: string) {
+            return (str.length > 180) ? str.slice(0, 180 - 1) + '...' : str;
+        },
     }
 })
 </script>
@@ -125,6 +155,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
 @import '../assets/styles/pages/swipecards.scss';
+@import "@/assets/styles/components/buttons.scss";
 
 .bounce-enter-active {
     animation: bounce-in .8s;
