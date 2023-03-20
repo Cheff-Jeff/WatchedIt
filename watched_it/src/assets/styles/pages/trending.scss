@@ -51,7 +51,6 @@ section.wrapper {
       .movie-image-container {
         max-width: 200px;
         max-height: 277px;
-        overflow: hidden;
         left: 0;
       }
 
@@ -62,7 +61,7 @@ section.wrapper {
   }
 
   .info-box {
-    position: inherit;
+    position: relative;
     background-color: $boxBackground;
     z-index: 2;
     width: 100%;
@@ -75,6 +74,7 @@ section.wrapper {
     margin: -24px -20px 0px auto;
     display: block;
     padding: 7px 4px;
+    z-index: 999;
 
     h1 {
       color: $black;
