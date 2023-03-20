@@ -25,9 +25,6 @@ onMounted(() => {
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="logo-wrapper">
-                        <img src="@/assets/logo.png" alt="logo">
-                    </div>
                     <div class="title-wrap">
                         <h1>Edit Account</h1>
                     </div>
@@ -114,8 +111,8 @@ onMounted(() => {
                             <p>Leave empty if you want to keep your current password</p>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                            <div class="mdc-touch-target-wrapper btn-wrap">
+                    <div class="btn-group btn-container">
+                        <div class="mdc-touch-target-wrapper btn-wrap">
                             <button class="mdc-button mdc-button--raised">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
@@ -128,7 +125,7 @@ onMounted(() => {
                                 <span class="mdc-button__touch"></span>
                                 <span class="mdc-button__label">Cancel</span>
                             </button>
-                        </div> 
+                        </div>
                     </div>
                 </form>
             </div>
@@ -142,7 +139,6 @@ import {
     validateName, validateEmail, validatePhone, errNameEmp, errName,
     errEmailEmp, errEmail, errPhoneEmp, errPhone, errPassEmp, errPass, errConfirmPass
 } from '@/assets/javascript/validation';
-import { signUp, signIn } from '@/assets/javascript/api';
 import { User } from '@/assets/javascript/Models/UserInterface';
 
 export default defineComponent({
@@ -184,24 +180,7 @@ export default defineComponent({
                     password: this.password
                 }
 
-                const result = await signUp(user);
-
-                if (result?.code == 201 && result.data.id) {
-                    let newUser: User = result.data
-                    newUser.password = this.password
-
-                    const res = await signIn(newUser)
-
-                    if (res?.code == 200 && res.data.id) {
-                        localStorage.setItem('user', res.data.id?.toString())
-                        this.$router.push('account');
-                    } else {
-                        console.log(res)
-                    }
-                }
-                else {
-                    console.log(result)
-                }
+                
             }
         },
         checkName() {
