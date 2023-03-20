@@ -25,13 +25,13 @@ export default defineComponent({
       e.preventDefault();
       // Stash the event so it can be triggered later.
       this.deferredPrompt = e;
-
-      this.deferredPrompt.prompt();
+      console.log(this.deferredPrompt)
     });
   },
   methods: {
     async downloadApp(){
       if(this.deferredPrompt){
+        console.log(this.deferredPrompt)
         this.deferredPrompt.prompt();
       }
     }
