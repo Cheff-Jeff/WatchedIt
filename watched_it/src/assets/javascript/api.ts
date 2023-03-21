@@ -370,3 +370,32 @@ export const updateUser = async (user: User) => {
   }
   return result
 }
+
+export const searchMovies = async (searchPhrase: string) => {
+  const result: Ref<TrendingMovie[] | null> = ref(null)
+  const movies: TrendingMovie[] = []
+  try {
+    await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}search/multi?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&query=${searchPhrase}&page=1&include_adult=false`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        if (response.status == 200) {
+          console.log(response)
+          //   for (let i = 0; i < response.data.results.length; i++) {
+          //     const movie: TrendingMovie = {
+          //       id: response.data.results[i]["id"],
+          //       poster_path: response.data.results[i]["poster_path"],
+          //       title: response.data.results[i]["title"],
+          //       release_date: response.data.results[i]["release_date"],
+          //     }
+          //     movies.push(movie)
+          //   }
+
+          //   result.value = movies
+        }
+      })
+  } catch (error: any) {
+    console.log("error", error)
+  }
+  return result
+}

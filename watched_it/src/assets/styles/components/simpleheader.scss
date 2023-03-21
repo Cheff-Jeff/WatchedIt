@@ -19,7 +19,8 @@
         width: 17px;
         fill: $black;
         margin-top: -1px;
-        &:hover{
+
+        &:hover {
             cursor: pointer;
         }
     }
@@ -38,6 +39,21 @@
         }
     }
 
+    .searchbox {
+        margin-right: 5px;
+        height: 30px;
+        min-width: 30px;
+        border: 1px solid $boxBackground;
+        border-radius: 10px;
+        background: $gray;
+
+        &:focus{
+            outline: none;
+            color: $black;
+            font-size: $light;
+        }
+    }
+
     .icon-right {
         float: right;
         margin-right: 10px;
@@ -47,7 +63,7 @@
     }
 }
 
-.menu-wrapper{
+.menu-wrapper {
     position: fixed;
     left: 0;
     top: -15px;
@@ -56,15 +72,17 @@
     z-index: 999999999999;
     overflow: hidden;
     transition: width .35s ease-in-out;
-    &:hover{
+
+    &:hover {
         cursor: pointer;
     }
-    &.open{
+
+    &.open {
         width: 100%;
         transition: width .35s ease-in-out;
     }
 
-    .menu{
+    .menu {
         width: 100%;
         border-radius: 0px 20px 20px 0px;
         transform: rotate(10deg);
@@ -74,53 +92,63 @@
         min-height: calc(100vh + 25px);
         position: relative;
         box-shadow: 4px 1px 8px rgba(0, 0, 0, 0.5);
-        &:hover{
+
+        &:hover {
             cursor: default;
         }
-        .close-wrapper{
+
+        .close-wrapper {
             position: absolute;
             top: 10px;
             right: 10px;
             transform: rotate(-10deg);
-            &:hover{
+
+            &:hover {
                 cursor: pointer;
             }
-            svg{
+
+            svg {
                 width: 35px;
                 height: 35px;
             }
         }
-        .inner-wrap{
+
+        .inner-wrap {
             width: calc(100% - 180px);
             margin-left: 145px;
             padding-top: 60px;
             transform: rotate(-10deg);
-            .logo-wrap{
+
+            .logo-wrap {
                 width: 40%;
                 margin: auto;
                 margin-left: 40px;
                 padding-bottom: 70px;
             }
-            nav{
-                ul{
+
+            nav {
+                ul {
                     list-style: none;
                     margin: 0;
                     padding-left: 10px;
 
-                    li{
+                    li {
                         margin: 20px 0 20px;
-                        a{
+
+                        a {
                             font-size: 23px;
                             color: $black;
                             text-decoration: none !important;
                             font-weight: $medium;
                             letter-spacing: 1.5px;
                             transition: color .3s ease-in-out;
-                            &:hover{
+
+                            &:hover {
                                 color: $purple;
                                 transition: color .3s ease-in-out;
                             }
-                            &.router-link-active{
+
+                            &.router-link-active {
                                 color: $purple;
                                 transition: color .3s ease-in-out;
                             }
