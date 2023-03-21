@@ -2,7 +2,7 @@ import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
 import { User } from './Models/UserInterface';
-import { TrendingMovie, TrendingShow, titleDetails } from "./Models/ExternApiInterface";
+import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
   const result: Ref<User[] | null> = ref(null)
@@ -372,26 +372,24 @@ export const updateUser = async (user: User) => {
 }
 
 export const searchMovies = async (searchPhrase: string) => {
-  const result: Ref<TrendingMovie[] | null> = ref(null)
-  const movies: TrendingMovie[] = []
+  const result: Ref<searchMovieShow[] | null> = ref(null)
+  const moviesshows: searchMovieShow[] = []
   try {
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}search/multi?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&query=${searchPhrase}&page=1&include_adult=false`, {
       headers: { 'Content-type': 'application/json' }
     }).then(
       response => {
         if (response.status == 200) {
-          console.log(response)
-          //   for (let i = 0; i < response.data.results.length; i++) {
-          //     const movie: TrendingMovie = {
-          //       id: response.data.results[i]["id"],
-          //       poster_path: response.data.results[i]["poster_path"],
-          //       title: response.data.results[i]["title"],
-          //       release_date: response.data.results[i]["release_date"],
-          //     }
-          //     movies.push(movie)
-          //   }
+            for (let i = 0; i < response.data.results.length; i++) {
+              const searchmovieshow: searchMovieShow = {
+                id: response.data.results[i]["id"],
+                title: response.data.results[i]["name"],
+                media_type: response.data.results[i]["media_type"],
+              }
+              moviesshows.push(searchmovieshow)
+            }
 
-          //   result.value = movies
+            result.value = moviesshows
         }
       })
   } catch (error: any) {

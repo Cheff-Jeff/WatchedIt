@@ -27,6 +27,27 @@ const props = defineProps({
         <input class="searchbox" type="text" placeholder="movie/show" v-model="searchPhrase" @keyup="getSearchedItems"
             @blur="getSearchedItems">
 
+        <div class="item-container">
+            <div class="item">
+                <p>test</p>
+            </div>
+            <div class="item">
+                <p>test</p>
+            </div>
+            <div class="item">
+                <p>test</p>
+            </div>
+            <div class="item">
+                <p>test</p>
+            </div>
+            <div class="item">
+                <p>test</p>
+            </div>
+            <div class="item">
+                <p>test</p>
+            </div>>
+        </div>
+
         <div class="icon-right">
             <svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -35,6 +56,7 @@ const props = defineProps({
             </svg>
         </div>
     </div>
+
     <div :class="menuToggle" class="menu-wrapper" @click="closeMenu">
         <div class="menu" @click.stop>
             <div class="close-wrapper" @click="closeMenu">
@@ -107,4 +129,5 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
-@import '@/assets/styles/components/simpleheader.scss';</style>
+@import '@/assets/styles/components/simpleheader.scss';
+</style>
