@@ -21,14 +21,10 @@ onMounted(() => {
 
 <template>
     <SimpleHeader :currentTitle="'Edit Account'" />
-    <section class="login">
+    <section class="editaccount">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="title-wrap">
-                        <h1>Edit Account</h1>
-                    </div>
-                </div>
+
                 <form @submit.prevent="submit">
                     <div class="col-md-12">
                         <div class="input-wrapper">
@@ -100,7 +96,7 @@ onMounted(() => {
                                     </span>
                                     <span class="mdc-notched-outline__trailing"></span>
                                 </span>
-                                <input type="password" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                <input type="password" class="mdc-text-field__input" aria-labelledby="my-label-id"
                                     minlength="10" v-model="password">
                             </label>
                             <div class="mdc-text-field-helper-line">
@@ -113,18 +109,20 @@ onMounted(() => {
                     </div>
                     <div class="btn-group btn-container">
                         <div class="mdc-touch-target-wrapper btn-wrap">
-                            <button class="mdc-button mdc-button--raised">
+                            <button type="submit" class="mdc-button mdc-button--raised">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
                                 <span class="mdc-button__label">Save</span>
                             </button>
                         </div>
                         <div class="mdc-touch-target-wrapper btn-wrap white">
-                            <button class="mdc-button mdc-button--raised">
-                                <span class="mdc-button__ripple"></span>
-                                <span class="mdc-button__touch"></span>
-                                <span class="mdc-button__label">Cancel</span>
-                            </button>
+                            <router-link :to="{ name: 'account' }">
+                                <button class="mdc-button mdc-button--raised">
+                                    <span class="mdc-button__ripple"></span>
+                                    <span class="mdc-button__touch"></span>
+                                    <span class="mdc-button__label">Cancel</span>
+                                </button>
+                            </router-link>
                         </div>
                     </div>
                 </form>
@@ -137,29 +135,33 @@ onMounted(() => {
 import { defineComponent } from 'vue';
 import {
     validateName, validateEmail, validatePhone, errNameEmp, errName,
-    errEmailEmp, errEmail, errPhoneEmp, errPhone, errPassEmp, errPass, errConfirmPass
+    errEmailEmp, errEmail, errPhoneEmp, errPhone, errPass
 } from '@/assets/javascript/validation';
 import { User } from '@/assets/javascript/Models/UserInterface';
+import { updateUser, fetchUser } from '@/assets/javascript/api';
 
 export default defineComponent({
     data() {
         return {
-            name: '',
-            email: '',
-            phone: '',
+            name: 'i',
+            email: 'i',
+            phone: 'i',
             password: '',
-            confirmPassword: '',
             nameError: 'Invalid name.',
             emailError: 'Invalid email.',
             phoneError: 'Invalid phone number.',
             passwordError: 'Invalid password',
-            confirmError: 'Password must match.',
             classNameError: '',
             classEmailError: '',
             classphoneError: '',
             classPassError: '',
-            classConfirmError: '',
         }
+    },
+    async mounted() {
+        const result = await fetchUser(JSON.parse(localStorage.getItem('user') || '{}'))
+        this.name = result.value?.data.name as string;
+        this.email = result.value?.data.email as string;
+        this.phone = result.value?.data.phone as string;
     },
     methods: {
         async submit() {
@@ -167,20 +169,26 @@ export default defineComponent({
             this.checkEmail()
             this.checkPhone()
             this.checkPassword()
-            this.checkConfirm()
 
             if (this.nameError == '', this.emailError == '',
-                this.phoneError == '', this.passwordError == '',
-                this.confirmError == '') {
+                this.phoneError == '', this.passwordError == '') {
                 const user: User = {
-                    id: null,
+                    id: JSON.parse(localStorage.getItem('user') || '{}'),
                     name: this.name,
                     email: this.email,
                     phone: this.phone,
                     password: this.password
                 }
 
-                
+                const result = await updateUser(user)
+
+                if (result?.code == 204) {
+                    //melding geven
+                }
+                else {
+                    console.log(result)
+                    //melding geven
+                }
             }
         },
         checkName() {
@@ -215,7 +223,7 @@ export default defineComponent({
             }
         },
         checkPassword() {
-            this.passwordError = this.password.length == 0 ? errPassEmp() : (
+            (
                 this.password.length == 10 ? '' : errPass()
             )
             if (this.passwordError) {
@@ -225,17 +233,6 @@ export default defineComponent({
                 this.classPassError = ''
             }
         },
-        checkConfirm() {
-            this.confirmError = this.confirmPassword.length == 0 ? errConfirmPass() : (
-                this.confirmPassword == this.password ? '' : errConfirmPass()
-            )
-            if (this.confirmError) {
-                this.classConfirmError = 'field-error'
-            }
-            else {
-                this.classConfirmError = ''
-            }
-        }
     },
 })
 </script>
