@@ -349,3 +349,24 @@ export const fetchShow = async (id: string) => {
   }
   return result
 }
+
+export const updateUser = async (user: User) => {
+  let result: { code: number } | null = null
+
+  try {
+    await axios.put(`${process.env.VUE_APP_API_HOST}/Users/updateuser`, user, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 200) {
+        result = {
+          code: response.status,
+        }
+      }
+    })
+  } catch (error: any) {
+    result = {
+      code: error.response.status,
+    }
+  }
+  return result
+}

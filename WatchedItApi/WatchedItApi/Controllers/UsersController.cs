@@ -69,5 +69,41 @@ namespace WatchedItApi.Controllers
             }
             return BadRequest("User already exists");
         }
+
+        [HttpPut("updateuser")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> updateUser(UserDto dto)
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
+            if (user != null)
+            {
+                if (dto.Name != null && dto.Email != null)
+                {
+                    _context.Entry(user).State = EntityState.Modified;
+
+                    User? newInfo = new User(dto);
+                    if (dto.Password != null)
+                    {
+                        newInfo.encrypt();
+                    }
+                    else
+                    {
+                        newInfo.keepOldInfo(user.Salt, user.Password);
+                    }
+
+                    user.Name = newInfo.Name;
+                    user.Email = newInfo.Email;
+                    user.Phone = newInfo.Phone;
+                    user.Password = newInfo.Password;
+                    user.Salt = newInfo.Salt;
+
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                return BadRequest("Information not complete");
+            }
+            return BadRequest("Not Found");   
+        }
     }
 }
