@@ -10,10 +10,10 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
         </div>
 
         <div class="card-container">
-            <div class="card" v-for="movie in trendingMovieList" :key="movie.id">
+            <div class="card" v-for="movie in trendingMovieList" :key="movie.id ">
                 <router-link :to="{name:'details',  params: { type: 'movie', id: movie.id }}">
                     <div class="movie-image-container">
-                        <img v-if="movie.poster_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.backdrop_path">
+                        <img v-if="movie.poster_path" class="movie-image"  :src="'https://image.tmdb.org/t/p/w1280' + movie.poster_path">
                         <img v-else class="movie-image" src="../assets/stockBackground.png">
                     </div>
                     <div class="info-box">
@@ -33,7 +33,7 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
             <div class="card" v-for="show in trendingShowList" :key="show.id">
                 <router-link :to="{name:'details',  params: { type: 'show', id: show.id }}">
                     <div class="movie-image-container">
-                        <img v-if="show.poster_path" class="movie-image" :src="'https://image.tmdb.org/t/p/w1280' + show.backdrop_path">
+                        <img v-if="show.poster_path" class="movie-image" :src="'https://image.tmdb.org/t/p/w1280' + show.poster_path">
                         <img v-else class="movie-image" src="../assets/stockBackground.png">
                     </div>
                     <div class="info-box">
