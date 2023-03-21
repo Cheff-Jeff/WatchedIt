@@ -78,26 +78,30 @@ namespace WatchedItApi.Controllers
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
             if (user != null)
             {
-                _context.Entry(user).State = EntityState.Modified;
-
-                User? newInfo = new User(dto);
-                if (dto.Password != null)
+                if (dto.Name != null && dto.Email != null)
                 {
-                    newInfo.encrypt();
-                }
-                else
-                {
-                    newInfo.keepOldInfo(user.Salt, user.Password);
-                }
-                
-                user.Name = newInfo.Name;
-                user.Email = newInfo.Email;
-                user.Phone = newInfo.Phone;
-                user.Password = newInfo.Password;
-                user.Salt = newInfo.Salt;
+                    _context.Entry(user).State = EntityState.Modified;
 
-                await _context.SaveChangesAsync();
-                return NoContent();
+                    User? newInfo = new User(dto);
+                    if (dto.Password != null)
+                    {
+                        newInfo.encrypt();
+                    }
+                    else
+                    {
+                        newInfo.keepOldInfo(user.Salt, user.Password);
+                    }
+
+                    user.Name = newInfo.Name;
+                    user.Email = newInfo.Email;
+                    user.Phone = newInfo.Phone;
+                    user.Password = newInfo.Password;
+                    user.Salt = newInfo.Salt;
+
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                return BadRequest("Information not complete");
             }
             return BadRequest("Not Found");   
         }
