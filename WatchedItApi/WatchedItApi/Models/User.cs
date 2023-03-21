@@ -8,6 +8,7 @@
         public string Phone { get; set; } = "";
         public string Password { get; set; } = "";
         public string Salt { get; set; } = "";
+        public List<Friend>? Friends { get; set; }
 
         public ICollection<MovieList>? MovieLists { get; set; }
 

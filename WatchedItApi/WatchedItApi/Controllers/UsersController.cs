@@ -69,5 +69,43 @@ namespace WatchedItApi.Controllers
             }
             return BadRequest("User already exists");
         }
+
+        [HttpPost]
+        [Route("friend")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddFriend(UserDto dto)
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == dto.Phone);
+            if (user != null && dto.Id != null)
+            {
+                Friend friend = new Friend(){ Id = 0, Name = user.Name, MovieList = null, phoneNumber = user.Phone, UserId = (int)dto.Id };
+                await _context.Friends.AddAsync(friend);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetFriends), new { id = friend.Id }, friend);
+
+            }
+            return BadRequest("Your friend does not have an account.");
+        }
+
+        [HttpGet]
+        [Route("friend")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFriends(int userId)
+        {
+            if (!String.IsNullOrEmpty(userId.ToString()))
+            {
+                IQueryable<Friend> friends = _context.Friends;
+                friends = friends
+                    .Where(u => u.UserId == userId);
+
+                return Ok(await friends.ToArrayAsync());
+            }
+            return BadRequest("User not found");
+            //return await _context.Friends.Where(u => u.UserId == dto.Id).ToListAsync();
+            //IQueryable<Friend> friends = _context.Friends;
+            //friends = friends.Where(f => f.u == dto.Id);
+            //return Ok(await friends.ToArrayAsync());
+        }
     }
 }
