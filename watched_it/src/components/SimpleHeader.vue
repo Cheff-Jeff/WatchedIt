@@ -24,6 +24,19 @@ const props = defineProps({
             <h1>{{ props.currentTitle }}</h1>
         </div>
 
+        <input class="searchbox" type="text" placeholder="movie/show" v-model="searchPhrase" @keyup="getSearchedItems"
+            @blur="getSearchedItems">
+
+        <div class="result-container">
+            <ul>
+                <li v-for="result in searchResult" :key="result.id">
+                    <router-link :to="{ name: 'details', params: { type: `${result.media_type}`, id: result.id } }">
+                            {{ result.title }}
+                    </router-link>
+                </li>
+            </ul>
+        </div>
+
         <div class="icon-right">
             <svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -32,11 +45,13 @@ const props = defineProps({
             </svg>
         </div>
     </div>
+
     <div :class="menuToggle" class="menu-wrapper" @click="closeMenu">
         <div class="menu" @click.stop>
             <div class="close-wrapper" @click="closeMenu">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+                    <path
+                        d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z" />
                 </svg>
             </div>
             <div class="inner-wrap">
@@ -46,12 +61,12 @@ const props = defineProps({
                 <nav>
                     <ul>
                         <li>
-                            <router-link :to="{name: 'account'}">
+                            <router-link :to="{ name: 'account' }">
                                 Account
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{name: 'trending'}">
+                            <router-link :to="{ name: 'trending' }">
                                 Trending
                             </router-link>
                         </li>
@@ -73,18 +88,27 @@ const props = defineProps({
 </template>
 
 <script lang="ts">
+import { searchMovies } from '@/assets/javascript/api';
 import { defineComponent } from 'vue';
 export default defineComponent({
     data() {
         return {
-            menuToggle: ''
+            menuToggle: '',
+            searchPhrase: '',
+
+            searchResult: [] as any,
         }
     },
     methods: {
-        closeMenu(){
+        async getSearchedItems() {
+            if (this.searchPhrase.length >= 1) {
+                this.searchResult = await searchMovies(this.searchPhrase);
+            }
+        },
+        closeMenu() {
             this.menuToggle = ''
         },
-        openMenu(){
+        openMenu() {
             this.menuToggle = 'open'
         }
     },

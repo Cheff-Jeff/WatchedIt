@@ -35,3 +35,9 @@ export interface titleDetails {
   first_air_date: string,
   director: string,
 }
+
+export interface searchMovieShow {
+  id: number,
+  title: string,
+  media_type: string,
+}
