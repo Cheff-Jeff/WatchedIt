@@ -13,13 +13,13 @@
   }
 
   onMounted(() => { 
-  const buttons = document.getElementsByClassName('mdc-button');
-  if(buttons){
-    for(let btn of buttons){
-      const buttonRipple = new MDCRipple(btn);
+    const buttons = document.getElementsByClassName('mdc-button');
+    if(buttons){
+      for(let btn of buttons){
+        const buttonRipple = new MDCRipple(btn);
+      }
     }
-  }
-});
+  });
 </script>
 
 <template>
@@ -37,6 +37,7 @@
     </section>
     <section class="friends" v-if="friends">
       <div class="container">
+        <p v-if="err">{{ err }}</p>
         <div class="user-wrapper" v-for="friend in friends" :key="friend.id">
           <span class="profile" v-html="avatar(friend.name)"/>
           <div class="info">
@@ -50,7 +51,8 @@
           </div>
         </div>
       </div>
-      {{ con }}
+      {{ phone }}
+      {{ newPho }}
     </section>
     <section class="newFriend">
       <div class="container">
@@ -71,11 +73,15 @@ import { defineComponent } from 'vue'
 import { createAvatar } from '@dicebear/core';
 import { avataaars } from '@dicebear/collection';
 import {NavigatorWithContacts} from '@/assets/javascript/Models/Navigator';
+import { addFriend } from '@/assets/javascript/api';
+import { User } from '@/assets/javascript/Models/UserInterface';
 
 export default defineComponent({
   data() {
     return {
-      con: ''
+      err: '',
+      phone: '',
+      newPho: ''
     }
   },
   methods: {
@@ -104,11 +110,34 @@ export default defineComponent({
         try {
           const navigatorWithContacts = navigator as NavigatorWithContacts;
           const contact = await navigatorWithContacts.contacts.select(properties, options);
-          console.log(contact);
-          //phone number with spaties
-          this.con = contact[0]['tel'][0];
+          await this.newFriend(contact[0]['tel'][0])
         } catch (err) {
           console.error(err);
+        }
+      }
+    },
+    async newFriend(phoneNumber: string){
+      const id = localStorage.getItem('user')
+      let dto: User = {
+        id: Number(id),
+        name: null,
+        email: null,
+        phone: phoneNumber,
+        password: null,
+      }
+      this.phone = phoneNumber,
+      this.newPho = phoneNumber.replace(/\s+/g, "")
+      const respone = await addFriend(dto)
+      if(respone.value?.code == 201){
+        this.$router.go(0)
+      }else{
+        dto.phone = phoneNumber.replace(/\s+/g, "")
+        const res = await addFriend(dto)
+        if(res.value?.code == 201){
+          this.$router.go(0)
+        }
+        else{
+          this.err = 'Your friend does not yet have an account.'
         }
       }
     }

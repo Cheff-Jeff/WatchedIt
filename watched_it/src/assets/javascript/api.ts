@@ -156,6 +156,28 @@ export const fetchFriends = async (id: string) => {
   return result
 }
 
+export const addFriend = async (dto: User) => {
+  const result: Ref<{ code: number, data: Friend[] } | null> = ref(null)
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Users/friend`, dto, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 201) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
 export const getExternTrendingMovies = async () => {
   const result: Ref<TrendingMovie[] | null> = ref(null)
   const movies: TrendingMovie[] = []

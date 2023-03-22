@@ -79,7 +79,7 @@ namespace WatchedItApi.Controllers
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == dto.Phone);
             if (user != null && dto.Id != null)
             {
-                Friend friend = new Friend(){ Id = 0, Name = user.Name, MovieList = null, phoneNumber = user.Phone, UserId = (int)dto.Id };
+                Friend friend = new Friend() { Id = 0, Name = user.Name, MovieList = null, phoneNumber = user.Phone, UserId = (int)dto.Id };
                 await _context.Friends.AddAsync(friend);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction(nameof(GetFriends), new { id = friend.Id }, friend);
@@ -102,10 +102,20 @@ namespace WatchedItApi.Controllers
                 return Ok(await friends.ToArrayAsync());
             }
             return BadRequest("User not found");
-            //return await _context.Friends.Where(u => u.UserId == dto.Id).ToListAsync();
-            //IQueryable<Friend> friends = _context.Friends;
-            //friends = friends.Where(f => f.u == dto.Id);
-            //return Ok(await friends.ToArrayAsync());
+        }
+
+        [HttpDelete]
+        [Route("friend")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteFriend(int id) 
+        {
+            Friend? friend  = await _context.Friends.FindAsync(id);
+            if (friend == null) return BadRequest();
+
+            _context.Friends.Remove(friend);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
