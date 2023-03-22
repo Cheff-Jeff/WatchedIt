@@ -27,25 +27,14 @@ const props = defineProps({
         <input class="searchbox" type="text" placeholder="movie/show" v-model="searchPhrase" @keyup="getSearchedItems"
             @blur="getSearchedItems">
 
-        <div class="item-container">
-            <div class="item">
-                <p>test</p>
-            </div>
-            <div class="item">
-                <p>test</p>
-            </div>
-            <div class="item">
-                <p>test</p>
-            </div>
-            <div class="item">
-                <p>test</p>
-            </div>
-            <div class="item">
-                <p>test</p>
-            </div>
-            <div class="item">
-                <p>test</p>
-            </div>>
+        <div class="result-container">
+            <ul>
+                <li v-for="result in searchResult" :key="result.id">
+                    <router-link :to="{ name: 'details', params: { type: `${result.media_type}`, id: result.id } }">
+                            {{ result.title }}
+                    </router-link>
+                </li>
+            </ul>
         </div>
 
         <div class="icon-right">
@@ -112,9 +101,8 @@ export default defineComponent({
     },
     methods: {
         async getSearchedItems() {
-            if (this.searchPhrase.length > 0) {
+            if (this.searchPhrase.length >= 1) {
                 this.searchResult = await searchMovies(this.searchPhrase);
-                console.log(this.searchResult)
             }
         },
         closeMenu() {

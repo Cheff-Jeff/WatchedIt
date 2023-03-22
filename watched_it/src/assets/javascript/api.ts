@@ -381,10 +381,25 @@ export const searchMovies = async (searchPhrase: string) => {
       response => {
         if (response.status == 200) {
             for (let i = 0; i < response.data.results.length; i++) {
+              
+              let title: string;
+              if(response.data.results[i]["name"]){
+                title = response.data.results[i]["name"]
+              } else {
+                title = response.data.results[i]["title"]
+              }
+
+              let media_type: string;
+              if(response.data.results[i]["media_type"] == 'tv'){
+                media_type = 'show'
+              } else {
+                media_type = response.data.results[i]["media_type"]
+              }
+
               const searchmovieshow: searchMovieShow = {
                 id: response.data.results[i]["id"],
-                title: response.data.results[i]["name"],
-                media_type: response.data.results[i]["media_type"],
+                title: title,
+                media_type: media_type,
               }
               moviesshows.push(searchmovieshow)
             }

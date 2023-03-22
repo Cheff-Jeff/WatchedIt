@@ -40,9 +40,9 @@
     }
 
     .searchbox {
-        margin-right: 5px;
-        height: 30px;
-        min-width: 30px;
+        margin-right: 8px;
+        height: 35px;
+        width: 200px;
         border: 1px solid $boxBackground;
         border-radius: 10px;
         background: $gray;
@@ -54,32 +54,47 @@
         }
     }
 
-    .item-container {
+    .result-container {
         z-index: 10;
         position: absolute;
         display: flex;
         flex-direction: column;
-        margin-top: 115px;
-        width: 100%;
-        height: 100%;
+        margin: 240px 0 0 0;
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 98%;   
+        max-height: 180px;
+        overflow: hidden;
+        
         border-radius: 5px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        
 
-        .item {
-            height: fit-content;
-            width: 100%;
-            background: $outline;
-            padding-right: 5px;
-            padding-left: 5px;
+        ul {
+            margin: 0;
+            padding: 0;
+            background: $white;
+            color: $black;
+            border-radius: 5px;
+            overflow-y: scroll;
 
-            p {
-                border-radius: 5px;
-                margin-bottom: 5px;
-                background: $gray;
-                color: $black;
-                font-size: $light;
+            li {
+                list-style-type: none;
+                padding: 4px 8px;
 
-                &:hover{
-                    background: $boxBackground;
+                transition: all .5s linear;
+                cursor: pointer;
+
+                &:hover {
+                    background: #ececec
+                }
+
+                a {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    text-decoration: none !important;
+                    color: $black;
                 }
             }
         }
