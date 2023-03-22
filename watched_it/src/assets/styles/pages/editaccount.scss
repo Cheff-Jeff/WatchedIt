@@ -1,0 +1,63 @@
+@import "../fonts/roboto.scss";
+
+section.editaccount {
+    min-height: 100vh;
+    background: $background;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+
+    .input-wrapper {
+        margin-bottom: 15px;
+
+        .mdc-text-field {
+            width: 100%;
+        }
+
+        p {
+            color: $black;
+            font-weight: $regular;
+            font-size: 11px;
+            letter-spacing: 0;
+        }
+    }
+
+    .container{
+        margin-top: -250px;
+    }
+
+    .btn-container {
+        margin-top: 20px;
+        width: 100%;
+
+        .btn-wrap {
+            width: 100%;
+            margin-left: 15px;
+            margin-right: 15px;
+
+            button {
+                width: 100%;
+
+                span {
+                    text-transform: none;
+                }
+            }
+        }
+    }
+
+
+
+
+
+    .link-wrapper {
+        text-align: center;
+
+        a {
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-decoration: none !important;
+            color: $black;
+        }
+    }
+}

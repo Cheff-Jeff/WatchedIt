@@ -39,11 +39,13 @@ defineExpose({user})
           </div>
           <div class="col-4">
             <div class="mdc-touch-target-wrapper btn-wrap white">
+              <router-link :to="{name:'editaccount'}">
               <button class="mdc-button mdc-button--raised">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__touch"></span>
                 <span class="mdc-button__label">Edit account</span>
               </button>
+            </router-link>
             </div>
             <div class="mdc-touch-target-wrapper btn-wrap">
               <button class="mdc-button mdc-button--raised" @click="download">

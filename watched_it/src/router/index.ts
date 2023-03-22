@@ -39,6 +39,21 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AccountView.vue')
   },
   {
+    path: '/editaccount',
+    name: 'editaccount',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/EditAccountView.vue')
+  },
+  {
     path: '/title/:type/:id',
     name: 'details',
     beforeEnter: async (to,from,next) => {
