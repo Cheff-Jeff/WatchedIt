@@ -11,3 +11,9 @@ export interface Friend {
   name: string | null,
   phone: string | null,
 }
+
+export interface favoriteDto{
+  id: number | undefined,
+  userId: number | undefined,
+  movieId: number | undefined
+}
