@@ -179,7 +179,7 @@ namespace WatchedItApi.Controllers
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.userId);
             if (user != null && dto.movieId != null)
             {
-                Favorites favorite = new Favorites() { Id = 0, userId = user.Id, movieId = (int)dto.movieId };
+                Favorites favorite = new Favorites() { Id = 0, userId = user.Id, movieId = (int)dto.movieId, movie = (bool)dto.movie };
                 await _context.Favorites.AddAsync(favorite);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction(nameof(GetFriends), new { id = user.Id }, user);

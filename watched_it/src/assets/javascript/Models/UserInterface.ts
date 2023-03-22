@@ -15,5 +15,6 @@ export interface Friend {
 export interface favoriteDto{
   id: number | undefined,
   userId: number | undefined,
-  movieId: number | undefined
+  movieId: number | undefined,
+  movie: boolean | undefined
 }
