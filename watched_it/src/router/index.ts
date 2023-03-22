@@ -95,6 +95,21 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('../views/TrendingView.vue')
   },
+  {
+    path: '/listview',
+    name: 'listview',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/ListView.vue')
+  },
 ]
 
 const router = createRouter({
