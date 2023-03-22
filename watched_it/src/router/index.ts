@@ -96,8 +96,8 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/TrendingView.vue')
   },
   {
-    path: '/listview',
-    name: 'listview',
+    path: '/watchlist',
+    name: 'watchlist',
     beforeEnter: (to,from,next) => {
       if(!CheckLogin()){
         next({ name: 'login' })

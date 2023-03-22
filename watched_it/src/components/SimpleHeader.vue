@@ -71,7 +71,7 @@ const props = defineProps({
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/test">
+                            <router-link :to="{ name: 'watchlist' }">
                                 Watch list
                             </router-link>
                         </li>
