@@ -44,15 +44,13 @@
             <p>{{ friend.name }}</p>
             <span>{{ friend.phone }}</span>
           </div>
-          <div class="icon-wrap">
+          <div class="icon-wrap" @click="togglePopup(friend.id?.toString(), friend.name)">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/>
             </svg>
           </div>
         </div>
       </div>
-      {{ phone }}
-      {{ newPho }}
     </section>
     <section class="newFriend">
       <div class="container">
@@ -66,6 +64,33 @@
       </div>
     </section>
   </div>
+  <div class="modal-wrap" :class="modalToggle" @click="togglePopup('','')">
+    <div class="modal-delete" @click.stop>
+      <div class="head">
+        <h5>Delete friend</h5>
+      </div>
+      <div class="body">
+        <p>You are about to delete friend: {{ deleteName }}</p>
+        <p>Are you sure?</p>
+      </div>
+      <div class="buttons">
+        <div class="mdc-touch-target-wrapper btn-wrap white">
+          <button class="mdc-button mdc-button--raised" @click="togglePopup('','')">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__touch"></span>
+            <span class="mdc-button__label">Cancel</span>
+          </button>
+        </div>
+        <div class="mdc-touch-target-wrapper btn-wrap red">
+          <button class="mdc-button mdc-button--raised" @click="deleteFriendShip">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__touch"></span>
+            <span class="mdc-button__label">Delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -73,15 +98,16 @@ import { defineComponent } from 'vue'
 import { createAvatar } from '@dicebear/core';
 import { avataaars } from '@dicebear/collection';
 import {NavigatorWithContacts} from '@/assets/javascript/Models/Navigator';
-import { addFriend } from '@/assets/javascript/api';
+import { addFriend, deleteFriend } from '@/assets/javascript/api';
 import { User } from '@/assets/javascript/Models/UserInterface';
 
 export default defineComponent({
   data() {
     return {
       err: '',
-      phone: '',
-      newPho: ''
+      deleteId: '',
+      deleteName: 'Jeffrey Nijkamp',
+      modalToggle: '',
     }
   },
   methods: {
@@ -125,8 +151,6 @@ export default defineComponent({
         phone: phoneNumber,
         password: null,
       }
-      this.phone = phoneNumber,
-      this.newPho = phoneNumber.replace(/\s+/g, "")
       const respone = await addFriend(dto)
       if(respone.value?.code == 201){
         this.$router.go(0)
@@ -138,6 +162,33 @@ export default defineComponent({
         }
         else{
           this.err = 'Your friend does not yet have an account.'
+        }
+      }
+    },
+    togglePopup(id: string | undefined, name: string | null){
+      console.log(id)
+      console.log(name)
+      if(!this.modalToggle && this.modalToggle == ''){
+        if(id && name){
+          this.deleteId = id
+          this.deleteName = name
+          this.modalToggle = 'open'
+        }
+      }
+      else{
+        this.deleteId = ''
+        this.deleteName = ''
+        this.modalToggle = ''
+      }
+    },
+    async deleteFriendShip(){
+      if(this.deleteId){
+        const response = await deleteFriend(this.deleteId)
+        if(response.value?.code == 204){
+          this.$router.go(0)
+        }
+        else{
+          this.err = 'Your friend was not deleted.'
         }
       }
     }

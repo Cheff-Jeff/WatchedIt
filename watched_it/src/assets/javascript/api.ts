@@ -178,6 +178,28 @@ export const addFriend = async (dto: User) => {
   return result
 }
 
+export const deleteFriend = async (id:string) => {
+  const result: Ref<{ code: number, data: any } | null> = ref(null)
+  try {
+    await axios.delete(`${process.env.VUE_APP_API_HOST}/Users/friend?id=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 204) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
 export const getExternTrendingMovies = async () => {
   const result: Ref<TrendingMovie[] | null> = ref(null)
   const movies: TrendingMovie[] = []
@@ -413,7 +435,7 @@ export const updateUser = async (user: User) => {
     await axios.put(`${process.env.VUE_APP_API_HOST}/Users/updateuser`, user, {
       headers: { 'Content-type': 'application/json' }
     }).then((response) => {
-      if (response.status == 200) {
+      if (response.status == 204) {
         result = {
           code: response.status,
         }

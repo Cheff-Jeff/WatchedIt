@@ -274,7 +274,7 @@ export default defineComponent({
     },
     checkPassword(){
       this.passwordError = this.password.length == 0 ? errPassEmp() : (
-        this.password.length == 10 ? '' : errPass()
+        this.password.length >= 10 ? '' : errPass()
       )
       if(this.passwordError){
         this.classPassError = 'field-error'
