@@ -19,5 +19,7 @@ namespace WatchedItApi.Data
         public DbSet<Friend> Friends { get; set; }
 
         public DbSet<Movie> Movies { get; set; }
+
+        public DbSet<Favorites> Favorites { get; set; }
     }
 }
