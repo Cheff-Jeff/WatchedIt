@@ -6,6 +6,16 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'login',
+    beforeEnter: (to,from,next) => {
+      if(CheckLogin()){
+        next({ name: 'account' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
     component: LoginView
   },
   {
@@ -94,6 +104,21 @@ const routes: Array<RouteRecordRaw> = [
       }
     },
     component: () => import('../views/TrendingView.vue')
+  },
+  {
+    path: '/friends',
+    name: 'friends',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/FriensView.vue')
   },
 ]
 

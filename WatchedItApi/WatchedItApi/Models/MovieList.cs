@@ -11,7 +11,7 @@ namespace WatchedItApi.Models
 
         public string title { get; set; } = String.Empty;
 
-        public int userId { get; set; }
+        public int UserId { get; set; }
 
         public ICollection<Movie>? Movies { get; set; }
 

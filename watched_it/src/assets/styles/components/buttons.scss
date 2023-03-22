@@ -24,6 +24,12 @@
       color: $black;
     }
   }
+  &.red{
+    button{
+      background-color: $error !important;
+      color: $white;
+    }
+  }
   button{
     width: 100%;
     span{

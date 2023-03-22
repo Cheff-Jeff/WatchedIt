@@ -14,7 +14,7 @@ namespace WatchedItApi.Controllers
 
         [HttpGet]
         public async Task<IEnumerable<MovieList>> GetAllByUserId(int id)
-            => await _context.MovieLists.Include(m => m.Movies).Where(u => u.userId == id).ToListAsync();
+            => await _context.MovieLists.Include(m => m.Movies).Where(u => u.UserId == id).ToListAsync();
 
 
         [HttpGet("{id}")]
