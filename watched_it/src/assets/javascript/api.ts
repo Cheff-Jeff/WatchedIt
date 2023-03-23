@@ -203,7 +203,7 @@ export const deleteFriend = async (id:string) => {
 export const fetchFavorites = async (id:string) => {
   const result: Ref<{ code: number, data: favoriteDto[] } | null> = ref(null)
   try {
-    await axios.get(`${process.env.VUE_APP_API_HOST}/Users/favorites?id=${id}`, {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Users/favorites?userId=${id}`, {
       headers: { 'Content-type': 'application/json' }
     }).then((response) => {
       if (response.status == 200) {

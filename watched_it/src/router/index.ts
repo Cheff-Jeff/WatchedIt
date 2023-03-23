@@ -120,6 +120,21 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('../views/FriensView.vue')
   },
+  {
+    path: '/favorites',
+    name: 'favorites',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/FavoriteView.vue')
+  }
 ]
 
 const router = createRouter({

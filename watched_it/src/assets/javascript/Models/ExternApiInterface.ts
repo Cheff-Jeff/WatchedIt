@@ -41,3 +41,10 @@ export interface searchMovieShow {
   title: string,
   media_type: string,
 }
+
+export interface favorites {
+  id:  number,
+  name: string,
+  poster: string,
+  isMovie: boolean
+}
