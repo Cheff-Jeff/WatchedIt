@@ -10,7 +10,6 @@ namespace WatchedItApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
         }
 
         public DbSet<User> Users { get; set; }

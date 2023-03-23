@@ -75,7 +75,7 @@ defineExpose({user})
           </div>
           <div class="col-5">
             <div class="link-wrapper">
-              <router-link :to="{name: 'signUp'}" class="link">
+              <router-link :to="{name: 'friends'}" class="link">
                 Friends
               </router-link>
             </div>

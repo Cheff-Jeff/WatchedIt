@@ -26,7 +26,7 @@ onMounted(() => {
             <img src="@/assets/logo.png" alt="logo">
           </div>
           <div class="title-wrap">
-            <h1>Sign in</h1>
+            <h1>Sign up</h1>
           </div>
         </div>
         <form @submit.prevent="submit">
@@ -157,7 +157,7 @@ onMounted(() => {
               <button class="mdc-button mdc-button--raised">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__touch"></span>
-                <span class="mdc-button__label">Sign in</span>
+                <span class="mdc-button__label">Sign up</span>
               </button>
             </div>
           </div>
@@ -274,7 +274,7 @@ export default defineComponent({
     },
     checkPassword(){
       this.passwordError = this.password.length == 0 ? errPassEmp() : (
-        this.password.length == 10 ? '' : errPass()
+        this.password.length >= 10 ? '' : errPass()
       )
       if(this.passwordError){
         this.classPassError = 'field-error'

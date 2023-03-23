@@ -183,11 +183,10 @@ export default defineComponent({
                 const result = await updateUser(user)
 
                 if (result?.code == 204) {
-                    //melding geven
+                    this.$router.push('account')
                 }
                 else {
                     console.log(result)
-                    //melding geven
                 }
             }
         },
@@ -223,8 +222,8 @@ export default defineComponent({
             }
         },
         checkPassword() {
-            (
-                this.password.length == 10 ? '' : errPass()
+            this.passwordError = this.password.length == 0 ? '' : (
+                this.password.length >= 10 ? '' : errPass()
             )
             if (this.passwordError) {
                 this.classPassError = 'field-error'

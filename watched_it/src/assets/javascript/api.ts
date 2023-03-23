@@ -1,7 +1,7 @@
 import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
-import { User } from './Models/UserInterface';
+import { Friend, User } from './Models/UserInterface';
 import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
@@ -110,6 +110,84 @@ export const fetchUser = async (id: string) => {
         result.value = {
           code: response.status,
           data: user
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const fetchFriends = async (id: string) => {
+  const result: Ref<{ code: number, data: Friend[] } | null> = ref(null)
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Users/friend?userId=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 200) {
+        const friends: Friend[] = []
+        
+        for(let i = 0; i < response.data.length; i++){
+          const user: Friend = {
+            id: response.data[i]['id'],
+            name: response.data[i]['name'],
+            phone: response.data[i]['phoneNumber'],
+          }
+          friends.push(user);
+        }
+        
+        result.value = {
+          code: response.status,
+          data: friends
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+
+  return result
+}
+
+export const addFriend = async (dto: User) => {
+  const result: Ref<{ code: number, data: Friend[] } | null> = ref(null)
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Users/friend`, dto, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 201) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const deleteFriend = async (id:string) => {
+  const result: Ref<{ code: number, data: any } | null> = ref(null)
+  try {
+    await axios.delete(`${process.env.VUE_APP_API_HOST}/Users/friend?id=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 204) {
+        result.value = {
+          code: response.status,
+          data: response.data
         }
       }
     })
@@ -357,7 +435,7 @@ export const updateUser = async (user: User) => {
     await axios.put(`${process.env.VUE_APP_API_HOST}/Users/updateuser`, user, {
       headers: { 'Content-type': 'application/json' }
     }).then((response) => {
-      if (response.status == 200) {
+      if (response.status == 204) {
         result = {
           code: response.status,
         }
