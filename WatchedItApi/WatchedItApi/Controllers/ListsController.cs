@@ -14,7 +14,7 @@ namespace WatchedItApi.Controllers
 
         [HttpGet]
         public async Task<IEnumerable<MovieList>> GetAllByUserId(int id)
-            => await _context.MovieLists.Include(m => m.Movies).Where(u => u.UserId == id).ToListAsync();
+            => await _context.MovieLists.Include(m => m.Movies).Include(f => f.Friends).Where(u => u.UserId == id).ToListAsync();
 
 
         [HttpGet("{id}")]
@@ -22,7 +22,7 @@ namespace WatchedItApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetMovieListById(int id)
         {
-            MovieList? movielist = await _context.MovieLists.Include(m => m.Movies).FirstOrDefaultAsync(l => l.id == id);
+            MovieList? movielist = await _context.MovieLists.Include(m => m.Movies).Include(f => f.Friends).FirstOrDefaultAsync(l => l.id == id);
 
             return movielist == null ? NotFound() : Ok(movielist);
         }

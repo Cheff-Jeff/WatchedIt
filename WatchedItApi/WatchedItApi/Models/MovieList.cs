@@ -13,6 +13,10 @@ namespace WatchedItApi.Models
 
         public int UserId { get; set; }
 
+        public string voteDeadLine { get; set; } = String.Empty;
+
+        public string watchDateTime { get; set; } = String.Empty;
+
         public ICollection<Movie>? Movies { get; set; }
 
         public ICollection<Friend>? Friends { get; set; }
