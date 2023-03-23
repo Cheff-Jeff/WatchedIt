@@ -2,7 +2,7 @@ import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
 import { Friend, User } from './Models/UserInterface';
-import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow } from "./Models/ExternApiInterface";
+import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
   const result: Ref<User[] | null> = ref(null)
@@ -489,4 +489,40 @@ export const searchMovies = async (searchPhrase: string) => {
     console.log("error", error)
   }
   return result
+}
+
+export const getCollectionList = async (id: number) => {
+  const result: Ref<collectionList[] | null> = ref(null)
+  const collectionLists: collectionList[] = []
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Lists?id=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        console.log(response.data[0]["movies"])
+        if (response.status == 200) {
+          for (let i = 0; i < response.data.length; i++) {
+
+            const collectionlist: collectionList = {
+              id: response.data[i]['id'],
+              title: response.data[i]['title'],
+              voteDeadLine: response.data[i]['voteDeadLine'],
+              watchDateTime: response.data[i]['watchDateTime'],
+              itemCount: response.data[i]["movies"].length,
+              movies: response.data[i]["movies"],
+              friends: response.data[i]["friends"]
+            }
+            
+            collectionLists.push(collectionlist)
+          }
+  
+          result.value = collectionLists
+        }
+      }
+    )
+  } catch (error: any) {
+    console.log("error", error)
+  } 
+  console.log(result)
+  return result;
 }

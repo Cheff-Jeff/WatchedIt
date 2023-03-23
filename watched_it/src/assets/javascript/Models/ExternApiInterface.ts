@@ -41,3 +41,13 @@ export interface searchMovieShow {
   title: string,
   media_type: string,
 }
+
+export interface collectionList {
+  id: number,
+  title: string,
+  voteDeadLine: string,
+  watchDateTime: string,
+  itemCount: number,
+  movies: [],
+  friends: [],
+}

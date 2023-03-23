@@ -2,10 +2,12 @@
 {
     public class MovieListDto
     {
-        public int movieListId { get; set; }
+        public int MovieListId { get; set; }
+
+        public int movieId { get; set; }
 
         public int externId { get; set; }
 
-        public int friendId { get; set; }
+        public string phoneNumber { get; set; } = string.Empty;
     }
 }

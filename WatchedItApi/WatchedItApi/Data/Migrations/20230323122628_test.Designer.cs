@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchedItApi.Data;
 
@@ -11,9 +12,11 @@ using WatchedItApi.Data;
 namespace WatchedItApi.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230323122628_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace WatchedItApi.Data.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("MovieListUser", (string)null);
+                    b.ToTable("MovieListUser");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.Friend", b =>
@@ -60,7 +63,7 @@ namespace WatchedItApi.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Friends", (string)null);
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.Movie", b =>
@@ -81,7 +84,7 @@ namespace WatchedItApi.Data.Migrations
 
                     b.HasIndex("MovieListId");
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.MovieList", b =>
@@ -109,7 +112,7 @@ namespace WatchedItApi.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MovieLists", (string)null);
+                    b.ToTable("MovieLists");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.User", b =>
@@ -142,7 +145,7 @@ namespace WatchedItApi.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MovieListUser", b =>

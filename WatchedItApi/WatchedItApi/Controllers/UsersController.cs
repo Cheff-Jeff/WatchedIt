@@ -79,7 +79,7 @@ namespace WatchedItApi.Controllers
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == dto.Phone);
             if (user != null && dto.Id != null)
             {
-                Friend friend = new Friend() { Id = 0, Name = user.Name, MovieList = null, phoneNumber = user.Phone, UserId = (int)dto.Id };
+                Friend friend = new Friend() { Id = 0, Name = user.Name, phoneNumber = user.Phone, UserId = (int)dto.Id };
                 await _context.Friends.AddAsync(friend);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction(nameof(GetFriends), new { id = friend.Id }, friend);

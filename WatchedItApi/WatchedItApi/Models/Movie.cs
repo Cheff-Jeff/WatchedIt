@@ -1,4 +1,6 @@
-﻿namespace WatchedItApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WatchedItApi.Models
 {
     public class Movie
     {
@@ -6,6 +8,7 @@
 
         public int ExternId { get; set; }
 
-        public int movieListId { get; set; }
+        
+        public int MovieListId { get; set; }
     }
 }

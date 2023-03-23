@@ -13,8 +13,13 @@ namespace WatchedItApi.Controllers
 
 
         [HttpGet]
-        public async Task<IEnumerable<MovieList>> GetAllByUserId(int id)
-            => await _context.MovieLists.Include(m => m.Movies).Include(f => f.Friends).Where(u => u.UserId == id).ToListAsync();
+        public async Task<IEnumerable<User>> GetAllMovieListsByUserId(int id)
+            => await _context.Users
+            .Include(l => l.MovieList)
+            .ThenInclude(m => m.Movies)
+            .Include(l => l.MovieList)
+            .ThenInclude(u => u.Users)
+            .Where(u => u.Id == id).ToListAsync();
 
 
         [HttpGet("{id}")]
@@ -22,7 +27,10 @@ namespace WatchedItApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetMovieListById(int id)
         {
-            MovieList? movielist = await _context.MovieLists.Include(m => m.Movies).Include(f => f.Friends).FirstOrDefaultAsync(l => l.id == id);
+            MovieList? movielist = await _context.MovieLists
+                .Include(m => m.Movies)
+                .Include(u => u.Users)
+                .FirstOrDefaultAsync(l => l.Id == id);
 
             return movielist == null ? NotFound() : Ok(movielist);
         }
@@ -34,10 +42,27 @@ namespace WatchedItApi.Controllers
         {
             if (movielist != null)
             {
-                await _context.MovieLists.AddAsync(movielist);
-                await _context.SaveChangesAsync();
+                User? user = await _context.Users
+                    .FindAsync(movielist.UserId);
 
-                return Ok("created");
+                if(user != null)
+                {
+                    await _context.MovieLists.AddAsync(movielist);
+                    await _context.SaveChangesAsync();
+
+                    MovieListDto dto = new MovieListDto
+                    {
+                        MovieListId = movielist.Id,
+                        phoneNumber = user.Phone,
+                    };
+
+                    await AddUserToList(dto);
+                    await _context.SaveChangesAsync();
+
+                    return Ok("created");
+                }
+                
+                return BadRequest("user not found");
             }
 
             return BadRequest("no info found");
@@ -48,12 +73,14 @@ namespace WatchedItApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddMovieToList([FromForm] MovieListDto request)
         {
-            var mymovielist = await _context.MovieLists.FindAsync(request.movieListId);
+            var mymovielist = await _context.MovieLists
+                .FindAsync(request.MovieListId);
+
             if (mymovielist != null)
             {
                 var newMovie = new Movie
                 {
-                    movieListId = request.movieListId,
+                    MovieListId = request.MovieListId,
                     ExternId = request.externId
                 };
 
@@ -67,11 +94,13 @@ namespace WatchedItApi.Controllers
         }
 
         [HttpDelete("removemoviefromlist")]
-        [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RemoveMovieFromList(int id)
+        public async Task<IActionResult> RemoveMovieFromList(int movieId)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies
+                .FindAsync(movieId);
+
             if (movie != null)
             {
                 _context.Movies.Remove(movie);
@@ -86,11 +115,23 @@ namespace WatchedItApi.Controllers
         [HttpDelete("removemovielist")]
         [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RemoveMovieList(int id)
+        public async Task<IActionResult> RemoveMovieList(int movielistid)
         {
-            var movielist = await _context.MovieLists.FindAsync(id);
+            var movielist = await _context.MovieLists
+                .Include(m => m.Movies)
+                .Include(u => u.Users)
+                .FirstOrDefaultAsync(l => l.Id == movielistid);
+
             if (movielist != null)
             {
+                if (movielist.Movies != null)
+                {
+                    foreach (var movie in movielist.Movies)
+                    {
+                        await RemoveMovieFromList(movie.Id);
+                    }
+                }
+
                 _context.MovieLists.Remove(movielist);
                 await _context.SaveChangesAsync();
 
@@ -98,6 +139,74 @@ namespace WatchedItApi.Controllers
             }
 
             return BadRequest("no info found");
+        }
+
+        [HttpPost("addusertolist")]
+        [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AddUserToList([FromForm] MovieListDto request)
+        {
+            MovieList? mymovielist = await _context.MovieLists
+                .Include(u => u.Users)
+                .FirstOrDefaultAsync(l => l.Id == request.MovieListId);
+
+            if (mymovielist != null)
+            {
+                User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
+
+                if (user != null)
+                {
+                    mymovielist.Users.Add(user);
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok("user added");
+                }
+
+                return BadRequest("user not found");
+            }
+
+            return BadRequest("no info found");
+        }
+
+        [HttpDelete("removeuserfromlist")]
+        [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RemoveUserFromList([FromForm] MovieListDto request)
+        {
+            MovieList? mymovielist = await _context.MovieLists
+                .Include(u => u.Users)
+                .FirstOrDefaultAsync(l => l.Id == request.MovieListId);
+
+            if (mymovielist != null)
+            {
+                User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
+
+                if (user != null)
+                {
+                    mymovielist.Users.Remove(user);
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok("user removed");
+                }
+
+                return BadRequest("user not found");
+            }
+
+            return BadRequest("no info found");
+        }
+
+        [HttpGet("test123")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetMovieListByUserId(int id)
+        {
+            User? user = await _context.Users
+                .Include(m => m.MovieList)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            return user == null ? NotFound() : Ok(user);
         }
     }
 }
