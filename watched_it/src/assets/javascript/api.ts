@@ -578,3 +578,39 @@ export const checkFavo = async (dto: favoriteDto) => {
   }
   return result
 }
+
+export const fetchCommingSoon = async (page: string) => {
+  const result: Ref<{ code: number, data: any, pages: number } | null> = ref(null)
+  try {
+    await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}movie/upcoming?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&page=${page}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(response => {
+      if(response.status == 200){
+        const movies: TrendingMovie[] = []
+        for(let i = 0; i < response.data['results'].length; i++)
+        {
+          // console.log(response.data['results'][i])
+          movies.push({
+            id: response.data['results'][i]['id'],
+            poster_path: response.data['results'][i]['poster_path'],
+            title: response.data['results'][i]['original_title'],
+            release_date: response.data['results'][i]['release_date']
+          })
+        }
+        result.value = {
+          code: response.status,
+          data: movies,
+          pages: response.data['total_pages']
+        }
+      }
+    })
+  } catch (error: any) {
+    console.log(error)
+    // result.value = {
+    //   code: error.response.status,
+    //   data: error.response.data,
+    //   pages: 0
+    // }
+  }
+  return result
+}

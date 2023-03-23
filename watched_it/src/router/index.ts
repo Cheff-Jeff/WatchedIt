@@ -149,6 +149,21 @@ const routes: Array<RouteRecordRaw> = [
       }
     },
     component: () => import('../views/FavoriteView.vue')
+  },
+  {
+    path: '/commingsoon',
+    name: 'soon',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/UpComingView.vue')
   }
 ]
 
