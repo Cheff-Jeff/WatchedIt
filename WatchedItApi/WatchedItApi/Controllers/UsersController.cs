@@ -153,5 +153,76 @@ namespace WatchedItApi.Controllers
             }
             return BadRequest("Not Found");   
         }
+
+        [HttpGet]
+        [Route("favorites")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFavorites(int userId)
+        {
+            if (!String.IsNullOrEmpty(userId.ToString()))
+            {
+                IQueryable<Favorites> favorites = _context.Favorites;
+                favorites = favorites
+                    .Where(u => u.userId == userId);
+
+                return Ok(await favorites.ToArrayAsync());
+            }
+            return BadRequest("User not found");
+        }
+
+        [HttpPost]
+        [Route("favorites")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddFovorite(FavoriteDto dto)
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.userId);
+            if (user != null && dto.movieId != null)
+            {
+                Favorites favorite = new Favorites() { Id = 0, userId = user.Id, movieId = (int)dto.movieId, movie = (bool)dto.movie };
+                await _context.Favorites.AddAsync(favorite);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetFriends), new { id = user.Id }, user);
+            }
+            return BadRequest("Your friend does not have an account.");
+        }
+
+        [HttpDelete]
+        [Route("favorites")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteFavorite(int id)
+        {
+            Favorites? favorite = await _context.Favorites.FindAsync(id);
+            if (favorite == null) return BadRequest();
+
+            _context.Favorites.Remove(favorite);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("favorites/check")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> checkFavorite(FavoriteDto dto)
+        {
+            List<Favorites> favorites = await _context.Favorites
+                .Where(u => u.userId == dto.userId)
+                .ToListAsync();
+
+            if (favorites.Count() > 0) 
+            {
+                for (int i = 0; i < favorites.Count(); i++)
+                {
+                    if (favorites[i].movieId == dto.movieId) 
+                    {
+                        return Ok(favorites[i]);
+                    }
+                }
+                return BadRequest("Not a favorite");
+            }
+
+            return BadRequest("No element found");
+        }
     }
 }

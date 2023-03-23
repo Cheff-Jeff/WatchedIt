@@ -1,7 +1,7 @@
 import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
-import { Friend, User } from './Models/UserInterface';
+import { Friend, User, favoriteDto } from './Models/UserInterface';
 import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
@@ -182,6 +182,72 @@ export const deleteFriend = async (id:string) => {
   const result: Ref<{ code: number, data: any } | null> = ref(null)
   try {
     await axios.delete(`${process.env.VUE_APP_API_HOST}/Users/friend?id=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 204) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const fetchFavorites = async (id:string) => {
+  const result: Ref<{ code: number, data: favoriteDto[] } | null> = ref(null)
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Users/favorites?userId=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 200) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const addFavorites = async (dto: favoriteDto) => {
+  const result: Ref<{ code: number, data: any } | null> = ref(null)
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Users/favorites`, dto, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 201) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const deleteFavorites = async (id: string) => {
+  const result: Ref<{ code: number, data: any } | null> = ref(null)
+  try {
+    await axios.delete(`${process.env.VUE_APP_API_HOST}/Users/favorites?id=${id}`, {
       headers: { 'Content-type': 'application/json' }
     }).then((response) => {
       if (response.status == 204) {
@@ -487,6 +553,28 @@ export const searchMovies = async (searchPhrase: string) => {
       })
   } catch (error: any) {
     console.log("error", error)
+  }
+  return result
+}
+
+export const checkFavo = async (dto: favoriteDto) => {
+  const result: Ref<{ code: number, data: any } | null> = ref(null)
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Users/favorites/check`, dto, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 200) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
   }
   return result
 }
