@@ -200,5 +200,29 @@ namespace WatchedItApi.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpPost]
+        [Route("favorites/check")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> checkFavorite(FavoriteDto dto)
+        {
+            List<Favorites> favorites = await _context.Favorites
+                .Where(u => u.userId == dto.userId)
+                .ToListAsync();
+
+            if (favorites.Count() > 0) 
+            {
+                for (int i = 0; i < favorites.Count(); i++)
+                {
+                    if (favorites[i].movieId == dto.movieId) 
+                    {
+                        return Ok(favorites[i]);
+                    }
+                }
+                return BadRequest("Not a favorite");
+            }
+
+            return BadRequest("No element found");
+        }
     }
 }

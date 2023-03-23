@@ -556,3 +556,25 @@ export const searchMovies = async (searchPhrase: string) => {
   }
   return result
 }
+
+export const checkFavo = async (dto: favoriteDto) => {
+  const result: Ref<{ code: number, data: any } | null> = ref(null)
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Users/favorites/check`, dto, {
+      headers: { 'Content-type': 'application/json' }
+    }).then((response) => {
+      if (response.status == 200) {
+        result.value = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
