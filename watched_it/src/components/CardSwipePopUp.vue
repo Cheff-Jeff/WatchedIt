@@ -1,9 +1,13 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
     <section>
 
         <Transition name="bounce">
 
-            <div v-if="show" class="card-container">        
+            <div v-if="show" class="card-container">
                 <div class="card" :key="MovieShow.id">
                     <div class="movie-image-container">
                         <img v-if="MovieShow.poster" class="movie-image"
@@ -57,11 +61,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+
 export default defineComponent({
     data() {
         return {
             show: true,
-            movieshowArray: [] as any,
+            movieshowArray: JSON.parse(JSON.stringify(this.votelist)),
 
             MovieShow: {
                 id: '',
@@ -72,7 +77,7 @@ export default defineComponent({
                 genres: [] as any,
             },
 
-            
+
 
             liked: false,
             likedMovieShow: [] as any,
@@ -85,11 +90,12 @@ export default defineComponent({
         "closeCardSwipePopUp"
     ],
     props: {
-        votelist: [] as any,
+        votelist: {
+            type: Array as any,
+            required: true
+        }
     },
     async mounted() {
-        this.movieshowArray = this.votelist
-
         const i: number = this.movieshowArray.map((item: { id: any; }) => item.id).indexOf(this.movieshowArray[0].id);
         this.MovieShow = this.movieshowArray[0]
 
