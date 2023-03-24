@@ -1,7 +1,33 @@
+<script setup lang="ts">
+import SimpleHeader from '@/components/SimpleHeader.vue';
+</script>
+
 <template>
-<pre>
-  {{ movies }}
-</pre>
+  <SimpleHeader current-title="Favorites" />
+  <div class="container page-wrap">
+    <section class="topBar">
+      <h1>Your favorite titles.</h1>
+    </section>
+    <section class="titles" v-if="movies">
+      <div class="row justify-content-center">
+        <div class="col-6" v-for="title in movies" :key="title.id">
+          <router-link :to="{name:'details',  params: { type: 'movie', id: title.id }}">
+            <div class="card">
+              <div class="movie-image-container">
+                <img v-if="title.poster_path" class="movie-image"  :src="`https://image.tmdb.org/t/p/w500${title.poster_path}`">
+                <img v-else class="movie-image" src="../assets/stockBackground.png">
+              </div>
+              <div class="info-box">
+                <h1>{{ title.title }}</h1>
+                <hr>
+                <p>{{ title.release_date }}</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -42,10 +68,12 @@ export default defineComponent({
         }
       }
     },
-    scrollCheck(event: any) {
-      console.log("scroll")
+    scrollCheck() {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        console.log('bottom!')
+        if(this.pages == 1)
+        {
+          this.pages++
+        }
         this.nextPage()
         this.pages++
       }
@@ -53,3 +81,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+@import "@/assets/styles/colors.scss";
+@import "@/assets/styles/pages/favorite.scss";
+@import "@/assets/styles/components/cards.scss";
+</style>
