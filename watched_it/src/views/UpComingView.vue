@@ -3,10 +3,10 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
 </script>
 
 <template>
-  <SimpleHeader current-title="Favorites" />
+  <SimpleHeader current-title="Upcoming" />
   <div class="container page-wrap">
     <section class="topBar">
-      <h1>Your favorite titles.</h1>
+      <h1>Upcoming movies.</h1>
     </section>
     <section class="titles" v-if="movies">
       <div class="row justify-content-center">
