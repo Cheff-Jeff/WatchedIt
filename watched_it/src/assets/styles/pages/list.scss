@@ -9,6 +9,14 @@ section.wrapper {
     position: relative;
     z-index: 20;
 
+    .btn-stick-bottom {
+        position: absolute;
+        bottom: 0;
+        margin: auto;
+        width: 100%;
+        padding: 20px;
+    }
+
     .section-title {
         height: auto;
         padding: 15px 0 0 5px;

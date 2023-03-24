@@ -36,6 +36,19 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
                 </div>
             </div>
         </div>
+
+        <div class="btn-stick-bottom">
+            <div class="col-md-12">
+                <div class="mdc-touch-target-wrapper btn-wrap">
+                    <button class="mdc-button mdc-button--raised">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__touch"></span>
+                        <span class="mdc-button__label">Add list</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
     </section>
 </template>
 
@@ -60,4 +73,5 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
 @import '../assets/styles/pages/list.scss';
+@import "@/assets/styles/components/buttons.scss";
 </style>
