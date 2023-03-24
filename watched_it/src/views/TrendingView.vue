@@ -56,7 +56,7 @@ import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
 export default defineComponent({
     data() {
         return {
-            compToRender: 'CardSwipePopUp',
+            compToRender: '',
 
             title: "Trending",
 

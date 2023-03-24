@@ -6,14 +6,14 @@
             <div v-if="show" class="card-container">        
                 <div class="card" :key="MovieShow.id">
                     <div class="movie-image-container">
-                        <img v-if="MovieShow.poster_path" class="movie-image"
-                            :src="'https://image.tmdb.org/t/p/w1280' + MovieShow.poster_path">
+                        <img v-if="MovieShow.poster" class="movie-image"
+                            :src="'https://image.tmdb.org/t/p/w1280' + MovieShow.poster">
                         <img v-else class="movie-image" src="../assets/stockBackground.png">
                     </div>
                     <div class="info-box">
                         <h1>{{ MovieShow.title }}</h1>
                         <hr />
-                        <p>{{ MovieShow.release_date }}</p>
+                        <p>{{ MovieShow.first_air_date }}</p>
                     </div>
                 </div>
 
@@ -21,13 +21,12 @@
         </Transition>
 
 
-
         <div class="interact-box">
 
             <div class="desc-container">
-                <h1>{{ genre }}</h1>
+                <h1 v-for="item in MovieShow.genres" :key="item.id">{{ item.name }}, </h1>
                 <hr />
-                <p>{{ description }}</p>
+                <p>{{ MovieShow.overview }}</p>
 
                 <div class="mdc-touch-target-wrapper btn-wrap white">
                     <button class="mdc-button mdc-button--raised">
@@ -58,7 +57,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getExternTrendingMovies } from '@/assets/javascript/api';
 export default defineComponent({
     data() {
         return {
@@ -67,13 +65,14 @@ export default defineComponent({
 
             MovieShow: {
                 id: '',
-                poster_path: '',
+                poster: '',
                 title: '',
-                release_date: '',
+                first_air_date: '',
+                overview: '',
+                genres: [] as any,
             },
 
-            genre: 'Horror',
-            description: 'ashasjhdjhsda ahadjsjhd ajhsdajhsajhsa jajajwef sdffsdfssgfs fsdfsdfsdf sdfsdfsdfsdfdfs dfsdfsdfsdfsdffs dfsdajaja jajaIt is a long established fact that a reader will be distracted by the readable content of a page when',
+            
 
             liked: false,
             likedMovieShow: [] as any,
@@ -85,12 +84,14 @@ export default defineComponent({
     emits: [
         "closeCardSwipePopUp"
     ],
+    props: {
+        votelist: [] as any,
+    },
     async mounted() {
-        this.movieshowArray = await getExternTrendingMovies();
+        this.movieshowArray = this.votelist
 
         const i: number = this.movieshowArray.map((item: { id: any; }) => item.id).indexOf(this.movieshowArray[0].id);
         this.MovieShow = this.movieshowArray[0]
-        this.description = this.truncateString(this.description)
 
         this.movieshowArray.splice(i, 1);
     },
@@ -130,8 +131,6 @@ export default defineComponent({
             const item = this.movieshowArray.splice(i, 1);
 
             this.MovieShow = item[0]
-
-            this.description = this.truncateString(this.description);
 
             var timer = null
             if (timer) {

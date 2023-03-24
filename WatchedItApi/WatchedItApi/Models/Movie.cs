@@ -10,5 +10,7 @@ namespace WatchedItApi.Models
 
         
         public int MovieListId { get; set; }
+
+        public bool movie { get; set; }
     }
 }

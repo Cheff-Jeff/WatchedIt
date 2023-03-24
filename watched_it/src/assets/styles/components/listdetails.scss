@@ -1,0 +1,148 @@
+@import "../fonts/roboto.scss";
+@import "../colors.scss";
+
+section.wrapper2 {
+    position: fixed;
+    top: 55px;
+    height: 100%;
+    width: 100%;
+    z-index: 25;
+    backdrop-filter: blur(6px);
+
+    .top-info-box {
+        width: calc(100% - 20px);
+        height: auto;
+        margin: 10px;
+        margin-right: 10px;
+        padding: 5px;
+        border: 1px solid $outline;
+        background: $background;
+        border-radius: 5px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+
+        .close-icon {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+
+            .icon-right {
+                margin-right: auto;
+                margin-left: 5px;
+                width: 25px;
+                fill: $black;
+            }
+
+            .icon-left {
+                margin-left: auto;
+                margin-right: 5px;
+                width: 20px;
+                fill: $black;
+            }
+        }
+
+        hr {
+            margin-top: 8px;
+            color: $outline;
+        }
+
+        .title {
+            width: 60%;
+            float: left;
+
+            p {
+                color: $outline;
+                z-index: 1;
+                font-weight: $medium;
+                font-size: 24px;
+                letter-spacing: 0;
+                margin: 3px 0 0px 0px;
+            }
+        }
+
+        .dates {
+            width: auto;
+            overflow: hidden;
+
+            span {
+                color: $black;
+                z-index: 1;
+                font-weight: $regular;
+                font-size: 13px;
+                letter-spacing: 0;
+                margin: 3px 0 0px 0px;
+            }
+        }
+
+        .swipe-btn {
+            margin-top: 40px;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+
+        .movie-count {
+            margin-top: -20px;
+            margin-bottom: -5px;
+
+            span {
+                color: $black;
+                z-index: 1;
+                font-weight: $regular;
+                font-size: 11px;
+                letter-spacing: 0;
+                margin: 3px 0 0px 0px;
+            }
+        }
+    }
+
+    .movie-info-box {
+        width: calc(100% - 20px);
+        height: auto;
+        margin: 10px;
+        margin-right: 10px;
+        padding: 5px;
+        border: 1px solid $outline;
+        background: $background;
+        border-radius: 5px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+
+        .movie-img {
+            width: 80px;
+            float: left;
+            border-radius: 5px;
+            
+        }
+
+        .movie-details {
+            height: fit-content;
+            margin-left: 15px;
+
+            p {
+                display: block;
+                color: $outline;
+                font-weight: $medium;
+                font-size: 18px;
+                letter-spacing: 0;
+                margin-bottom: -5px;
+            }
+
+            span {
+                color: $black;
+                font-weight: $regular;
+                line-height: 0;
+                font-size: 12px;
+                letter-spacing: 0;
+            }  
+        }
+        .details-btn-container {
+            display: flex; 
+            justify-content: flex-end;
+            width: 100%;
+            height: 1px;
+
+            .details-btn{
+                margin-top: -35px;
+            }
+        }
+        
+    }
+}

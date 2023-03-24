@@ -331,7 +331,6 @@ export const fetchMovie = async (id: string) => {
         code: 200,
         data: details
       }
-      console.log(details)
     })
   } catch (error: any) {
     result.value = {
@@ -499,22 +498,21 @@ export const getCollectionList = async (id: number) => {
       headers: { 'Content-type': 'application/json' }
     }).then(
       response => {
-        console.log(response.data[0]["movies"])
         if (response.status == 200) {
-          for (let i = 0; i < response.data.length; i++) {
+          
+          for (let i = 0; i < response.data[0]["movieList"].length; i++) {
+              const collectionlist: collectionList = {
+                id: response.data[0]["movieList"][i]["id"],
+                title: response.data[0]["movieList"][i]['title'],
+                voteDeadLine: response.data[0]["movieList"][i]['voteDeadLine'],
+                watchDateTime: response.data[0]["movieList"][i]['watchDateTime'],
+                itemCount: response.data[0]["movieList"][i]["movies"].length,
+                movies: response.data[0]["movieList"][i]["movies"],
+                users: response.data[0]["movieList"][i]["users"]
+              }
 
-            const collectionlist: collectionList = {
-              id: response.data[i]['id'],
-              title: response.data[i]['title'],
-              voteDeadLine: response.data[i]['voteDeadLine'],
-              watchDateTime: response.data[i]['watchDateTime'],
-              itemCount: response.data[i]["movies"].length,
-              movies: response.data[i]["movies"],
-              friends: response.data[i]["friends"]
+              collectionLists.push(collectionlist)
             }
-            
-            collectionLists.push(collectionlist)
-          }
   
           result.value = collectionLists
         }
@@ -523,6 +521,5 @@ export const getCollectionList = async (id: number) => {
   } catch (error: any) {
     console.log("error", error)
   } 
-  console.log(result)
   return result;
 }

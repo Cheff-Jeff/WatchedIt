@@ -49,5 +49,5 @@ export interface collectionList {
   watchDateTime: string,
   itemCount: number,
   movies: [],
-  friends: [],
+  users: [],
 }

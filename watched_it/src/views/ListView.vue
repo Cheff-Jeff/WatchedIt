@@ -6,9 +6,8 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
     <SimpleHeader :currentTitle="'Watch list'" />
 
     <section class="wrapper">
-
         <div class="list-container">
-            <div class="card" v-for="list in collectionList" :key="list.id">
+            <div class="card" v-for="list in collectionList" :key="list.id" v-on:click="getClickedList(list)">
                 <div class="movie-image-container">
                     <div class="folder-info-container">
                         <div class="folder-info">
@@ -48,24 +47,39 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
                 </div>
             </div>
         </div>
-        
     </section>
+
+    <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getCollectionList } from '../assets/javascript/api';
+import ListDetails from '@/components/ListDetails.vue';
 export default defineComponent({
     data() {
         return {
+            compToRender: '',
             collectionList: [] as any,
+
+            getCurrentList: [] as any,
         }
+    },
+    components: {
+        ListDetails
     },
     async mounted() {
         this.collectionList = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
     },
     methods: {
+        getClickedList(list: []) {
+            this.getCurrentList = list;
 
+            this.compToRender = 'ListDetails'
+        },
+        closeListDetails() {
+            this.compToRender = ''
+        },
     }
 })
 </script>
