@@ -48,3 +48,7 @@ export interface favorites {
   poster: string,
   isMovie: boolean
 }
+
+export interface genre {id: number, name: string}
+export interface provider {logo: string, name: string}
+export interface actor {name: string, photo: string}

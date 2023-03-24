@@ -25,3 +25,14 @@
 .card{
   padding-right: 40px !important;
 }
+
+.details{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999999999;
+  .page-wrap{
+    padding-top: 0;
+  }
+}
