@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchedItApi.Data;
 
@@ -10,9 +11,11 @@ using WatchedItApi.Data;
 namespace WatchedItApi.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230325105911_voteCountChanged")]
+    partial class voteCountChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,6 +172,10 @@ namespace WatchedItApi.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MovieListId");
+
+                    b.HasIndex("userId");
+
                     b.ToTable("UserVotes");
                 });
 
@@ -203,6 +210,25 @@ namespace WatchedItApi.Data.Migrations
                         .HasForeignKey("MovieListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WatchedItApi.Models.UserVote", b =>
+                {
+                    b.HasOne("WatchedItApi.Models.MovieList", "movielist")
+                        .WithMany()
+                        .HasForeignKey("MovieListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchedItApi.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("movielist");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.MovieList", b =>

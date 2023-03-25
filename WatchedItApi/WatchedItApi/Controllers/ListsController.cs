@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using WatchedItApi.Data;
+using WatchedItApi.Data.Migrations;
 using WatchedItApi.Models;
 
 namespace WatchedItApi.Controllers
@@ -47,16 +49,32 @@ namespace WatchedItApi.Controllers
 
                 if(user != null)
                 {
+                    //movielist toevoegen
                     await _context.MovieLists.AddAsync(movielist);
                     await _context.SaveChangesAsync();
 
+
+
+                    //user aan list toevoegen
                     MovieListDto dto = new MovieListDto
                     {
                         MovieListId = movielist.Id,
                         phoneNumber = user.Phone,
                     };
-
+                    
                     await AddUserToList(dto);
+                    await _context.SaveChangesAsync();
+
+
+                    //user aan votedlist toevoegen
+                    UserVote userVote = new UserVote
+                    {
+                        MovieListId = movielist.Id,
+                        userId = movielist.UserId,
+                        voted = false
+                    };
+
+                    await _context.UserVotes.AddAsync(userVote);
                     await _context.SaveChangesAsync();
 
                     return Ok("created");
@@ -157,7 +175,17 @@ namespace WatchedItApi.Controllers
                 if (user != null)
                 {
                     mymovielist.Users.Add(user);
+                    await _context.SaveChangesAsync();
 
+                    //user aan votedlist toevoegen
+                    UserVote userVote = new UserVote
+                    {
+                        MovieListId = mymovielist.Id,
+                        userId = user.Id,
+                        voted = false
+                    };
+
+                    await _context.UserVotes.AddAsync(userVote);
                     await _context.SaveChangesAsync();
 
                     return Ok("user added");
@@ -176,7 +204,7 @@ namespace WatchedItApi.Controllers
         {
             MovieList? mymovielist = await _context.MovieLists
                 .Include(u => u.Users)
-                .FirstOrDefaultAsync(l => l.Id == request.MovieListId);
+                .FirstOrDefaultAsync(ml => ml.Id == request.MovieListId);
 
             if (mymovielist != null)
             {
@@ -197,16 +225,61 @@ namespace WatchedItApi.Controllers
             return BadRequest("no info found");
         }
 
-        [HttpGet("test123")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPost("ratemovie")]
+        [ProducesResponseType(typeof(UserVote), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetMovieListByUserId(int id)
+        public async Task<IActionResult> AddVoteCountToMovie(UserVoteDto request)
         {
-            User? user = await _context.Users
-                .Include(m => m.MovieList)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            UserVote? myuserVote = await _context.UserVotes
+                .FirstOrDefaultAsync(uv => uv.MovieListId == request.movielistId && uv.userId == request.userId);
 
-            return user == null ? NotFound() : Ok(user);
+            if (myuserVote != null && myuserVote.voted == false)
+            {
+                MovieList? mymovielist = await _context.MovieLists
+                    .Include(ml => ml.Movies)
+                    .FirstOrDefaultAsync(ml => ml.Id == request.movielistId);
+
+                if(mymovielist != null && mymovielist.Movies != null && request.movieIds != null)
+                {
+                    foreach(var movieId in request.movieIds)
+                    { 
+                        Movie? movieitem = mymovielist.Movies
+                            .FirstOrDefault(m => m.Id == movieId);
+
+                        if(movieitem != null)
+                        {
+                            movieitem.voteCount += 1;
+                        }
+                    }
+                }
+
+                myuserVote.voted = true;
+
+                await _context.SaveChangesAsync();
+
+                return Ok("votes added");
+            }
+
+            return BadRequest("already voted");
+        }
+
+        [HttpGet("getmovievotesresult")]
+        [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetMovieVotesResult(int movielistId)
+        {
+            MovieList? mymovielist = await _context.MovieLists
+                .Include(ml => ml.Movies)
+                .FirstOrDefaultAsync(ml => ml.Id == movielistId);
+
+            if (mymovielist != null && mymovielist.Movies != null)
+            {
+                Movie? mymovie = mymovielist.Movies.MaxBy(m => m.voteCount);
+
+                return Ok(mymovie);
+            }
+
+            return BadRequest("already voted");
         }
     }
 }
