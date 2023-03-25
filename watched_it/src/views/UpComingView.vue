@@ -5,50 +5,50 @@ import Details from '@/components/Title-Details.vue';
 
 <template>
   <SimpleHeader current-title="Upcoming" />
-  <div class="container page-wrap" id="wrapper" :style="{'max-height' : pageHeight}">
-    <section class="topBar">
-      <h1>Upcoming movies.</h1>
-    </section>
-    <section class="titles" v-if="movies">
-      <div class="row justify-content-center">
-        <div class="col-6" v-for="title in movies" :key="title.id">
-          <!-- <router-link :to="{name:'details',  params: { type: 'movie', id: title.id }}">
-            
-          </router-link> -->
-          <div class="card" @click="showDetails(title.id, 'movie')">
-            <div class="movie-image-container">
-              <img v-if="title.poster_path" class="movie-image"  :src="`https://image.tmdb.org/t/p/w500${title.poster_path}`">
-              <img v-else class="movie-image" src="../assets/stockBackground.png">
-            </div>
-            <div class="info-box">
-              <h1>{{ title.title }}</h1>
-              <hr>
-              <p>{{ title.release_date }}</p>
+  <div class="animate-wrap" v-auto-animate>
+    <div class="container page-wrap" id="wrapper" :style="{'max-height' : pageHeight}">
+      <section class="topBar">
+        <h1>Upcoming movies.</h1>
+      </section>
+      <section class="titles" v-if="movies">
+        <div class="row justify-content-center">
+          <div class="col-6" v-for="title in movies" :key="title.id">
+            <div class="card" @click="showDetails(title.id, 'movie')">
+              <div class="movie-image-container">
+                <img v-if="title.poster_path" class="movie-image"  :src="`https://image.tmdb.org/t/p/w500${title.poster_path}`">
+                <img v-else class="movie-image" src="../assets/stockBackground.png">
+              </div>
+              <div class="info-box">
+                <h1>{{ title.title }}</h1>
+                <hr>
+                <p>{{ title.release_date }}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <section class="details" id="Overlay">
+      <Details v-if="detailsToggle"
+        :id="details.id.toString()"
+        :banner="details.banner"
+        :voteAvrage="Number(details.VoteAvrage)"
+        :title="details.title"
+        :director="details.director"
+        :date="details.date"
+        :genres="details.genres"
+        :language="details.language"
+        :poster="details.poster"
+        :overview="details.overview"
+        :providers="details.providers"
+        :actors="details.actors"
+        :title-type="details.titleType"
+        @mounted="detailStyle()"
+        @close="closeOverlay()"
+        @rerender="reRender()"
+      />
+    </section>  
   </div>
-  <section class="details" id="Overlay">
-    <Details v-if="detailsToggle"
-      :id="details.id.toString()"
-      :banner="details.banner"
-      :voteAvrage="Number(details.VoteAvrage)"
-      :title="details.title"
-      :director="details.director"
-      :date="details.date"
-      :genres="details.genres"
-      :language="details.language"
-      :poster="details.poster"
-      :overview="details.overview"
-      :providers="details.providers"
-      :actors="details.actors"
-      :title-type="details.titleType"
-      @mounted="detailStyle()"
-      @close="closeOverlay()"
-    />
-  </section>  
 </template>
 
 <script lang="ts">
@@ -64,7 +64,7 @@ export default defineComponent({
       pages: 1,
       totalPages: 1,
       movies: [] as TrendingMovie[],
-      detailsToggle: '',
+      detailsToggle: false,
       pageHeight: 'auto',
       scroll: 0 as number,
       scrollHeight: 0,
@@ -139,28 +139,32 @@ export default defineComponent({
           titleType: type
         }
       }
-      const page = document.getElementById('wrapper')
-      this.scroll = page!.scrollHeight
-      this.detailsToggle = 'open'
+      this.scroll = document.documentElement.scrollTop
+      this.detailsToggle = true
     },
     detailStyle(){
-      console.log("open")
-      if(this.detailsToggle == 'open')
+      if(this.detailsToggle)
       {
+        window.scrollTo(0, 0)
         const overlay = document.getElementById('Overlay');
         this.pageHeight = overlay!.offsetHeight.toString() + "px"
       }
     },
     closeOverlay(){
-      console.log("close")
-      if(this.detailsToggle == 'open')
+      if(this.detailsToggle)
       {
-        const page = document.querySelector('#wrapper');
-        // this.scrollHeight = window.screenY
-        this.detailsToggle = ''
         this.pageHeight = "none"
-        this.scrollHeight = this.scroll
+        this.detailsToggle = false
+        setTimeout(()=>{
+          window.scrollTo(0, this.scroll)
+        }, 5);
       }
+    },
+    reRender(){
+      this.detailsToggle = false
+      this.$nextTick(()=>{
+        this.detailsToggle = true
+      })
     }
   },
 })

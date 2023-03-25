@@ -2,7 +2,7 @@
 import { defineProps, PropType, onMounted, defineEmits } from 'vue';
 import {MDCRipple} from '@material/ripple';
 import { genre, provider, actor } from '@/assets/javascript/Models/ExternApiInterface'
-const emit = defineEmits(['mounted', 'close'])
+const emit = defineEmits(['mounted', 'close', 'rerender'])
 const props = defineProps({
   id: { type: String },
   banner: { type: String, },
@@ -186,13 +186,13 @@ export default defineComponent({
       })
 
       if(result.value?.code == 201){
-        this.$router.go(0)
+        this.$emit('rerender')
       }
     },
     async removeFavorite(id: number){
       const result = await deleteFavorites(id.toString())
       if(result.value?.code == 204){
-        this.$router.go(0)
+        this.$emit('rerender')
       }
     },
     close(){

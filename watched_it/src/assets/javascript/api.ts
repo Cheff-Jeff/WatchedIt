@@ -34,7 +34,6 @@ export const fetchUsers = async () => {
 
 export const signIn = async (user: User) => {
   let result: { code: number, data: User } | null = null
-  console.log(user);
 
   try {
     await axios.post(`${process.env.VUE_APP_API_HOST}/Users/Login`, user, {
@@ -298,7 +297,6 @@ export const getExternTrendingShows = async () => {
   const result: Ref<TrendingShow[] | null> = ref(null)
   const shows: TrendingShow[] = []
   try {
-    console.log(process.env.VUE_APP_API_EXTERNHOSTV3)
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}tv/popular?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=1`, {
       headers: { 'Content-type': 'application/json' }
     }).then(
@@ -397,7 +395,6 @@ export const fetchMovie = async (id: string) => {
         code: 200,
         data: details
       }
-      console.log(details)
     })
   } catch (error: any) {
     result.value = {
@@ -482,7 +479,6 @@ export const fetchShow = async (id: string) => {
         code: 200,
         data: details
       }
-      console.log(details)
     })
   } catch (error: any) {
     console.log(error)
@@ -589,7 +585,6 @@ export const fetchCommingSoon = async (page: string) => {
         const movies: TrendingMovie[] = []
         for(let i = 0; i < response.data['results'].length; i++)
         {
-          // console.log(response.data['results'][i])
           movies.push({
             id: response.data['results'][i]['id'],
             poster_path: response.data['results'][i]['poster_path'],
@@ -606,11 +601,6 @@ export const fetchCommingSoon = async (page: string) => {
     })
   } catch (error: any) {
     console.log(error)
-    // result.value = {
-    //   code: error.response.status,
-    //   data: error.response.data,
-    //   pages: 0
-    // }
   }
   return result
 }
