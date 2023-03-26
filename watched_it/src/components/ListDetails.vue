@@ -143,9 +143,6 @@ export default defineComponent({
                 details = await fetchShow(this.currentList.movies[i].externId);
             }
 
-            //movieId geven aan voteaverige, wist niet hoe beter kon.
-            details._value.data.vote_average = this.currentList.movies[i].id
-
             details._value.data.overview = this.truncateString(details._value.data.overview)
             this.movieshowdetails.push(details._value.data)
         }

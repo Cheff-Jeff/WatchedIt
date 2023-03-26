@@ -103,8 +103,6 @@ export default defineComponent({
         this.MovieShow = this.movieshowArray[0]
 
         this.movieshowArray.splice(i, 1);
-
-        console.log(this.votelist)
     },
     methods: {
         async sendRating(){
