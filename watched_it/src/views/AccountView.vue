@@ -94,7 +94,7 @@ defineExpose({user})
           <h1>Movies for you</h1>
         </div>
 
-        <div class="card-container" v-if="movieRecom">
+        <div class="card-container" v-if="movieRecom" id="movieContainer">
           <div class="card" v-for="movie in movieRecom" :key="movie.id">
             <router-link :to="{name:'details',  params: { type: 'movie', id: movie.id }}">
               <div class="movie-image-container">
@@ -174,6 +174,11 @@ export default defineComponent({
   methods: {
     download(){
       this.$emit('download')
+    },
+    scrollCheck(){
+      console.log(document.body.scrollWidth)
+      console.log(document.body.scrollLeft)
+      console.log(document.body.clientWidth)
     }
   },
 })
