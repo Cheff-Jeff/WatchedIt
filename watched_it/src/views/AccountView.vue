@@ -8,10 +8,10 @@ const id: string | null = localStorage.getItem('user')
 let user: User | undefined
 
 if(id){
-    const result = await fetchUser(id)
-    console.log(result)
-    user = result.value?.data
-  }
+  const result = await fetchUser(id)
+  console.log(result)
+  user = result.value?.data
+}
 
 onMounted(() => { 
   const buttons = document.getElementsByClassName('mdc-button');
@@ -91,138 +91,44 @@ defineExpose({user})
       </section>
       <section class="movies">
         <div class="section-title">
-            <h1>Movies for you</h1>
+          <h1>Movies for you</h1>
         </div>
 
-        <div class="card-container">
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
+        <div class="card-container" v-if="movieRecom">
+          <div class="card" v-for="movie in movieRecom" :key="movie.id">
+            <router-link :to="{name:'details',  params: { type: 'movie', id: movie.id }}">
+              <div class="movie-image-container">
+                <img v-if="movie.poster_path" class="movie-image" :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`">
+                <img v-else class="movie-image" src="../assets/stockBackground.png">
+              </div>
+              <div class="info-box">
+                <h1>{{ movie.title }}</h1>
+                <hr />
+                <p>{{ movie.release_date }}</p>
+              </div>
+            </router-link>
+          </div>
         </div>
       </section>
       <section class="shows">
         <div class="section-title">
-            <h1>Shows for you</h1>
+          <h1>Shows for you</h1>
         </div>
 
-        <div class="card-container">
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="movie-image-container">
-                    <img class="movie-image" src="https://imgur.com/rYSzWYZ.png">
-                </div>
-                <div class="info-box">
-                    <h1>Halloween Kills</h1>
-                    <hr />
-                    <p>Released at: 1978-04-17</p>
-                </div>
-            </div>
+        <div class="card-container" v-if="showRecom">
+          <div class="card" v-for="show in showRecom" :key="show.id">
+            <router-link :to="{name:'details',  params: { type: 'show', id: show.id }}">
+              <div class="movie-image-container">
+                <img v-if="show.poster_path" class="movie-image" :src="`https://image.tmdb.org/t/p/w500${show.poster_path}`">
+                <img v-else class="movie-image" src="../assets/stockBackground.png">
+              </div>
+              <div class="info-box">
+                <h1>{{ show.name }}</h1>
+                <hr />
+                <p>{{ show.first_air_date }}</p>
+              </div>
+            </router-link>
+          </div>
         </div>
       </section>
     </div>
@@ -231,8 +137,40 @@ defineExpose({user})
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { checkMovieRecomendations, moviewRecomandations, checkShowRecomendations, showRecomandations } from '@/assets/javascript/api';
+import { TrendingMovie, TrendingShow } from '@/assets/javascript/Models/ExternApiInterface';
+import { favoriteDto } from '@/assets/javascript/Models/UserInterface';
 
 export default defineComponent({
+  data() {
+    return {
+      page: 1,
+      sPage: 1,
+      movieRecom: [] as TrendingMovie[],
+      showRecom: [] as TrendingShow[]
+    }
+  },
+  async beforeMount() {
+    const id: string | null = localStorage.getItem('user')
+    if(id){
+      const favRes = await checkMovieRecomendations(id)
+      if(favRes.value?.code == 200){
+        const favorite: favoriteDto = favRes.value.data
+        const res = await moviewRecomandations(favorite.id!.toString(), this.page.toString())
+        if(res.value?.code == 200){
+          this.movieRecom = res.value.data
+        }
+      }
+      const showRes = await checkShowRecomendations(id)
+      if(showRes.value?.code == 200){
+        const sfavorite: favoriteDto = showRes.value.data
+        const res = await showRecomandations(sfavorite.id!.toString(), this.sPage.toString())
+        if(res.value?.code == 200){
+          this.showRecom = res.value.data
+        }
+      }
+    }
+  },
   methods: {
     download(){
       this.$emit('download')

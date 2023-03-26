@@ -604,3 +604,119 @@ export const fetchCommingSoon = async (page: string) => {
   }
   return result
 }
+
+export const checkMovieRecomendations = async (id: string) => {
+  const result: Ref<{ code: number, data: favoriteDto } | null> = ref(null)
+  try {
+    const response = await fetchFavorites(id)
+    if(response.value?.code == 200 && response.value.data.length > 0)
+    {
+      for(let i = 0; i < response.value.data.length; i++){
+        const favorite = response.value.data[i]
+        if(favorite.movie){
+          result.value = {
+            code: response.value.code,
+            data: response.value.data[i]
+          }
+          break
+        }
+      }
+    }    
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+
+  return result
+}
+
+export const checkShowRecomendations = async (id: string) => {
+  const result: Ref<{ code: number, data: favoriteDto } | null> = ref(null)
+  try {
+    const response = await fetchFavorites(id)
+    if(response.value?.code == 200 && response.value.data.length > 0)
+    {
+      for(let i = 0; i < response.value.data.length; i++){
+        const favorite = response.value.data[i]
+        if(!favorite.movie){
+          result.value = {
+            code: response.value.code,
+            data: response.value.data[i]
+          }
+          break
+        }
+      }
+    }    
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+
+  return result
+}
+
+export const moviewRecomandations = async (movieId: string, page: string) => {
+  const result: Ref<{ code: number, data: TrendingMovie[] } | null> = ref(null)
+  try {
+    await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/movie/${movieId}/recommendations?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=${page}`)
+    .then(response => {
+      if(response.status == 200){
+        const movies: TrendingMovie[] = []
+        console.log(response.data)
+        for (let i = 0; i < response.data['results'].length; i++) {
+          movies.push({
+            id: response.data['results'][i]['id'],
+            poster_path: response.data['results'][i]['poster_path'],
+            title: response.data['results'][i]['title'],
+            release_date: response.data['results'][i]['release_date']
+          })
+        }
+        console.log(movies)
+        result.value = {
+          code: response.status,
+          data: movies
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const showRecomandations = async (movieId: string, page: string) => {
+  const result: Ref<{ code: number, data: TrendingShow[] } | null> = ref(null)
+  try {
+    await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/tv/${movieId}/recommendations?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=${page}`)
+    .then(response => {
+      if(response.status == 200){
+        const movies: TrendingShow[] = []
+        for (let i = 0; i < response.data['results'].length; i++) {
+          movies.push({
+            id: response.data['results'][i]['id'],
+            poster_path: response.data['results'][i]['poster_path'],
+            name: response.data['results'][i]['name'],
+            first_air_date: response.data['results'][i]['first_air_date']
+          })
+        }
+        result.value = {
+          code: response.status,
+          data: movies
+        }
+      }
+    })
+  } catch (error: any) {
+    result.value = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
