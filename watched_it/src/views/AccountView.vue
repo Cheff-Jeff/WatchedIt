@@ -137,7 +137,9 @@ defineExpose({user})
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { checkMovieRecomendations, moviewRecomandations, checkShowRecomendations, showRecomandations } from '@/assets/javascript/api';
+import { checkMovieRecomendations, moviewRecomandations, checkShowRecomendations, 
+  showRecomandations, getExternTrendingShows, getExternTrendingMovies 
+} from '@/assets/javascript/api';
 import { TrendingMovie, TrendingShow } from '@/assets/javascript/Models/ExternApiInterface';
 import { favoriteDto } from '@/assets/javascript/Models/UserInterface';
 
@@ -160,6 +162,11 @@ export default defineComponent({
         if(res.value?.code == 200){
           this.movieRecom = res.value.data
         }
+      }else{
+        const res = await getExternTrendingMovies()
+        if(res.value){
+          this.movieRecom = res.value
+        }
       }
       const showRes = await checkShowRecomendations(id)
       if(showRes.value?.code == 200){
@@ -167,6 +174,12 @@ export default defineComponent({
         const res = await showRecomandations(sfavorite.id!.toString(), this.sPage.toString())
         if(res.value?.code == 200){
           this.showRecom = res.value.data
+        }
+      }
+      else{
+        const res = await getExternTrendingShows()
+        if(res.value){
+          this.showRecom = res.value
         }
       }
     }
