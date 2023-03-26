@@ -9,5 +9,7 @@
         public int externId { get; set; }
 
         public string phoneNumber { get; set; } = string.Empty;
+
+        public bool movie { get; set; }
     }
 }

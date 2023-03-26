@@ -65,18 +65,6 @@ namespace WatchedItApi.Controllers
                     await AddUserToList(dto);
                     await _context.SaveChangesAsync();
 
-
-                    //user aan votedlist toevoegen
-                    UserVote userVote = new UserVote
-                    {
-                        MovieListId = movielist.Id,
-                        userId = movielist.UserId,
-                        voted = false
-                    };
-
-                    await _context.UserVotes.AddAsync(userVote);
-                    await _context.SaveChangesAsync();
-
                     return Ok("created");
                 }
                 
@@ -91,21 +79,33 @@ namespace WatchedItApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddMovieToList([FromForm] MovieListDto request)
         {
-            var mymovielist = await _context.MovieLists
-                .FindAsync(request.MovieListId);
+            var mymovielist = await _context.MovieLists.Include(m => m.Movies)
+                .FirstOrDefaultAsync(ml => ml.Id == request.MovieListId);
 
+            bool doubleMovie = false;
+            
             if (mymovielist != null)
             {
-                var newMovie = new Movie
+                if(mymovielist.Movies != null)
                 {
-                    MovieListId = request.MovieListId,
-                    ExternId = request.externId
-                };
+                    doubleMovie = mymovielist.Movies.Any(m => m.ExternId == request.externId && m.movie == request.movie);
+                }
+                
+                if (doubleMovie == false)
+                {
+                    var newMovie = new Movie
+                    {
+                        MovieListId = request.MovieListId,
+                        ExternId = request.externId,
+                        movie = request.movie
+                    };
 
-                await _context.Movies.AddAsync(newMovie);
-                await _context.SaveChangesAsync();
+                    await _context.Movies.AddAsync(newMovie);
+                    await _context.SaveChangesAsync();
 
-                return Ok("movie added");
+                    return Ok("movie added");
+                }
+                return BadRequest("movie already in list");
             }
 
             return BadRequest("no info found");
@@ -147,6 +147,18 @@ namespace WatchedItApi.Controllers
                     foreach (var movie in movielist.Movies)
                     {
                         await RemoveMovieFromList(movie.Id);
+                    }
+                }
+                if(movielist.Users != null)
+                {
+                    foreach (var user in movielist.Users)
+                    {
+                        var uservote = await _context.UserVotes.FirstOrDefaultAsync(uv => uv.MovieListId == movielist.Id && uv.userId == user.Id);
+
+                        if (uservote != null)
+                        {
+                            _context.UserVotes.Remove(uservote);
+                        }
                     }
                 }
 
