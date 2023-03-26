@@ -8,7 +8,7 @@
 
         public int userId { get; set; }
 
-        public List<int>? movieIds { get; set; }
+        public List<int>? externMovieIds { get; set; }
 
         public int voteCount { get; set; }
     }

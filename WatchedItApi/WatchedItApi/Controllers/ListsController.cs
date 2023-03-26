@@ -79,7 +79,8 @@ namespace WatchedItApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddMovieToList([FromForm] MovieListDto request)
         {
-            var mymovielist = await _context.MovieLists.Include(m => m.Movies)
+            var mymovielist = await _context.MovieLists
+                .Include(m => m.Movies)
                 .FirstOrDefaultAsync(ml => ml.Id == request.MovieListId);
 
             bool doubleMovie = false;
@@ -153,7 +154,8 @@ namespace WatchedItApi.Controllers
                 {
                     foreach (var user in movielist.Users)
                     {
-                        var uservote = await _context.UserVotes.FirstOrDefaultAsync(uv => uv.MovieListId == movielist.Id && uv.userId == user.Id);
+                        var uservote = await _context.UserVotes
+                            .FirstOrDefaultAsync(uv => uv.MovieListId == movielist.Id && uv.userId == user.Id);
 
                         if (uservote != null)
                         {
@@ -182,7 +184,8 @@ namespace WatchedItApi.Controllers
 
             if (mymovielist != null)
             {
-                User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
+                User? user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
 
                 if (user != null)
                 {
@@ -220,7 +223,8 @@ namespace WatchedItApi.Controllers
 
             if (mymovielist != null)
             {
-                User? user = await _context.Users.FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
+                User? user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
 
                 if (user != null)
                 {
@@ -238,9 +242,9 @@ namespace WatchedItApi.Controllers
         }
 
         [HttpPost("ratemovie")]
-        [ProducesResponseType(typeof(UserVote), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddVoteCountToMovie(UserVoteDto request)
+        public async Task<IActionResult> AddVoteCountToMovie([FromForm] UserVoteDto request)
         {
             UserVote? myuserVote = await _context.UserVotes
                 .FirstOrDefaultAsync(uv => uv.MovieListId == request.movielistId && uv.userId == request.userId);
@@ -251,12 +255,12 @@ namespace WatchedItApi.Controllers
                     .Include(ml => ml.Movies)
                     .FirstOrDefaultAsync(ml => ml.Id == request.movielistId);
 
-                if(mymovielist != null && mymovielist.Movies != null && request.movieIds != null)
+                if(mymovielist != null && mymovielist.Movies != null && request.externMovieIds != null)
                 {
-                    foreach(var movieId in request.movieIds)
+                    foreach(var externMovieId in request.externMovieIds)
                     { 
                         Movie? movieitem = mymovielist.Movies
-                            .FirstOrDefault(m => m.Id == movieId);
+                            .FirstOrDefault(m => m.ExternId == externMovieId);
 
                         if(movieitem != null)
                         {
@@ -273,6 +277,17 @@ namespace WatchedItApi.Controllers
             }
 
             return BadRequest("already voted");
+        }
+
+        [HttpGet("votecheck")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> getHasUserVoted(int movielistId, int userId)
+        {
+            UserVote? myuserVote = await _context.UserVotes
+                .FirstOrDefaultAsync(uv => uv.MovieListId == movielistId && uv.userId == userId);
+
+            return myuserVote == null ? NotFound() : Ok(myuserVote.voted);
         }
 
         [HttpGet("getmovievotesresult")]

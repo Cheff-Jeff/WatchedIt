@@ -51,3 +51,9 @@ export interface collectionList {
   movies: [],
   users: [],
 }
+
+export interface rateMovieShow {
+  movielistId: number,
+  userId: number,
+  externMovieIds: []
+}

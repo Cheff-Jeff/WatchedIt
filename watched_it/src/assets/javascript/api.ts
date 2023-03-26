@@ -2,7 +2,7 @@ import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
 import { Friend, User } from './Models/UserInterface';
-import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList } from "./Models/ExternApiInterface";
+import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
   const result: Ref<User[] | null> = ref(null)
@@ -520,6 +520,51 @@ export const getCollectionList = async (id: number) => {
     )
   } catch (error: any) {
     console.log("error", error)
+  } 
+  return result;
+}
+
+export const rateMovies = async (rating: rateMovieShow) => {
+  let result: { code: number, data: any } | null = null
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Lists/ratemovie`, rating, {
+      headers: { 'Content-type': 'multipart/form-data' }
+    }).then((response) => {
+      if (response.status == 201) {
+        result = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
+export const getHasUserVoted = async (movielistId: number, userId: number) => {
+  let result: { data: boolean } | null = null
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Lists/votecheck?movielistId=${movielistId}&userId=${userId}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        if (response.status == 200) { 
+          result = {
+            data: response.data
+          }
+        }
+      }
+    )
+  } catch (error: any) {
+    console.log("error", error)
+    result = {
+      data: error
+    }
   } 
   return result;
 }

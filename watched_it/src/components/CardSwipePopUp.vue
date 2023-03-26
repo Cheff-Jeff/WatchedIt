@@ -61,6 +61,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { rateMovies } from '@/assets/javascript/api';
+import { rateMovieShow } from '@/assets/javascript/Models/ExternApiInterface';
 
 export default defineComponent({
     data() {
@@ -81,9 +83,6 @@ export default defineComponent({
 
             liked: false,
             likedMovieShow: [] as any,
-
-            disliked: false,
-            dislikedMovieShow: [] as any,
         }
     },
     emits: [
@@ -93,6 +92,10 @@ export default defineComponent({
         votelist: {
             type: Array as any,
             required: true
+        },
+        movielistId: {
+            type: Number,
+            required: true
         }
     },
     async mounted() {
@@ -100,8 +103,20 @@ export default defineComponent({
         this.MovieShow = this.movieshowArray[0]
 
         this.movieshowArray.splice(i, 1);
+
+        console.log(this.votelist)
     },
     methods: {
+        async sendRating(){
+            const ratemovieshow: rateMovieShow = {
+                movielistId: this.movielistId,
+                userId: JSON.parse(localStorage.getItem('user') || '{}'),
+                externMovieIds: this.likedMovieShow
+            }
+
+            console.log(ratemovieshow)
+            await rateMovies(ratemovieshow);
+        },
         LikeItem() {
             if (this.MovieShow.id != null) {
                 this.likedMovieShow.push(this.MovieShow.id)
@@ -111,21 +126,18 @@ export default defineComponent({
                 if (this.movieshowArray.length != 0) {
                     this.NextItem(this.MovieShow.id)
                 } else {
-                    //api call maken met likedarray
-                    this.closeModal()
+                    this.sendRating();
+                    this.closeModal();
                 }
             }
         },
         DisLikeItem() {
             if (this.MovieShow.id != null) {
-                this.dislikedMovieShow.push(this.MovieShow.id)
-
-                this.disliked = !this.disliked
 
                 if (this.movieshowArray.length != 0) {
                     this.NextItem(this.MovieShow.id)
                 } else {
-                    //api call maken met dislikedarray
+                    this.sendRating();
                     this.closeModal()
                 }
             }

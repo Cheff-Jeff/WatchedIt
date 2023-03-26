@@ -46,13 +46,18 @@
 
 
             <div class="swipe-btn">
-                <div class="col-md-12" v-on:click="openVotePopUp()">
-                    <div class="mdc-touch-target-wrapper btn-wrap">
-                        <button class="mdc-button mdc-button--raised">
-                            <span class="mdc-button__ripple"></span>
-                            <span class="mdc-button__touch"></span>
-                            <span class="mdc-button__label">Vote</span>
-                        </button>
+                <div class="row">
+                    <div class="col-7">
+
+                    </div>
+                    <div class="col-5">
+                        <div class="mdc-touch-target-wrapper btn-wrap">
+                            <button id="vote" class="mdc-button mdc-button--raised" v-on:click="openVotePopUp()">
+                                <span class="mdc-button__ripple"></span>
+                                <span class="mdc-button__touch"></span>
+                                <span class="mdc-button__label">Vote</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,14 +96,15 @@
         </div>
     </section>
 
-    <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails">
+    <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
+        :movielistId="currentList.id">
     </component>
 </template>
 
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchMovie, fetchShow, fetchUser } from '@/assets/javascript/api';
+import { fetchMovie, fetchShow, fetchUser, getHasUserVoted } from '@/assets/javascript/api';
 import CardSwipePopUp from './CardSwipePopUp.vue';
 
 export default defineComponent({
@@ -121,6 +127,8 @@ export default defineComponent({
         currentList: [] as any,
     },
     async mounted() {
+        await this.btnDisplayCheck();
+
         this.userdetails = this.currentList.users;
         this.userdetails.splice(0, 1);
         let user = await fetchUser(JSON.parse(localStorage.getItem('user') || '{}'));
@@ -135,16 +143,28 @@ export default defineComponent({
                 details = await fetchShow(this.currentList.movies[i].externId);
             }
 
+            //movieId geven aan voteaverige, wist niet hoe beter kon.
+            details._value.data.vote_average = this.currentList.movies[i].id
+
             details._value.data.overview = this.truncateString(details._value.data.overview)
             this.movieshowdetails.push(details._value.data)
         }
     },
     methods: {
         openVotePopUp() {
-            if(this.currentList.movies.length >= 1){
+            if (this.currentList.movies.length >= 1) {
                 this.compToRender = 'CardSwipePopUp'
             } else {
                 //melding dat er niks is om te voten
+            }
+        },
+        async btnDisplayCheck() {
+            const result = await getHasUserVoted(this.currentList.id, JSON.parse(localStorage.getItem('user') || '{}'));
+
+            if (this.currentList.voteDeadLine > new Date().toLocaleString() || result?.data == true) {
+                const btn = (document.getElementById("vote") as HTMLButtonElement)!
+                btn.disabled = true;
+                btn.style.opacity = '0.4';
             }
         },
         truncateString(str: string) {
@@ -155,6 +175,8 @@ export default defineComponent({
         },
         closeCardSwipePopUp() {
             this.compToRender = ''
+
+            this.btnDisplayCheck();
         }
     }
 })
