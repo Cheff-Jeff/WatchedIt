@@ -8,7 +8,6 @@ import { onMounted } from 'vue';
 onMounted(() => {
     const inputs = document.getElementsByClassName('mdc-text-field');
     const btn = document.querySelector('.mdc-button');
-    console.log("test")
     if (inputs) {
         for (let input of inputs) {
             let textField = new MDCTextField(input);
@@ -67,103 +66,105 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-    </section>
 
-    <div v-if="modalToggle" class="modal-wrap">
-        <div class="modal-delete">
-            <div class="head">
-                <h5>Add list</h5>
-            </div>
-            <div class="body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-wrapper">
-                            <label class="mdc-text-field mdc-text-field--outlined">
-                                <span class="mdc-notched-outline">
-                                    <span class="mdc-notched-outline__leading"></span>
-                                    <span class="mdc-notched-outline__notch">
-                                        <span class="mdc-floating-label" id="my-label-id">Title</span>
+        <div v-if="modalToggle" class="modal-wrap">
+            <div class="modal-delete">
+                <div class="head">
+                    <h5>Add list</h5>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Your Name</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
                                     </span>
-                                    <span class="mdc-notched-outline__trailing"></span>
-                                </span>
-                                <input type="tel" class="mdc-text-field__input" aria-labelledby="my-label-id" required
-                                    v-model="listDetails.title">
-                            </label>
+                                    <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.title">
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="input-wrapper">
-                            <label class="mdc-text-field mdc-text-field--outlined">
-                                <span class="mdc-notched-outline">
-                                    <span class="mdc-notched-outline__leading"></span>
-                                    <span class="mdc-notched-outline__notch">
-                                        <span class="mdc-floating-label" id="my-label-id">Add item till</span>
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Add item till</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
                                     </span>
-                                    <span class="mdc-notched-outline__trailing"></span>
-                                </span>
-                                <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
-                                    v-model="listDetails.addmovieDate">
-                            </label>
+                                    <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.addmovieDate">
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="input-wrapper">
-                            <label class="mdc-text-field mdc-text-field--outlined">
-                                <span class="mdc-notched-outline">
-                                    <span class="mdc-notched-outline__leading"></span>
-                                    <span class="mdc-notched-outline__notch">
-                                        <span class="mdc-floating-label" id="my-label-id">Vote deadline</span>
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Vote deadline</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
                                     </span>
-                                    <span class="mdc-notched-outline__trailing"></span>
-                                </span>
-                                <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
-                                    v-model="listDetails.voteDeadline">
-                            </label>
+                                    <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.voteDeadline">
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="input-wrapper">
-                            <label class="mdc-text-field mdc-text-field--outlined">
-                                <span class="mdc-notched-outline">
-                                    <span class="mdc-notched-outline__leading"></span>
-                                    <span class="mdc-notched-outline__notch">
-                                        <span class="mdc-floating-label" id="my-label-id">Watch time</span>
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Watch time</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
                                     </span>
-                                    <span class="mdc-notched-outline__trailing"></span>
-                                </span>
-                                <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
-                                    v-model="listDetails.watchTime">
-                            </label>
+                                    <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.watchDate">
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="buttons">
-                <div class="mdc-touch-target-wrapper btn-wrap white" @click="togglePopup()">
-                    <button class="mdc-button mdc-button--raised">
-                        <span class="mdc-button__ripple"></span>
-                        <span class="mdc-button__touch"></span>
-                        <span class="mdc-button__label">Cancel</span>
-                    </button>
-                </div>
-                <div class="mdc-touch-target-wrapper btn-wrap">
-                    <button class="mdc-button mdc-button--raised">
-                        <span class="mdc-button__ripple"></span>
-                        <span class="mdc-button__touch"></span>
-                        <span class="mdc-button__label">Save</span>
-                    </button>
+                <div class="buttons">
+                    <div class="mdc-touch-target-wrapper btn-wrap white" @click="togglePopup()">
+                        <button class="mdc-button mdc-button--raised">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Cancel</span>
+                        </button>
+                    </div>
+                    <div class="mdc-touch-target-wrapper btn-wrap">
+                        <button class="mdc-button mdc-button--raised" v-on:click="submitNewList()">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Save</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+    </section>
 
     <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getCollectionList } from '../assets/javascript/api';
+import { getCollectionList, addNewList } from '../assets/javascript/api';
 import ListDetails from '@/components/ListDetails.vue';
+import { newList } from '../assets/javascript/Models/ExternApiInterface';
 
 export default defineComponent({
     data() {
@@ -179,7 +180,7 @@ export default defineComponent({
                 title: '',
                 addmovieDate: '',
                 voteDeadline: '',
-                watchTime: ''
+                watchDate: ''
             }
         }
     },
@@ -201,6 +202,25 @@ export default defineComponent({
         togglePopup() {
             this.modalToggle = !this.modalToggle;
         },
+        async submitNewList() {
+            const newList: newList = {
+                title: this.listDetails.title,
+                userId: JSON.parse(localStorage.getItem('user') || '{}'),
+                addMovieDeadLine: this.listDetails.addmovieDate,
+                voteDeadLine: this.listDetails.voteDeadline,
+                watchDateTime: this.listDetails.watchDate
+            }
+
+            const result = await addNewList(newList)
+
+            if (result?.code == 200) {
+                //melding
+                window.location.reload()
+            }
+            else {
+                //melding
+            }
+        }
     }
 })
 </script>
@@ -209,5 +229,5 @@ export default defineComponent({
 @import "@/assets/styles/colors.scss";
 @import "@/assets/styles/components/buttons.scss";
 @import "@/assets/styles/components/input.scss";
-@import '@/assets/styles/pages/list.scss';
+@import "@/assets/styles/pages/list.scss";
 </style>

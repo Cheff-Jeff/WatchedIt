@@ -70,3 +70,11 @@ export interface genre {id: number, name: string}
 export interface provider {logo: string, name: string}
 export interface actor {name: string, photo: string}
 
+export interface newList {
+  title: string,
+  userId: number,
+  addMovieDeadLine: string,
+  voteDeadLine: string,
+  watchDateTime: string,
+}
+

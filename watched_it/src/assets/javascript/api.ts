@@ -2,7 +2,7 @@ import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
 import { Friend, User, favoriteDto } from './Models/UserInterface';
-import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow } from "./Models/ExternApiInterface";
+import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow, newList } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
   const result: Ref<User[] | null> = ref(null)
@@ -823,5 +823,29 @@ export const showRecomandations = async (movieId: string, page: string) => {
       data: error.response.data
     }
   }
+  return result 
+}
+
+export const addNewList = async (newList: newList) => {
+  let result: { code: number, data: User } | null = null
+
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Lists/addmovielist`, newList, {
+      headers: { 'Content-type': 'multipart/form-data' }
+    }).then((response) => {
+      if (response.status == 200) {
+        result = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+
   return result
 }

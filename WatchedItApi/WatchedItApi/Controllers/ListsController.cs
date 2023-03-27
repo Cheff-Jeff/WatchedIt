@@ -40,7 +40,7 @@ namespace WatchedItApi.Controllers
         [HttpPost("addmovielist")]
         [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddMovieList(MovieList movielist)
+        public async Task<IActionResult> AddMovieList([FromForm] MovieList movielist)
         {
             if (movielist != null)
             {
