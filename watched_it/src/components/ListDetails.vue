@@ -147,7 +147,7 @@ export default defineComponent({
     async mounted() {
         await this.btnDisplayCheck();
 
-        if (this.currentList.addMovieDeadLine > new Date().toDateString()) {
+        if (this.currentList.voteDeadLine < new Date().toLocaleDateString()) {
             const result = await getMovieVotesResult(this.currentList.id);
 
             let resultitem = [] as any;
@@ -159,7 +159,6 @@ export default defineComponent({
             }
 
             this.resultmovieshow = resultitem._value.data
-            console.log(this.resultmovieshow)
 
             const btn = (document.getElementById("vote") as HTMLButtonElement)!
             btn.style.display = 'none'

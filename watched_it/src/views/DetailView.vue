@@ -209,7 +209,15 @@ export default defineComponent({
     }
   },
   async mounted() {
-    this.movieshowList = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
+    let result = [] as any;
+    result = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
+
+    for (let i = 0; i < result._value.length; i++) {
+      if(result._value[i].addMovieDeadLine < new Date().toLocaleDateString()){
+        this.movieshowList.push(result._value[i])
+      }
+    }
+    console.log(this.movieshowList)
   },
   methods: {
     togglePopup() {
@@ -231,7 +239,7 @@ export default defineComponent({
         this.togglePopup();
       }
       else {
-        //melding film zit al in lijst of tijdslot om fils toe te voegn is niet meer
+        //melding film zit al in lijst
       }
     },
     async newFavorite(titleId: number, titleType: string) {
