@@ -22,7 +22,13 @@ img{
   width: 100%;
   height: auto;
 }
-
+span.error{
+  font-size: 10px;
+  color: #b00020;
+  text-align: center;
+  display: block;
+  margin-bottom: 20px;
+}
 .link{
   font-size: 14px;
   letter-spacing: 1px;

@@ -107,12 +107,25 @@ onMounted(() => {
                             <p>Leave empty if you want to keep your current password</p>
                         </div>
                     </div>
+                    <span class="small error" v-if="error">
+                        {{ error }}
+                    </span>
                     <div class="btn-group btn-container">
                         <div class="mdc-touch-target-wrapper btn-wrap">
                             <button type="submit" class="mdc-button mdc-button--raised">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
-                                <span class="mdc-button__label">Save</span>
+                                <span class="mdc-button__label loading-icon" v-if="loading">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                    <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#fff" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+                                    </circle>
+                                    <circle cx="50" cy="50" r="23" stroke-width="8" stroke="#fff" stroke-dasharray="36.12831551628262 36.12831551628262" stroke-dashoffset="36.12831551628262" fill="none" stroke-linecap="round">
+                                    <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;-360 50 50"></animateTransform>
+                                    </circle>
+                                </svg>
+                                </span>
+                                <span v-else class="mdc-button__label">Save</span>
                             </button>
                         </div>
                         <div class="mdc-touch-target-wrapper btn-wrap white">
@@ -155,6 +168,8 @@ export default defineComponent({
             classEmailError: '',
             classphoneError: '',
             classPassError: '',
+            error: '',
+            loading: false
         }
     },
     async mounted() {
@@ -165,28 +180,33 @@ export default defineComponent({
     },
     methods: {
         async submit() {
-            this.checkName()
-            this.checkEmail()
-            this.checkPhone()
-            this.checkPassword()
+            if(!this.loading){
+                this.loading = true
+                this.checkName()
+                this.checkEmail()
+                this.checkPhone()
+                this.checkPassword()
 
-            if (this.nameError == '', this.emailError == '',
-                this.phoneError == '', this.passwordError == '') {
-                const user: User = {
-                    id: JSON.parse(localStorage.getItem('user') || '{}'),
-                    name: this.name,
-                    email: this.email,
-                    phone: this.phone,
-                    password: this.password
-                }
+                if (this.nameError == '', this.emailError == '',
+                    this.phoneError == '', this.passwordError == '') {
+                    const user: User = {
+                        id: JSON.parse(localStorage.getItem('user') || '{}'),
+                        name: this.name,
+                        email: this.email,
+                        phone: this.phone,
+                        password: this.password
+                    }
 
-                const result = await updateUser(user)
+                    const result = await updateUser(user)
 
-                if (result?.code == 204) {
-                    this.$router.push('account')
-                }
-                else {
-                    console.log(result)
+                    if (result?.code == 204) {
+                        this.loading = false
+                        this.$router.push('account')
+                    }
+                    else {
+                        this.loading = false
+                        this.error = "Something went wrong. Please try again."
+                    }
                 }
             }
         },
