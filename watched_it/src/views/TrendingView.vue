@@ -45,18 +45,14 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
             </div>
         </div>
     </section>
-
-    <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp"></component>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getExternTrendingMovies, getExternTrendingShows } from '@/assets/javascript/api';
-import CardSwipePopUp from '@/components/CardSwipePopUp.vue';
 export default defineComponent({
     data() {
         return {
-            compToRender: 'CardSwipePopUp',
 
             title: "Trending",
 
@@ -68,14 +64,6 @@ export default defineComponent({
         this.trendingMovieList = await getExternTrendingMovies();
         this.trendingShowList = await getExternTrendingShows();
     },
-    components: {
-        CardSwipePopUp
-    },
-    methods: {
-        closeCardSwipePopUp(){
-            this.compToRender = ''
-        }
-    }
 })
 </script>
 

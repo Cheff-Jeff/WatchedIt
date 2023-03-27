@@ -27,7 +27,7 @@
     <section class="topBar">
       <h1>Your favorite titles.</h1>
     </section>
-    <section class="titles" v-if="favoriteTitles">
+    <section class="titles" v-if="favoriteTitles && favoriteTitles?.length > 0">
       <div class="row justify-content-center">
         <div class="col-6" v-for="title in favoriteTitles" :key="title.id">
           <router-link v-if="title.isMovie" :to="{name:'details',  params: { type: 'movie', id: title.id }}">
@@ -51,6 +51,18 @@
                 <h1>{{ title.name }}</h1>
               </div>
             </div>
+          </router-link>
+        </div>
+      </div>
+    </section>
+    <section class="fallback" v-else>
+      <div class="container">
+        <div class="img-wrap">
+          <img src="@/assets/lisa.gif">
+        </div>
+        <div class="link-wrap">
+          <router-link :to="{name: 'trending'}" class="link">
+            Trending
           </router-link>
         </div>
       </div>
