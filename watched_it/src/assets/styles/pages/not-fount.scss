@@ -1,0 +1,53 @@
+@import "../fonts/roboto.scss";
+
+.wrapper{
+  background: $background;
+  min-height: calc(100vh);
+}
+.content{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 55px;
+  min-height: calc(100vh - 55px);
+  .img-wrapper{
+    margin-top: -50px;
+    margin-bottom: 50px;
+    .hover-box{
+      margin-bottom: -25px;
+      position: relative;
+      z-index: 99;
+      background: $boxBackground;
+      border: solid 2px $outline;
+      padding: 5px;
+      width: fit-content;
+      h1{
+        font-size: 15px;
+        letter-spacing: 1.5px;
+        position: relative;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        color: $outline;
+        &::before{
+          content: "";
+          width: 25%;
+          height: 1px;
+          background: $outline;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
+      }
+      p{
+        font-size: 10px;
+        letter-spacing: 1px;
+        margin-bottom: 0;
+      }
+    }
+    img{
+      width: 87%;
+      margin: auto;
+    }
+  }
+}

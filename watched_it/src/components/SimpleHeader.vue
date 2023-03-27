@@ -76,8 +76,8 @@ const props = defineProps({
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/test">
-                                Comig soon
+                            <router-link :to="{name: 'soon'}">
+                                Coming soon
                             </router-link>
                         </li>
                     </ul>
