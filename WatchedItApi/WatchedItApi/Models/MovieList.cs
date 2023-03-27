@@ -7,11 +7,13 @@ namespace WatchedItApi.Models
     public class MovieList
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         public string title { get; set; } = String.Empty;
 
         public int UserId { get; set; }
+
+        public string addMovieDeadLine { get; set; } = String.Empty;
 
         public string voteDeadLine { get; set; } = String.Empty;
 
@@ -19,6 +21,6 @@ namespace WatchedItApi.Models
 
         public ICollection<Movie>? Movies { get; set; }
 
-        public ICollection<Friend>? Friends { get; set; }
+        public ICollection<User>? Users { get; set; }
     }
 }

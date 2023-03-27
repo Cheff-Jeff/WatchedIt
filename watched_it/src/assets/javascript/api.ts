@@ -1,8 +1,8 @@
 import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
-import { Friend, User, favoriteDto } from './Models/UserInterface';
-import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow } from "./Models/ExternApiInterface";
+import { Friend, User } from './Models/UserInterface';
+import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
   const result: Ref<User[] | null> = ref(null)
@@ -553,6 +553,52 @@ export const searchMovies = async (searchPhrase: string) => {
   return result
 }
 
+export const getCollectionList = async (id: number) => {
+  const result: Ref<collectionList[] | null> = ref(null)
+  const collectionLists: collectionList[] = []
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Lists?id=${id}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        if (response.status == 200) {
+          
+          for (let i = 0; i < response.data[0]["movieList"].length; i++) {
+              const collectionlist: collectionList = {
+                id: response.data[0]["movieList"][i]["id"],
+                title: response.data[0]["movieList"][i]['title'],
+                addMovieDeadLine: response.data[0]["movieList"][i]['addMovieDeadLine'],
+                voteDeadLine: response.data[0]["movieList"][i]['voteDeadLine'],
+                watchDateTime: response.data[0]["movieList"][i]['watchDateTime'],
+                itemCount: response.data[0]["movieList"][i]["movies"].length,
+                movies: response.data[0]["movieList"][i]["movies"],
+                users: response.data[0]["movieList"][i]["users"]
+              }
+
+              collectionLists.push(collectionlist)
+            }
+  
+          result.value = collectionLists
+        }
+      }
+    )
+  } catch (error: any) {
+    console.log("error", error)
+  } 
+  return result;
+}
+
+export const rateMovies = async (rating: rateMovieShow) => {
+  let result: { code: number, data: any } | null = null
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Lists/ratemovie`, rating, {
+      headers: { 'Content-type': 'multipart/form-data' }
+    }).then((response) => {
+      if (response.status == 201) {
+        result = {
+          code: response.status,
+          data: response.data
+          
 export const checkFavo = async (dto: favoriteDto) => {
   const result: Ref<{ code: number, data: any } | null> = ref(null)
   try {
@@ -600,6 +646,7 @@ export const fetchCommingSoon = async (page: string) => {
       }
     })
   } catch (error: any) {
+    result = {
     console.log(error)
   }
   return result
@@ -628,6 +675,53 @@ export const checkMovieRecomendations = async (id: string) => {
       data: error.response.data
     }
   }
+  return result
+}
+
+export const getHasUserVoted = async (movielistId: number, userId: number) => {
+  let result: { data: boolean } | null = null
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Lists/votecheck?movielistId=${movielistId}&userId=${userId}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        if (response.status == 200) { 
+          result = {
+            data: response.data
+          }
+        }
+      }
+    )
+  } catch (error: any) {
+    console.log("error", error)
+    result = {
+      data: error
+    }
+  } 
+  return result;
+}
+
+export const getMovieVotesResult = async (movielistId: number) => {
+  let result: { data: any } | null = null
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Lists/getmovievotesresult?movielistId=${movielistId}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        if (response.status == 200) { 
+          result = {
+            data: response.data
+          }
+        }
+      }
+    )
+  } catch (error: any) {
+    console.log("error", error)
+    result = {
+      data: error
+    }
+  } 
+  return result;
 
   return result
 }

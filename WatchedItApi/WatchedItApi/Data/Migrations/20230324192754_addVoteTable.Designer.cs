@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchedItApi.Data;
 
@@ -10,9 +11,11 @@ using WatchedItApi.Data;
 namespace WatchedItApi.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230324192754_addVoteTable")]
+    partial class addVoteTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,28 +37,6 @@ namespace WatchedItApi.Data.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("MovieListUser");
-                });
-
-            modelBuilder.Entity("WatchedItApi.Models.Favorites", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("movie")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("movieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.Friend", b =>
@@ -101,9 +82,6 @@ namespace WatchedItApi.Data.Migrations
                     b.Property<bool>("movie")
                         .HasColumnType("bit");
 
-                    b.Property<int>("voteCount")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MovieListId");
@@ -121,10 +99,6 @@ namespace WatchedItApi.Data.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("addMovieDeadLine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("title")
                         .IsRequired()
@@ -176,7 +150,7 @@ namespace WatchedItApi.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("WatchedItApi.Models.UserVote", b =>
+            modelBuilder.Entity("WatchedItApi.Models.UserVoteMovie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -184,18 +158,27 @@ namespace WatchedItApi.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
                     b.Property<int>("MovieListId")
                         .HasColumnType("int");
 
                     b.Property<int>("userId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("voted")
-                        .HasColumnType("bit");
+                    b.Property<int>("voteCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserVotes");
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("MovieListId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("UserVoteMovies");
                 });
 
             modelBuilder.Entity("MovieListUser", b =>
@@ -229,6 +212,33 @@ namespace WatchedItApi.Data.Migrations
                         .HasForeignKey("MovieListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WatchedItApi.Models.UserVoteMovie", b =>
+                {
+                    b.HasOne("WatchedItApi.Models.Movie", "movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchedItApi.Models.MovieList", "movielist")
+                        .WithMany()
+                        .HasForeignKey("MovieListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchedItApi.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("movie");
+
+                    b.Navigation("movielist");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.MovieList", b =>
