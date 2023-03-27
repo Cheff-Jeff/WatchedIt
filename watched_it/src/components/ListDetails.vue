@@ -29,8 +29,8 @@
                 <div class="row">
                     <div class="col-6">
                         <img v-if="resultmovieshow.poster" class="result-img"
-                                :src="'https://image.tmdb.org/t/p/w1280' + resultmovieshow.poster">
-                            <img v-else class="tesult-img" src="../assets/stockBackground.png">
+                            :src="'https://image.tmdb.org/t/p/w1280' + resultmovieshow.poster">
+                        <img v-else class="tesult-img" src="../assets/stockBackground.png">
                     </div>
                     <div class="col-6 flex">
                         <div>
@@ -106,7 +106,6 @@
                 </div>
             </div>
         </div>
-
     </section>
 
     <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
@@ -148,7 +147,7 @@ export default defineComponent({
     async mounted() {
         await this.btnDisplayCheck();
 
-        if(this.currentList.addMovieDeadLine < new Date().toLocaleString()){
+        if (this.currentList.addMovieDeadLine < new Date().toLocaleString()) {
             const result = await getMovieVotesResult(this.currentList.id);
 
             let resultitem = [] as any;
@@ -221,7 +220,7 @@ export default defineComponent({
                 this.compToRender = ''
                 this.btnDisplayCheck();
             }, 500);
-        }
+        },
     }
 })
 </script>
