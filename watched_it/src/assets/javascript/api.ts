@@ -1,7 +1,7 @@
 import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
-import { Friend, User } from './Models/UserInterface';
+import { Friend, User, favoriteDto } from './Models/UserInterface';
 import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
@@ -129,8 +129,8 @@ export const fetchFriends = async (id: string) => {
     }).then((response) => {
       if (response.status == 200) {
         const friends: Friend[] = []
-        
-        for(let i = 0; i < response.data.length; i++){
+
+        for (let i = 0; i < response.data.length; i++) {
           const user: Friend = {
             id: response.data[i]['id'],
             name: response.data[i]['name'],
@@ -138,7 +138,7 @@ export const fetchFriends = async (id: string) => {
           }
           friends.push(user);
         }
-        
+
         result.value = {
           code: response.status,
           data: friends
@@ -177,7 +177,7 @@ export const addFriend = async (dto: User) => {
   return result
 }
 
-export const deleteFriend = async (id:string) => {
+export const deleteFriend = async (id: string) => {
   const result: Ref<{ code: number, data: any } | null> = ref(null)
   try {
     await axios.delete(`${process.env.VUE_APP_API_HOST}/Users/friend?id=${id}`, {
@@ -199,7 +199,7 @@ export const deleteFriend = async (id:string) => {
   return result
 }
 
-export const fetchFavorites = async (id:string) => {
+export const fetchFavorites = async (id: string) => {
   const result: Ref<{ code: number, data: favoriteDto[] } | null> = ref(null)
   try {
     await axios.get(`${process.env.VUE_APP_API_HOST}/Users/favorites?userId=${id}`, {
@@ -322,21 +322,22 @@ export const getExternTrendingShows = async () => {
 }
 
 export const fetchMovie = async (id: string) => {
-  const result: Ref<{code: number, data: titleDetails} | null> = ref(null)
-  const details: titleDetails = {id: 0, genres: [{id: 0, name: 'string'}], language: 'string', title: 'string',
-    overview: 'string', vote_average: 0, poster: 'string', backdrop: 'string', providers: [{logo: 'string', name: 'string'}],
-    cast: [{name: 'string', photo: 'string'}], first_air_date: 'string', director: 'string'
+  const result: Ref<{ code: number, data: titleDetails } | null> = ref(null)
+  const details: titleDetails = {
+    id: 0, genres: [{ id: 0, name: 'string' }], language: 'string', title: 'string',
+    overview: 'string', vote_average: 0, poster: 'string', backdrop: 'string', providers: [{ logo: 'string', name: 'string' }],
+    cast: [{ name: 'string', photo: 'string' }], first_air_date: 'string', director: 'string'
   }
 
   try {
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/movie/${id}?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}`, {
       headers: { 'Content-type': 'application/json' }
     }).then(response => {
-      if(response.status == 200){
-        const genres: {id: number, name: string}[] = Array<{id: number, name: string}>()
+      if (response.status == 200) {
+        const genres: { id: number, name: string }[] = Array<{ id: number, name: string }>()
 
-        for(let i = 0; i < response.data['genres'].length; i++){
-          const genre = {id: response.data['genres'][i]['id'], name: response.data['genres'][i]['name']}
+        for (let i = 0; i < response.data['genres'].length; i++) {
+          const genre = { id: response.data['genres'][i]['id'], name: response.data['genres'][i]['name'] }
           genres.push(genre)
         }
 
@@ -354,12 +355,12 @@ export const fetchMovie = async (id: string) => {
       const providers = await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/movie/${id}/watch/providers?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}`, {
         headers: { 'Content-type': 'application/json' }
       })
-      if(providers.status == 200){
-        const streamers: {logo: string,name: string}[] = Array<{logo: string,name: string}>()
-        if(providers.data['results']['NL'] !== undefined && providers.data['results']['NL'] !== 'undefined' && providers.data['results']['NL']['flatrate']){
-          for(let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++){
+      if (providers.status == 200) {
+        const streamers: { logo: string, name: string }[] = Array<{ logo: string, name: string }>()
+        if (providers.data['results']['NL'] !== undefined && providers.data['results']['NL'] !== 'undefined' && providers.data['results']['NL']['flatrate']) {
+          for (let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++) {
             streamers.push({
-              logo: providers.data['results']['NL']['flatrate'][i]['logo_path'], 
+              logo: providers.data['results']['NL']['flatrate'][i]['logo_path'],
               name: providers.data['results']['NL']['flatrate'][i]['provider_name']
             })
           }
@@ -370,10 +371,10 @@ export const fetchMovie = async (id: string) => {
       const crew = await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/movie/${id}/credits?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}`, {
         headers: { 'Content-type': 'application/json' }
       })
-      if(crew.status == 200){
-        const cast: {name: string,photo: string}[] = Array<{name: string,photo: string}>()
-        for(let i = 0; i < crew.data['cast'].length; i++){
-          if(crew.data['cast'][i]['known_for_department'] == "Acting"){
+      if (crew.status == 200) {
+        const cast: { name: string, photo: string }[] = Array<{ name: string, photo: string }>()
+        for (let i = 0; i < crew.data['cast'].length; i++) {
+          if (crew.data['cast'][i]['known_for_department'] == "Acting") {
             cast.push({
               name: crew.data['cast'][i]['name'],
               photo: crew.data['cast'][i]['profile_path']
@@ -383,14 +384,14 @@ export const fetchMovie = async (id: string) => {
 
         details.cast = cast
 
-        for(let i = 0; i < crew.data['crew'].length; i++){
-          if(crew.data['crew'][i]['job'] == "Director"){
+        for (let i = 0; i < crew.data['crew'].length; i++) {
+          if (crew.data['crew'][i]['job'] == "Director") {
             details.director = crew.data['crew'][i]['name']
             break;
           }
         }
       }
-    }).then(()=>{
+    }).then(() => {
       result.value = {
         code: 200,
         data: details
@@ -406,21 +407,22 @@ export const fetchMovie = async (id: string) => {
 }
 
 export const fetchShow = async (id: string) => {
-  const result: Ref<{code: number, data: titleDetails} | null> = ref(null)
-  const details: titleDetails = {id: 0, genres: [{id: 0, name: 'string'}], language: 'string', title: 'string',
-    overview: 'string', vote_average: 0, poster: 'string', backdrop: 'string', providers: [{logo: 'string', name: 'string'}],
-    cast: [{name: 'string', photo: 'string'}], first_air_date: 'string', director: 'string'
+  const result: Ref<{ code: number, data: titleDetails } | null> = ref(null)
+  const details: titleDetails = {
+    id: 0, genres: [{ id: 0, name: 'string' }], language: 'string', title: 'string',
+    overview: 'string', vote_average: 0, poster: 'string', backdrop: 'string', providers: [{ logo: 'string', name: 'string' }],
+    cast: [{ name: 'string', photo: 'string' }], first_air_date: 'string', director: 'string'
   }
 
   try {
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/tv/${id}?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}`, {
       headers: { 'Content-type': 'application/json' }
     }).then(response => {
-      if(response.status == 200){
-        const genres: {id: number, name: string}[] = Array<{id: number, name: string}>()
+      if (response.status == 200) {
+        const genres: { id: number, name: string }[] = Array<{ id: number, name: string }>()
 
-        for(let i = 0; i < response.data['genres'].length; i++){
-          const genre = {id: response.data['genres'][i]['id'], name: response.data['genres'][i]['name']}
+        for (let i = 0; i < response.data['genres'].length; i++) {
+          const genre = { id: response.data['genres'][i]['id'], name: response.data['genres'][i]['name'] }
           genres.push(genre)
         }
 
@@ -438,12 +440,12 @@ export const fetchShow = async (id: string) => {
       const providers = await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}tv/${id}/watch/providers?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}`, {
         headers: { 'Content-type': 'application/json' }
       })
-      if(providers.status == 200){
-        const streamers: {logo: string,name: string}[] = Array<{logo: string,name: string}>()
-        if(providers.data['results']['NL'] !== undefined && providers.data['results']['NL'] !== 'undefined' && providers.data['results']['NL']['flatrate']){
-          for(let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++){
+      if (providers.status == 200) {
+        const streamers: { logo: string, name: string }[] = Array<{ logo: string, name: string }>()
+        if (providers.data['results']['NL'] !== undefined && providers.data['results']['NL'] !== 'undefined' && providers.data['results']['NL']['flatrate']) {
+          for (let i = 0; i < providers.data['results']['NL']['flatrate'].length; i++) {
             streamers.push({
-              logo: providers.data['results']['NL']['flatrate'][i]['logo_path'], 
+              logo: providers.data['results']['NL']['flatrate'][i]['logo_path'],
               name: providers.data['results']['NL']['flatrate'][i]['provider_name']
             })
           }
@@ -454,10 +456,10 @@ export const fetchShow = async (id: string) => {
       const crew = await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}tv/${id}/aggregate_credits?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}`, {
         headers: { 'Content-type': 'application/json' }
       })
-      if(crew.status == 200){
-        const cast: {name: string,photo: string}[] = Array<{name: string,photo: string}>()
-        for(let i = 0; i < crew.data['cast'].length; i++){
-          if(crew.data['cast'][i]['known_for_department'] == "Acting"){
+      if (crew.status == 200) {
+        const cast: { name: string, photo: string }[] = Array<{ name: string, photo: string }>()
+        for (let i = 0; i < crew.data['cast'].length; i++) {
+          if (crew.data['cast'][i]['known_for_department'] == "Acting") {
             cast.push({
               name: crew.data['cast'][i]['name'],
               photo: crew.data['cast'][i]['profile_path']
@@ -467,14 +469,14 @@ export const fetchShow = async (id: string) => {
 
         details.cast = cast
 
-        for(let i = 0; i < crew.data['crew'].length; i++){
-          if(crew.data['crew'][i]['jobs'][0]['job'] == "Director"){
+        for (let i = 0; i < crew.data['crew'].length; i++) {
+          if (crew.data['crew'][i]['jobs'][0]['job'] == "Director") {
             details.director = crew.data['crew'][i]['name']
             break;
           }
         }
       }
-    }).then(()=>{
+    }).then(() => {
       result.value = {
         code: 200,
         data: details
@@ -520,31 +522,31 @@ export const searchMovies = async (searchPhrase: string) => {
     }).then(
       response => {
         if (response.status == 200) {
-            for (let i = 0; i < response.data.results.length; i++) {
-              
-              let title: string;
-              if(response.data.results[i]["name"]){
-                title = response.data.results[i]["name"]
-              } else {
-                title = response.data.results[i]["title"]
-              }
+          for (let i = 0; i < response.data.results.length; i++) {
 
-              let media_type: string;
-              if(response.data.results[i]["media_type"] == 'tv'){
-                media_type = 'show'
-              } else {
-                media_type = response.data.results[i]["media_type"]
-              }
-
-              const searchmovieshow: searchMovieShow = {
-                id: response.data.results[i]["id"],
-                title: title,
-                media_type: media_type,
-              }
-              moviesshows.push(searchmovieshow)
+            let title: string;
+            if (response.data.results[i]["name"]) {
+              title = response.data.results[i]["name"]
+            } else {
+              title = response.data.results[i]["title"]
             }
 
-            result.value = moviesshows
+            let media_type: string;
+            if (response.data.results[i]["media_type"] == 'tv') {
+              media_type = 'show'
+            } else {
+              media_type = response.data.results[i]["media_type"]
+            }
+
+            const searchmovieshow: searchMovieShow = {
+              id: response.data.results[i]["id"],
+              title: title,
+              media_type: media_type,
+            }
+            moviesshows.push(searchmovieshow)
+          }
+
+          result.value = moviesshows
         }
       })
   } catch (error: any) {
@@ -562,29 +564,29 @@ export const getCollectionList = async (id: number) => {
     }).then(
       response => {
         if (response.status == 200) {
-          
-          for (let i = 0; i < response.data[0]["movieList"].length; i++) {
-              const collectionlist: collectionList = {
-                id: response.data[0]["movieList"][i]["id"],
-                title: response.data[0]["movieList"][i]['title'],
-                addMovieDeadLine: response.data[0]["movieList"][i]['addMovieDeadLine'],
-                voteDeadLine: response.data[0]["movieList"][i]['voteDeadLine'],
-                watchDateTime: response.data[0]["movieList"][i]['watchDateTime'],
-                itemCount: response.data[0]["movieList"][i]["movies"].length,
-                movies: response.data[0]["movieList"][i]["movies"],
-                users: response.data[0]["movieList"][i]["users"]
-              }
 
-              collectionLists.push(collectionlist)
+          for (let i = 0; i < response.data[0]["movieList"].length; i++) {
+            const collectionlist: collectionList = {
+              id: response.data[0]["movieList"][i]["id"],
+              title: response.data[0]["movieList"][i]['title'],
+              addMovieDeadLine: response.data[0]["movieList"][i]['addMovieDeadLine'],
+              voteDeadLine: response.data[0]["movieList"][i]['voteDeadLine'],
+              watchDateTime: response.data[0]["movieList"][i]['watchDateTime'],
+              itemCount: response.data[0]["movieList"][i]["movies"].length,
+              movies: response.data[0]["movieList"][i]["movies"],
+              users: response.data[0]["movieList"][i]["users"]
             }
-  
+
+            collectionLists.push(collectionlist)
+          }
+
           result.value = collectionLists
         }
       }
     )
   } catch (error: any) {
     console.log("error", error)
-  } 
+  }
   return result;
 }
 
@@ -598,7 +600,18 @@ export const rateMovies = async (rating: rateMovieShow) => {
         result = {
           code: response.status,
           data: response.data
-          
+        }
+      }
+    })
+  } catch (error: any) {
+    result = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+  return result
+}
+
 export const checkFavo = async (dto: favoriteDto) => {
   const result: Ref<{ code: number, data: any } | null> = ref(null)
   try {
@@ -627,10 +640,10 @@ export const fetchCommingSoon = async (page: string) => {
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}movie/upcoming?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&page=${page}`, {
       headers: { 'Content-type': 'application/json' }
     }).then(response => {
-      if(response.status == 200){
+      if (response.status == 200) {
         const movies: TrendingMovie[] = []
-        for(let i = 0; i < response.data['results'].length; i++)
-        {
+        for (let i = 0; i < response.data['results'].length; i++) {
+
           movies.push({
             id: response.data['results'][i]['id'],
             poster_path: response.data['results'][i]['poster_path'],
@@ -638,6 +651,7 @@ export const fetchCommingSoon = async (page: string) => {
             release_date: response.data['results'][i]['release_date']
           })
         }
+
         result.value = {
           code: response.status,
           data: movies,
@@ -646,7 +660,6 @@ export const fetchCommingSoon = async (page: string) => {
       }
     })
   } catch (error: any) {
-    result = {
     console.log(error)
   }
   return result
@@ -656,11 +669,10 @@ export const checkMovieRecomendations = async (id: string) => {
   const result: Ref<{ code: number, data: favoriteDto } | null> = ref(null)
   try {
     const response = await fetchFavorites(id)
-    if(response.value?.code == 200 && response.value.data.length > 0)
-    {
-      for(let i = 0; i < response.value.data.length; i++){
+    if (response.value?.code == 200 && response.value.data.length > 0) {
+      for (let i = 0; i < response.value.data.length; i++) {
         const favorite = response.value.data[i]
-        if(favorite.movie){
+        if (favorite.movie) {
           result.value = {
             code: response.value.code,
             data: response.value.data[i]
@@ -668,7 +680,7 @@ export const checkMovieRecomendations = async (id: string) => {
           break
         }
       }
-    }    
+    }
   } catch (error: any) {
     result.value = {
       code: error.response.status,
@@ -685,7 +697,7 @@ export const getHasUserVoted = async (movielistId: number, userId: number) => {
       headers: { 'Content-type': 'application/json' }
     }).then(
       response => {
-        if (response.status == 200) { 
+        if (response.status == 200) {
           result = {
             data: response.data
           }
@@ -697,7 +709,7 @@ export const getHasUserVoted = async (movielistId: number, userId: number) => {
     result = {
       data: error
     }
-  } 
+  }
   return result;
 }
 
@@ -708,7 +720,7 @@ export const getMovieVotesResult = async (movielistId: number) => {
       headers: { 'Content-type': 'application/json' }
     }).then(
       response => {
-        if (response.status == 200) { 
+        if (response.status == 200) {
           result = {
             data: response.data
           }
@@ -720,7 +732,7 @@ export const getMovieVotesResult = async (movielistId: number) => {
     result = {
       data: error
     }
-  } 
+  }
   return result;
 
   return result
@@ -730,11 +742,10 @@ export const checkShowRecomendations = async (id: string) => {
   const result: Ref<{ code: number, data: favoriteDto } | null> = ref(null)
   try {
     const response = await fetchFavorites(id)
-    if(response.value?.code == 200 && response.value.data.length > 0)
-    {
-      for(let i = 0; i < response.value.data.length; i++){
+    if (response.value?.code == 200 && response.value.data.length > 0) {
+      for (let i = 0; i < response.value.data.length; i++) {
         const favorite = response.value.data[i]
-        if(!favorite.movie){
+        if (!favorite.movie) {
           result.value = {
             code: response.value.code,
             data: response.value.data[i]
@@ -742,7 +753,7 @@ export const checkShowRecomendations = async (id: string) => {
           break
         }
       }
-    }    
+    }
   } catch (error: any) {
     result.value = {
       code: error.response.status,
@@ -757,25 +768,25 @@ export const moviewRecomandations = async (movieId: string, page: string) => {
   const result: Ref<{ code: number, data: TrendingMovie[] } | null> = ref(null)
   try {
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/movie/${movieId}/recommendations?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=${page}`)
-    .then(response => {
-      if(response.status == 200){
-        const movies: TrendingMovie[] = []
-        console.log(response.data)
-        for (let i = 0; i < response.data['results'].length; i++) {
-          movies.push({
-            id: response.data['results'][i]['id'],
-            poster_path: response.data['results'][i]['poster_path'],
-            title: response.data['results'][i]['title'],
-            release_date: response.data['results'][i]['release_date']
-          })
+      .then(response => {
+        if (response.status == 200) {
+          const movies: TrendingMovie[] = []
+          console.log(response.data)
+          for (let i = 0; i < response.data['results'].length; i++) {
+            movies.push({
+              id: response.data['results'][i]['id'],
+              poster_path: response.data['results'][i]['poster_path'],
+              title: response.data['results'][i]['title'],
+              release_date: response.data['results'][i]['release_date']
+            })
+          }
+          console.log(movies)
+          result.value = {
+            code: response.status,
+            data: movies
+          }
         }
-        console.log(movies)
-        result.value = {
-          code: response.status,
-          data: movies
-        }
-      }
-    })
+      })
   } catch (error: any) {
     result.value = {
       code: error.response.status,
@@ -789,23 +800,23 @@ export const showRecomandations = async (movieId: string, page: string) => {
   const result: Ref<{ code: number, data: TrendingShow[] } | null> = ref(null)
   try {
     await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}tv/${movieId}/recommendations?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=${page}`)
-    .then(response => {
-      if(response.status == 200){
-        const movies: TrendingShow[] = []
-        for (let i = 0; i < response.data['results'].length; i++) {
-          movies.push({
-            id: response.data['results'][i]['id'],
-            poster_path: response.data['results'][i]['poster_path'],
-            name: response.data['results'][i]['name'],
-            first_air_date: response.data['results'][i]['first_air_date']
-          })
+      .then(response => {
+        if (response.status == 200) {
+          const movies: TrendingShow[] = []
+          for (let i = 0; i < response.data['results'].length; i++) {
+            movies.push({
+              id: response.data['results'][i]['id'],
+              poster_path: response.data['results'][i]['poster_path'],
+              name: response.data['results'][i]['name'],
+              first_air_date: response.data['results'][i]['first_air_date']
+            })
+          }
+          result.value = {
+            code: response.status,
+            data: movies
+          }
         }
-        result.value = {
-          code: response.status,
-          data: movies
-        }
-      }
-    })
+      })
   } catch (error: any) {
     result.value = {
       code: error.response.status,
