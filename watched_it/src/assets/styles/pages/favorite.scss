@@ -1,0 +1,38 @@
+@import "../fonts/roboto.scss";
+.page-wrap{
+  min-height: 100vh;
+  width: 100%;
+  background: $background;
+  padding-bottom: 20px;
+  padding-top: 55px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.topBar{
+  margin: 20px 0;
+  h1{
+    font-size: 23px;
+  }
+}
+
+.info-box{
+  min-width: 150px !important;
+  max-width: 150px !important;
+  margin: -24px -10px 0px auto !important;
+}
+
+.card{
+  padding-right: 40px !important;
+}
+
+.details{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999999999;
+  .page-wrap{
+    padding-top: 0;
+  }
+}

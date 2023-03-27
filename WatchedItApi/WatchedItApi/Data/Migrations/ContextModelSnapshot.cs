@@ -36,6 +36,28 @@ namespace WatchedItApi.Data.Migrations
                     b.ToTable("MovieListUser");
                 });
 
+            modelBuilder.Entity("WatchedItApi.Models.Favorites", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("movie")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("movieId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Favorites");
+                });
+
             modelBuilder.Entity("WatchedItApi.Models.Friend", b =>
                 {
                     b.Property<int>("Id")

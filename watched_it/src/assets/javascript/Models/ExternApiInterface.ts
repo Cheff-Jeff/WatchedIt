@@ -58,3 +58,15 @@ export interface rateMovieShow {
   userId: number,
   externMovieIds: []
 }
+
+export interface favorites {
+  id:  number,
+  name: string,
+  poster: string,
+  isMovie: boolean
+}
+
+export interface genre {id: number, name: string}
+export interface provider {logo: string, name: string}
+export interface actor {name: string, photo: string}
+

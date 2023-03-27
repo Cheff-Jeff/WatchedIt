@@ -68,7 +68,7 @@ const routes: Array<RouteRecordRaw> = [
             return true
           }
           else{
-            next({ name: 'login' })
+            next({ name: 'NotFount' })
             return false
           }
         }
@@ -78,12 +78,12 @@ const routes: Array<RouteRecordRaw> = [
             return true
           }
           else{
-            next({ name: 'login' })
+            next({ name: 'NotFount' })
             return false
           }
         }
         else{
-          next({ name: 'login' })
+          next({ name: 'NotFount' })
           return false
         }
       }
@@ -135,6 +135,42 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('../views/ListView.vue')
   },
+  {
+    path: '/favorites',
+    name: 'favorites',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/FavoriteView.vue')
+  },
+  {
+    path: '/commingsoon',
+    name: 'soon',
+    beforeEnter: (to,from,next) => {
+      if(!CheckLogin()){
+        next({ name: 'login' })
+        return false
+      }
+      else{
+        next();
+        return true
+      }
+    },
+    component: () => import('../views/UpComingView.vue')
+  },
+  {
+    //error 404 page
+    path: '/:pathMatch(.*)*',
+    name: 'NotFount',
+    component: () => import('../views/NotFount.vue')
+  }
 ]
 
 const router = createRouter({
