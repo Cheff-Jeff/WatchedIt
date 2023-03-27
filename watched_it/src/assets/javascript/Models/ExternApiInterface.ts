@@ -78,3 +78,9 @@ export interface newList {
   watchDateTime: string,
 }
 
+export interface MovieShowToList {
+  MovieListId: number,
+  externId: number,
+  movie: boolean
+}
+

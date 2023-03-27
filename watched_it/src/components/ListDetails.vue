@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-6">
                     <div class="dates">
-                        <span>Add deadline: {{ currentList.addMovieDeadLine }}</span> <br />
+                        <span>Add movie/show till: {{ currentList.addMovieDeadLine }}</span> <br />
                         <span>Vote deadline: {{ currentList.voteDeadLine }}</span> <br />
                         <span>Watch date: {{ currentList.watchDateTime }}</span>
                     </div>
@@ -147,7 +147,7 @@ export default defineComponent({
     async mounted() {
         await this.btnDisplayCheck();
 
-        if (this.currentList.addMovieDeadLine < new Date().toLocaleString()) {
+        if (this.currentList.addMovieDeadLine > new Date().toDateString()) {
             const result = await getMovieVotesResult(this.currentList.id);
 
             let resultitem = [] as any;

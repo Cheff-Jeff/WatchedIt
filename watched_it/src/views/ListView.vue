@@ -95,7 +95,7 @@ onMounted(() => {
                                     <span class="mdc-notched-outline">
                                         <span class="mdc-notched-outline__leading"></span>
                                         <span class="mdc-notched-outline__notch">
-                                            <span class="mdc-floating-label" id="my-label-id">Add item till</span>
+                                            <span class="mdc-floating-label" id="my-label-id">Add movie/show till</span>
                                         </span>
                                         <span class="mdc-notched-outline__trailing"></span>
                                     </span>
@@ -203,23 +203,26 @@ export default defineComponent({
             this.modalToggle = !this.modalToggle;
         },
         async submitNewList() {
+            
             const newList: newList = {
                 title: this.listDetails.title,
                 userId: JSON.parse(localStorage.getItem('user') || '{}'),
-                addMovieDeadLine: this.listDetails.addmovieDate,
-                voteDeadLine: this.listDetails.voteDeadline,
-                watchDateTime: this.listDetails.watchDate
+                addMovieDeadLine: this.convertStringToLocaleTime(this.listDetails.addmovieDate),
+                voteDeadLine: this.convertStringToLocaleTime(this.listDetails.voteDeadline),
+                watchDateTime: this.convertStringToLocaleTime(this.listDetails.watchDate)
             }
 
             const result = await addNewList(newList)
 
             if (result?.code == 200) {
-                //melding
                 window.location.reload()
             }
             else {
-                //melding
+                //melding er ging iets mis
             }
+        },
+        convertStringToLocaleTime(input: string) {
+            return input.split("-").reverse().join("-");
         }
     }
 })
