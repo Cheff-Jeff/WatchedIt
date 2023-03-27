@@ -25,65 +25,20 @@
             </div>
             <hr />
 
-
-            <div class="row">
-                <div class="col-7">
-                    <div class="users-container">
-                        <p>Contributers:</p>
-                        <div class="user">
-                            <span v-for="item in userdetails" :key="item.id">{{ item.name }} </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="dates">
-                        <span>Vote deadline: {{ currentList.voteDeadLine }}</span> <br />
-                        <span>Watch date: {{ currentList.watchDateTime }}</span>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="swipe-btn">
+            <div id="result-container" class="result-container">
                 <div class="row">
-                    <div class="col-7">
-
+                    <div class="col-6">
+                        <img v-if="resultmovieshow.poster" class="result-img"
+                                :src="'https://image.tmdb.org/t/p/w1280' + resultmovieshow.poster">
+                            <img v-else class="tesult-img" src="../assets/stockBackground.png">
                     </div>
-                    <div class="col-5">
-                        <div class="mdc-touch-target-wrapper btn-wrap">
-                            <button id="vote" class="mdc-button mdc-button--raised" v-on:click="openVotePopUp()">
-                                <span class="mdc-button__ripple"></span>
-                                <span class="mdc-button__touch"></span>
-                                <span class="mdc-button__label">Vote</span>
-                            </button>
+                    <div class="col-6 flex">
+                        <div>
+                            <p>{{ resultmovieshow.title }}</p>
+                            <hr />
+                            <span>{{ resultmovieshow.overview }}</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="movie-count">
-                <span>Amount of movies: {{ currentList.itemCount }}</span>
-            </div>
-        </div>
-
-        <div class="movie-info-box" v-for="item in movieshowdetails" :key="item.id">
-            <div class="moviedetails">
-                <div class="row">
-                    <div class="col-2">
-                        <img v-if="item.poster" class="movie-img" :src="'https://image.tmdb.org/t/p/w1280' + item.poster">
-                        <img v-else class="movie-img" src="../assets/stockBackground.png">
-                    </div>
-                    <div class="col-10">
-                        <div class="movie-details">
-                            <p>{{ item.title }}</p>
-                            <span>{{ item.overview }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="details-btn-container">
-                    <div class="details-btn">
-                        <div class="mdc-touch-target-wrapper btn-wrap white">
+                        <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
                             <button class="mdc-button mdc-button--raised">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
@@ -93,7 +48,65 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="users-container">
+                        <p>Contributers:</p>
+                        <div class="user">
+                            <span v-for="item in userdetails" :key="item.id">{{ item.name }} </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="dates">
+                        <span>Add deadline: {{ currentList.addMovieDeadLine }}</span> <br />
+                        <span>Vote deadline: {{ currentList.voteDeadLine }}</span> <br />
+                        <span>Watch date: {{ currentList.watchDateTime }}</span>
+                    </div>
+                    <br />
+                    <div class="mdc-touch-target-wrapper btn-wrap details-btn">
+                        <button id="vote" class="mdc-button mdc-button--raised" v-on:click="openVotePopUp()">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Vote</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-count">
+                <span>Amount of movies: {{ currentList.itemCount }}</span>
+            </div>
         </div>
+
+        <div class="movies-container">
+            <div class="movie-info-box" v-for="item in movieshowdetails" :key="item.id">
+                <div class="moviedetails">
+                    <div class="row">
+                        <div class="col-4">
+                            <img v-if="item.poster" class="movie-img"
+                                :src="'https://image.tmdb.org/t/p/w1280' + item.poster">
+                            <img v-else class="movie-img" src="../assets/stockBackground.png">
+                        </div>
+                        <div class="col-8 flex">
+                            <div class="movie-details">
+                                <p>{{ item.title }}</p>
+                                <span>{{ item.overview }}</span>
+                            </div>
+                            <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
+                                <button class="mdc-button mdc-button--raised">
+                                    <span class="mdc-button__ripple"></span>
+                                    <span class="mdc-button__touch"></span>
+                                    <span class="mdc-button__label">View more</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
@@ -104,7 +117,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchMovie, fetchShow, fetchUser, getHasUserVoted } from '@/assets/javascript/api';
+import { fetchMovie, fetchShow, fetchUser, getHasUserVoted, getMovieVotesResult } from '@/assets/javascript/api';
 import CardSwipePopUp from './CardSwipePopUp.vue';
 
 export default defineComponent({
@@ -115,6 +128,12 @@ export default defineComponent({
             movieshowdetails: [] as any,
 
             userdetails: [] as any,
+
+            resultmovieshow: {
+                poster: '',
+                title: '',
+                overview: ''
+            },
         }
     },
     components: {
@@ -128,6 +147,27 @@ export default defineComponent({
     },
     async mounted() {
         await this.btnDisplayCheck();
+
+        if(this.currentList.addMovieDeadLine < new Date().toLocaleString()){
+            const result = await getMovieVotesResult(this.currentList.id);
+
+            let resultitem = [] as any;
+
+            if (result?.data.movie) {
+                resultitem = await fetchMovie(result?.data.externId);
+            } else {
+                resultitem = await fetchShow(result?.data.externId);
+            }
+
+            this.resultmovieshow = resultitem._value.data
+            console.log(this.resultmovieshow)
+
+            const btn = (document.getElementById("vote") as HTMLButtonElement)!
+            btn.style.display = 'none'
+
+            const resultContainer = (document.getElementById("result-container") as HTMLButtonElement)!
+            resultContainer.style.display = 'block'
+        }
 
         this.userdetails = this.currentList.users;
         this.userdetails.splice(0, 1);
@@ -165,15 +205,22 @@ export default defineComponent({
             }
         },
         truncateString(str: string) {
-            return (str.length > 145) ? str.slice(0, 145 - 1) + '...' : str;
+            return (str.length > 90) ? str.slice(0, 90 - 1) + '...' : str;
         },
         closeModal() {
             this.$emit('closeListDetails', true)
         },
         closeCardSwipePopUp() {
-            this.compToRender = ''
+            var timer = null
+            if (timer) {
+                clearTimeout(timer);
+                timer = null;
+            }
 
-            this.btnDisplayCheck();
+            timer = setTimeout(async () => {
+                this.compToRender = ''
+                this.btnDisplayCheck();
+            }, 500);
         }
     }
 })

@@ -45,6 +45,7 @@ export interface searchMovieShow {
 export interface collectionList {
   id: number,
   title: string,
+  addMovieDeadLine: string,
   voteDeadLine: string,
   watchDateTime: string,
   itemCount: number,

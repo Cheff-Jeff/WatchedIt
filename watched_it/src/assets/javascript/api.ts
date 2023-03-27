@@ -504,6 +504,7 @@ export const getCollectionList = async (id: number) => {
               const collectionlist: collectionList = {
                 id: response.data[0]["movieList"][i]["id"],
                 title: response.data[0]["movieList"][i]['title'],
+                addMovieDeadLine: response.data[0]["movieList"][i]['addMovieDeadLine'],
                 voteDeadLine: response.data[0]["movieList"][i]['voteDeadLine'],
                 watchDateTime: response.data[0]["movieList"][i]['watchDateTime'],
                 itemCount: response.data[0]["movieList"][i]["movies"].length,
@@ -550,6 +551,29 @@ export const getHasUserVoted = async (movielistId: number, userId: number) => {
   let result: { data: boolean } | null = null
   try {
     await axios.get(`${process.env.VUE_APP_API_HOST}/Lists/votecheck?movielistId=${movielistId}&userId=${userId}`, {
+      headers: { 'Content-type': 'application/json' }
+    }).then(
+      response => {
+        if (response.status == 200) { 
+          result = {
+            data: response.data
+          }
+        }
+      }
+    )
+  } catch (error: any) {
+    console.log("error", error)
+    result = {
+      data: error
+    }
+  } 
+  return result;
+}
+
+export const getMovieVotesResult = async (movielistId: number) => {
+  let result: { data: any } | null = null
+  try {
+    await axios.get(`${process.env.VUE_APP_API_HOST}/Lists/getmovievotesresult?movielistId=${movielistId}`, {
       headers: { 'Content-type': 'application/json' }
     }).then(
       response => {
