@@ -21,6 +21,17 @@
       }
     }
   }
+  .fallback{
+    min-height: calc(100vh - 210px);
+    max-height: calc(100vh - 210px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .img-wrap{
+      width: 87%;
+      margin: auto;
+    }
+  }
   .friends{
     margin-top: 35px;
     max-height: calc(100vh - 210px);
