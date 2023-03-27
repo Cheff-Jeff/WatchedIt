@@ -124,7 +124,8 @@ namespace WatchedItApi.Controllers
         public async Task<IActionResult> updateUser(UserDto dto)
         {
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
-            if (user != null)
+            User? user2 = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user != null && user2 == null)
             {
                 if (dto.Name != null && dto.Email != null)
                 {
