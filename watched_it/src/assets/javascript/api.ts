@@ -694,7 +694,7 @@ export const moviewRecomandations = async (movieId: string, page: string) => {
 export const showRecomandations = async (movieId: string, page: string) => {
   const result: Ref<{ code: number, data: TrendingShow[] } | null> = ref(null)
   try {
-    await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}/tv/${movieId}/recommendations?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=${page}`)
+    await axios.get(`${process.env.VUE_APP_API_EXTERNHOSTV3}tv/${movieId}/recommendations?api_key=${process.env.VUE_APP_API_EXTERNKEYV3}&language=en-US&page=${page}`)
     .then(response => {
       if(response.status == 200){
         const movies: TrendingShow[] = []

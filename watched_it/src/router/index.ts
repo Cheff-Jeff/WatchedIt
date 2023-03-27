@@ -68,7 +68,7 @@ const routes: Array<RouteRecordRaw> = [
             return true
           }
           else{
-            next({ name: 'login' })
+            next({ name: 'NotFount' })
             return false
           }
         }
@@ -78,12 +78,12 @@ const routes: Array<RouteRecordRaw> = [
             return true
           }
           else{
-            next({ name: 'login' })
+            next({ name: 'NotFount' })
             return false
           }
         }
         else{
-          next({ name: 'login' })
+          next({ name: 'NotFount' })
           return false
         }
       }
@@ -164,6 +164,12 @@ const routes: Array<RouteRecordRaw> = [
       }
     },
     component: () => import('../views/UpComingView.vue')
+  },
+  {
+    //error 404 page
+    path: '/:pathMatch(.*)*',
+    name: 'NotFount',
+    component: () => import('../views/NotFount.vue')
   }
 ]
 
