@@ -189,18 +189,24 @@ export default defineComponent({
 
                 if (this.nameError == '', this.emailError == '',
                     this.phoneError == '', this.passwordError == '') {
+
+                    let pass = null;
+                    if(this.password != ''){
+                        pass = this.password
+                    }
                     const user: User = {
                         id: JSON.parse(localStorage.getItem('user') || '{}'),
                         name: this.name,
                         email: this.email,
                         phone: this.phone,
-                        password: this.password
+                        password: pass
                     }
 
                     const result = await updateUser(user)
 
                     if (result?.code == 204) {
                         this.loading = false
+                        this.$emit('notify', 'Your account has been updated', 'good')
                         this.$router.push('account')
                     }
                     else {

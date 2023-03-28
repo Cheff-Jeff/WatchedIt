@@ -74,3 +74,34 @@ span.error{
   background: #555;
   border-radius: 10px;
 }
+
+.notify{
+  position: fixed;
+  top: 45px;
+  left: 0;
+  right: 0;
+  z-index: 99999999999;
+  width: 70%;
+  margin: auto;
+  
+  padding: 5px;
+  background: $white;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 10px 10px 10px $backDrop;
+  span{
+    line-height: 1.4;
+    display: block;
+  }
+  &.warning{
+    border: solid 2px $warning;
+    border-left: solid 5px $warning;
+  }
+  &.error{
+    border: solid 2px $red;
+    border-left: solid 5px $red;
+  }
+  &.good{
+    border: solid 2px $good;
+    border-left: solid 5px $good;
+  }
+}

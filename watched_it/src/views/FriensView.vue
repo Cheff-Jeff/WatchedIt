@@ -39,7 +39,9 @@
     </section>
     <section class="friends" v-if="friends && friends?.length > 0">
       <div class="container">
-        <p v-if="err">{{ err }}</p>
+        <span class="small error" v-if="err">
+          {{ err }}
+        </span>
         <div class="user-wrapper" v-for="friend in friends" :key="friend.id">
           <span class="profile" v-html="avatar(friend.name)"/>
           <div class="info">
@@ -115,7 +117,7 @@ export default defineComponent({
     return {
       err: '',
       deleteId: '',
-      deleteName: 'Jeffrey Nijkamp',
+      deleteName: '',
       modalToggle: '',
     }
   },
@@ -149,6 +151,9 @@ export default defineComponent({
         } catch (err) {
           console.error(err);
         }
+      }
+      else{
+        this.$emit('notify', 'Cannot access contacts on device', 'error')
       }
     },
     async newFriend(phoneNumber: string){
