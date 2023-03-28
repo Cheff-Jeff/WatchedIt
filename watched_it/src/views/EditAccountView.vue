@@ -201,6 +201,7 @@ export default defineComponent({
 
                     if (result?.code == 204) {
                         this.loading = false
+                        this.$emit('notify', 'Your account has been updated', 'good')
                         this.$router.push('account')
                     }
                     else {

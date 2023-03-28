@@ -6,7 +6,8 @@
         <span>{{ msg }}</span>
       </div>
       <router-view 
-        @download="downloadApp" 
+        @download="downloadApp"
+        @notify="notifyUser" 
       />
     </div>
 
@@ -48,6 +49,7 @@ export default defineComponent({
       }
     },
     notifyUser(message: string, type: string){
+      console.log('test')
       this.notify = true
       this.msg = message
       this.notifyType = type
@@ -56,7 +58,7 @@ export default defineComponent({
         this.notify = false,
         this.msg = '',
         this.notifyType = ''
-      }, 3000);
+      }, 2000);
     }
   },
 })
