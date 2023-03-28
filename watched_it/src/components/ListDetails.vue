@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-6">
                     <div class="dates">
-                        <span>Add movie/show till: {{ currentList.addMovieDeadLine }}</span> <br />
+                        <span>Add movie till: {{ currentList.addMovieDeadLine }}</span> <br />
                         <span>Vote deadline: {{ currentList.voteDeadLine }}</span> <br />
                         <span>Watch date: {{ currentList.watchDateTime }}</span>
                     </div>
@@ -71,6 +71,7 @@
                             <span class="mdc-button__touch"></span>
                             <span class="mdc-button__label">Vote</span>
                         </button>
+                        <p class="error">{{ votedError }}</p>
                     </div>
                 </div>
             </div>
@@ -133,6 +134,8 @@ export default defineComponent({
                 title: '',
                 overview: ''
             },
+
+            votedError: '',
         }
     },
     components: {
@@ -200,6 +203,8 @@ export default defineComponent({
                 const btn = (document.getElementById("vote") as HTMLButtonElement)!
                 btn.disabled = true;
                 btn.style.opacity = '0.4';
+
+                this.votedError = 'you have already voted'
             }
         },
         truncateString(str: string) {

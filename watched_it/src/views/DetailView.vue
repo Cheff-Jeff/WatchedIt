@@ -182,6 +182,7 @@ defineExpose({ details, favorite, favoriteId, route })
               <span class="mdc-button__label">Cancel</span>
             </button>
           </div>
+          <p>{{ addMovieError }}</p>
         </div>
       </div>
     </div>
@@ -205,19 +206,21 @@ export default defineComponent({
         addmovieDate: '',
         voteDeadline: '',
         watchDate: ''
-      }
+      },
+
+      addMovieError: ''
     }
   },
   async mounted() {
     let result = [] as any;
     result = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
 
+    
     for (let i = 0; i < result._value.length; i++) {
-      if(result._value[i].addMovieDeadLine < new Date().toLocaleDateString()){
+      if(result._value[i].addMovieDeadLine > new Date().toLocaleDateString()){
         this.movieshowList.push(result._value[i])
       }
     }
-    console.log(this.movieshowList)
   },
   methods: {
     togglePopup() {
@@ -235,11 +238,10 @@ export default defineComponent({
       const result = await addMovieShowToList(addmovieshowtoList);
 
       if (result?.code == 200) {
-        //melding film toegevoegt aan lijst
-        this.togglePopup();
+        this.addMovieError = `Movie/Show added to selected list`
       }
       else {
-        //melding film zit al in lijst
+        this.addMovieError = `Movie/Show is already in selected list`
       }
     },
     async newFavorite(titleId: number, titleType: string) {
