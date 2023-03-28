@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import Details from './Title-Details.vue';
 </script>
 
 
@@ -39,7 +39,7 @@
                             <span>{{ resultmovieshow.overview }}</span>
                         </div>
                         <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
-                            <button class="mdc-button mdc-button--raised">
+                            <button class="mdc-button mdc-button--raised" @click="showDetails(resultmovieshow.id, resultmovieshow.movie)">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
                                 <span class="mdc-button__label">View more</span>
@@ -105,7 +105,7 @@
                                 <span>{{ item.overview }}</span>
                             </div>
                             <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
-                                <button class="mdc-button mdc-button--raised">
+                                <button class="mdc-button mdc-button--raised" @click="showDetails(item.id, item.movie)">
                                     <span class="mdc-button__ripple"></span>
                                     <span class="mdc-button__touch"></span>
                                     <span class="mdc-button__label">View more</span>
@@ -144,7 +144,18 @@
                 </div>
             </div>
         </div>
+
+        <section class="details" id="Overlay">
+            <Details v-if="detailsToggle" :id="details.id.toString()" :banner="details.banner"
+                :voteAvrage="Number(details.VoteAvrage)" :title="details.title" :director="details.director"
+                :date="details.date" :genres="details.genres" :language="details.language" :poster="details.poster"
+                :overview="details.overview" :providers="details.providers" :actors="details.actors"
+                :title-type="details.titleType" @mounted="detailStyle()" @close="closeOverlay()" @rerender="reRender()" />
+        </section>
+
     </section>
+
+    
 
     <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
         :movielistId="currentList.id">
@@ -159,6 +170,7 @@ import CardSwipePopUp from './CardSwipePopUp.vue';
 import { createAvatar } from '@dicebear/core';
 import { avataaars } from '@dicebear/collection';
 import { FriendToList } from '../assets/javascript/Models/ExternApiInterface';
+import { genre, provider, actor } from '@/assets/javascript/Models/ExternApiInterface'
 
 export default defineComponent({
     data() {
@@ -172,13 +184,37 @@ export default defineComponent({
             friendDetails: [] as any,
 
             resultmovieshow: {
+                id: 0 as number,
+                movie: '',
                 poster: '',
                 title: '',
                 overview: ''
             },
 
             votedError: '',
-            modalToggle: false
+            modalToggle: false,
+
+
+            detailsToggle: false,
+            pageHeight: 'auto',
+            scroll: 0 as number,
+            scrollHeight: 0,
+
+            details: {
+                id: 0,
+                banner: '',
+                VoteAvrage: '',
+                title: '',
+                director: '',
+                date: '',
+                genres: [] as genre[],
+                language: '',
+                poster: '',
+                overview: '',
+                providers: [] as provider[],
+                actors: [] as actor[],
+                titleType: ''
+            }
         }
     },
     components: {
@@ -200,8 +236,11 @@ export default defineComponent({
 
             if (result?.data.movie) {
                 resultitem = await fetchMovie(result?.data.externId);
+                this.resultmovieshow.movie = 'movie'
+
             } else {
                 resultitem = await fetchShow(result?.data.externId);
+                this.resultmovieshow.movie = 'tv'
             }
 
             this.resultmovieshow = resultitem._value.data
@@ -223,13 +262,16 @@ export default defineComponent({
         for (let i = 0; i < this.currentList.movies.length; i++) {
             if (this.currentList.movies[i].movie) {
                 details = await fetchMovie(this.currentList.movies[i].externId);
+                details.value.data.movie = "movie"
             } else {
                 details = await fetchShow(this.currentList.movies[i].externId);
+                details.value.data.movie = "tv"
             }
 
             details._value.data.overview = this.truncateString(details._value.data.overview)
             this.movieshowdetails.push(details._value.data)
         }
+        console.log(this.movieshowdetails)
     },
     methods: {
         openVotePopUp() {
@@ -308,6 +350,50 @@ export default defineComponent({
             }
             return avatar.toString();
         },
+        async showDetails(id: number, type: string) {
+            const result = await fetchMovie(id.toString())
+            if (result.value?.code == 200) {
+                this.details = {
+                    id: result.value.data.id,
+                    banner: result.value.data.backdrop,
+                    VoteAvrage: result.value.data.vote_average.toString(),
+                    title: result.value.data.title,
+                    director: result.value.data.director,
+                    date: result.value.data.first_air_date,
+                    genres: result.value.data.genres,
+                    language: result.value.data.language,
+                    poster: result.value.data.poster,
+                    overview: result.value.data.overview,
+                    providers: result.value.data.providers,
+                    actors: result.value.data.cast,
+                    titleType: type
+                }
+            }
+            this.scroll = document.documentElement.scrollTop
+            this.detailsToggle = true
+        },
+        detailStyle() {
+            if (this.detailsToggle) {
+                window.scrollTo(0, 0)
+                const overlay = document.getElementById('Overlay');
+                this.pageHeight = overlay!.offsetHeight.toString() + "px"
+            }
+        },
+        closeOverlay() {
+            if (this.detailsToggle) {
+                this.pageHeight = "none"
+                this.detailsToggle = false
+                setTimeout(() => {
+                    window.scrollTo(0, this.scroll)
+                }, 5);
+            }
+        },
+        reRender() {
+            this.detailsToggle = false
+            this.$nextTick(() => {
+                this.detailsToggle = true
+            })
+        }
     }
 })
 </script>

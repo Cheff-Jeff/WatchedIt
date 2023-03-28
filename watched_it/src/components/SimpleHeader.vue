@@ -103,6 +103,8 @@ export default defineComponent({
         async getSearchedItems() {
             if (this.searchPhrase.length >= 1) {
                 this.searchResult = await searchMovies(this.searchPhrase);
+            } else {
+                this.searchResult = null
             }
         },
         closeMenu() {
