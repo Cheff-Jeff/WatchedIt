@@ -39,7 +39,8 @@ import Details from './Title-Details.vue';
                             <span>{{ resultmovieshow.overview }}</span>
                         </div>
                         <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
-                            <button class="mdc-button mdc-button--raised" @click="showDetails(resultmovieshow.id, resultmovieshow.movie)">
+                            <button class="mdc-button mdc-button--raised"
+                                @click="showDetails(resultmovieshow.id, resultmovieshow.movie)">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
                                 <span class="mdc-button__label">View more</span>
@@ -57,7 +58,7 @@ import Details from './Title-Details.vue';
                             <span v-for="item in userdetails" :key="item.id">{{ item.name }} </span>
                         </div>
                     </div>
-                    <div class="add-friend-btn">
+                    <div id="add-friend" class="add-friend-btn">
                         <div class="mdc-touch-target-wrapper btn-wrap details-btn">
                             <button id="add-friend" class="mdc-button mdc-button--raised" v-on:click="togglePopup()">
                                 <span class="mdc-button__ripple"></span>
@@ -74,7 +75,7 @@ import Details from './Title-Details.vue';
                         <span>Watch date: {{ currentList.watchDateTime }}</span>
                     </div>
                     <br />
-                    <div class="mdc-touch-target-wrapper btn-wrap details-btn">
+                    <div class="mdc-touch-target-wrapper btn-wrap">
                         <button id="vote" class="mdc-button mdc-button--raised" v-on:click="openVotePopUp()">
                             <span class="mdc-button__ripple"></span>
                             <span class="mdc-button__touch"></span>
@@ -87,7 +88,7 @@ import Details from './Title-Details.vue';
         </div>
 
         <div class="movie-count">
-            <span>Amount of movies: {{ currentList.itemCount }}</span>
+            <span>movies/shows count: {{ currentList.itemCount }}</span>
         </div>
 
         <div class="movies-container">
@@ -124,7 +125,7 @@ import Details from './Title-Details.vue';
                 </div>
                 <div class="body">
                     <div class="row user-wrapper" v-for="item in friendDetails" :key="item.id"
-                        v-on:click="addFriendToList(item)">
+                        v-on:click="addfriendToList(item)">
                         <div class="col-3">
                             <span class="profile" v-html="avatar(item.name)" />
                         </div>
@@ -141,6 +142,7 @@ import Details from './Title-Details.vue';
                             <span class="mdc-button__label">Cancel</span>
                         </button>
                     </div>
+                    <p class="error">{{ addfriendError }}</p>
                 </div>
             </div>
         </div>
@@ -155,7 +157,7 @@ import Details from './Title-Details.vue';
 
     </section>
 
-    
+
 
     <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
         :movielistId="currentList.id">
@@ -165,7 +167,7 @@ import Details from './Title-Details.vue';
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchMovie, fetchShow, fetchUser, getHasUserVoted, getMovieVotesResult, fetchFriends, addFriendToList } from '@/assets/javascript/api';
+import { fetchMovie, fetchShow, getHasUserVoted, getMovieVotesResult, fetchFriends, addFriendToList } from '@/assets/javascript/api';
 import CardSwipePopUp from './CardSwipePopUp.vue';
 import { createAvatar } from '@dicebear/core';
 import { avataaars } from '@dicebear/collection';
@@ -192,6 +194,7 @@ export default defineComponent({
             },
 
             votedError: '',
+            addfriendError: '',
             modalToggle: false,
 
 
@@ -220,14 +223,13 @@ export default defineComponent({
     components: {
         CardSwipePopUp
     },
-    emits: [
-        "closeListDetails"
-    ],
     props: {
         currentList: [] as any,
     },
     async mounted() {
         await this.btnDisplayCheck();
+
+
 
         if (this.currentList.voteDeadLine < new Date().toLocaleDateString()) {
             const result = await getMovieVotesResult(this.currentList.id);
@@ -247,15 +249,13 @@ export default defineComponent({
 
             const btn = (document.getElementById("vote") as HTMLButtonElement)!
             btn.style.display = 'none'
+            this.votedError = ''
 
             const resultContainer = (document.getElementById("result-container") as HTMLButtonElement)!
             resultContainer.style.display = 'block'
         }
 
         this.userdetails = this.currentList.users;
-        this.userdetails.splice(0, 1);
-        let user = await fetchUser(JSON.parse(localStorage.getItem('user') || '{}'));
-        this.userdetails.push(user.value?.data);
 
         let details = [] as any;
 
@@ -271,20 +271,25 @@ export default defineComponent({
             details._value.data.overview = this.truncateString(details._value.data.overview)
             this.movieshowdetails.push(details._value.data)
         }
-        console.log(this.movieshowdetails)
     },
     methods: {
         openVotePopUp() {
+            this.$emit('notify', 'list is empty', 'error');
             if (this.currentList.movies.length >= 1) {
                 this.compToRender = 'CardSwipePopUp'
             } else {
-                //melding dat er niks is om te voten
+                //melding
             }
         },
         async btnDisplayCheck() {
+            if (this.currentList.userId != JSON.parse(localStorage.getItem('user') || '{}')) {
+                const btn = (document.getElementById("add-friend") as HTMLButtonElement)!
+                btn.style.display = 'none'
+            }
+
             const result = await getHasUserVoted(this.currentList.id, JSON.parse(localStorage.getItem('user') || '{}'));
 
-            if (this.currentList.voteDeadLine > new Date().toLocaleString() || result?.data == true) {
+            if (this.currentList.voteDeadLine < new Date().toLocaleDateString() || result?.data == true) {
                 const btn = (document.getElementById("vote") as HTMLButtonElement)!
                 btn.disabled = true;
                 btn.style.opacity = '0.4';
@@ -316,21 +321,26 @@ export default defineComponent({
             const result = await fetchFriends(JSON.parse(localStorage.getItem('user') || '{}'));
             this.friendDetails = result.value!.data;
 
+            if (this.modalToggle == false) {
+                this.$forceUpdate();
+            }
+
         },
-        async addFriendToList(item: any) {
+        async addfriendToList(item: any) {
             const friend: FriendToList = {
                 MovieListId: this.currentList.id,
                 phoneNumber: item.phone
             };
 
-            for (let j = 0; j < this.userdetails.length; j++) {
-                if (item.name == this.userdetails[j].name) {
-                    //melding geven friend is already in list
-                    console.log("in list")
-                }
-            }
+            const result = await addFriendToList(friend);
 
-            await addFriendToList(friend);
+            if (result?.code == 200) {
+                this.addfriendError = ''
+                this.userdetails.push(item)
+
+            } else {
+                this.addfriendError = 'friend is already in list'
+            }
         },
         avatar(name: string | null) {
             let avatar: any = ''

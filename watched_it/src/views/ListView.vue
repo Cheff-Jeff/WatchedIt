@@ -22,7 +22,7 @@ onMounted(() => {
 <template>
     <SimpleHeader :currentTitle="'Watch list'" />
 
-    <section class="wrapper">
+    <section v-auto-animate class="wrapper">
         <div class="list-container">
             <div class="card" v-for="list in collectionList" :key="list.id" v-on:click="getClickedList(list)">
                 <div class="movie-image-container">
@@ -155,14 +155,14 @@ onMounted(() => {
             </div>
         </div>
 
-    </section>
+        <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
 
-    <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
+    </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getCollectionList, addNewList } from '../assets/javascript/api';
+import { getCollectionList, addNewList, fetchUser } from '../assets/javascript/api';
 import ListDetails from '@/components/ListDetails.vue';
 import { newList } from '../assets/javascript/Models/ExternApiInterface';
 
@@ -198,8 +198,13 @@ export default defineComponent({
         this.collectionList = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
     },
     methods: {
-        getClickedList(list: []) {
+        async getClickedList(list: []) {
             this.getCurrentList = list;
+            if (this.getCurrentList.users[0] == null) {
+                this.getCurrentList.users.splice(0, 1)
+                let user = await fetchUser(JSON.parse(localStorage.getItem('user') || '{}'));
+                this.getCurrentList.users.push(user.value!.data);
+            }
 
             this.compToRender = 'ListDetails'
         },

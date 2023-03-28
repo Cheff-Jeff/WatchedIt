@@ -569,6 +569,7 @@ export const getCollectionList = async (id: number) => {
             const collectionlist: collectionList = {
               id: response.data[0]["movieList"][i]["id"],
               title: response.data[0]["movieList"][i]['title'],
+              userId: response.data[0]["movieList"][i]['userId'],
               addMovieDeadLine: response.data[0]["movieList"][i]['addMovieDeadLine'],
               voteDeadLine: response.data[0]["movieList"][i]['voteDeadLine'],
               watchDateTime: response.data[0]["movieList"][i]['watchDateTime'],
@@ -873,7 +874,7 @@ export const addMovieShowToList = async (movieshowtolist: MovieShowToList) => {
 }
 
 export const addFriendToList = async (addfriendtoList: FriendToList) => {
-  let result: { code: number, data: FriendToList } | null = null
+  let result: { code: number, data: string } | null = null
 
   try {
     await axios.post(`${process.env.VUE_APP_API_HOST}/Lists/addusertolist`, addfriendtoList, {
