@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchedItApi.Data;
 
@@ -10,9 +11,11 @@ using WatchedItApi.Data;
 namespace WatchedItApi.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230325122725_userVotesUpdate")]
+    partial class userVotesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,28 +37,6 @@ namespace WatchedItApi.Data.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("MovieListUser");
-                });
-
-            modelBuilder.Entity("WatchedItApi.Models.Favorites", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("movie")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("movieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("WatchedItApi.Models.Friend", b =>
@@ -121,10 +102,6 @@ namespace WatchedItApi.Data.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("addMovieDeadLine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("title")
                         .IsRequired()

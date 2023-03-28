@@ -10,7 +10,8 @@
         public string Salt { get; set; } = "";
         public List<Friend>? Friends { get; set; }
 
-        public ICollection<MovieList>? MovieLists { get; set; }
+        public ICollection<MovieList> MovieList { get; set; }
+
 
         public User() { }
 

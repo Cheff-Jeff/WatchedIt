@@ -1,19 +1,23 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
     <section>
 
         <Transition name="bounce">
 
-            <div v-if="show" class="card-container">        
+            <div v-if="show" class="card-container">
                 <div class="card" :key="MovieShow.id">
                     <div class="movie-image-container">
-                        <img v-if="MovieShow.poster_path" class="movie-image"
-                            :src="'https://image.tmdb.org/t/p/w1280' + MovieShow.poster_path">
+                        <img v-if="MovieShow.poster" class="movie-image"
+                            :src="'https://image.tmdb.org/t/p/w1280' + MovieShow.poster">
                         <img v-else class="movie-image" src="../assets/stockBackground.png">
                     </div>
                     <div class="info-box">
                         <h1>{{ MovieShow.title }}</h1>
                         <hr />
-                        <p>{{ MovieShow.release_date }}</p>
+                        <p>{{ MovieShow.first_air_date }}</p>
                     </div>
                 </div>
 
@@ -21,13 +25,12 @@
         </Transition>
 
 
-
         <div class="interact-box">
 
             <div class="desc-container">
-                <h1>{{ genre }}</h1>
+                <h1 v-for="item in MovieShow.genres" :key="item.id">{{ item.name }}, </h1>
                 <hr />
-                <p>{{ description }}</p>
+                <p>{{ MovieShow.overview }}</p>
 
                 <div class="mdc-touch-target-wrapper btn-wrap white">
                     <button class="mdc-button mdc-button--raised">
@@ -38,14 +41,14 @@
                 </div>
             </div>
 
-            <div class="like" v-on:click="LikeItem()">
+            <div class="like" id="like" v-on:click="LikeItem()">
                 <svg xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                     <path
                         d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" />
                 </svg>
             </div>
-            <div class="dislike" v-on:click="DisLikeItem()">
+            <div class="dislike" id="dislike" v-on:click="DisLikeItem()">
                 <svg xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                     <path
@@ -58,43 +61,60 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getExternTrendingMovies } from '@/assets/javascript/api';
+import { rateMovies } from '@/assets/javascript/api';
+import { rateMovieShow } from '@/assets/javascript/Models/ExternApiInterface';
+
 export default defineComponent({
     data() {
         return {
             show: true,
-            movieshowArray: [] as any,
+            movieshowArray: JSON.parse(JSON.stringify(this.votelist)),
 
             MovieShow: {
                 id: '',
-                poster_path: '',
+                poster: '',
                 title: '',
-                release_date: '',
+                first_air_date: '',
+                overview: '',
+                genres: [] as any,
             },
 
-            genre: 'Horror',
-            description: 'ashasjhdjhsda ahadjsjhd ajhsdajhsajhsa jajajwef sdffsdfssgfs fsdfsdfsdf sdfsdfsdfsdfdfs dfsdfsdfsdfsdffs dfsdajaja jajaIt is a long established fact that a reader will be distracted by the readable content of a page when',
+
 
             liked: false,
             likedMovieShow: [] as any,
-
-            disliked: false,
-            dislikedMovieShow: [] as any,
         }
     },
     emits: [
         "closeCardSwipePopUp"
     ],
+    props: {
+        votelist: {
+            type: Array as any,
+            required: true
+        },
+        movielistId: {
+            type: Number,
+            required: true
+        }
+    },
     async mounted() {
-        this.movieshowArray = await getExternTrendingMovies();
-
         const i: number = this.movieshowArray.map((item: { id: any; }) => item.id).indexOf(this.movieshowArray[0].id);
         this.MovieShow = this.movieshowArray[0]
-        this.description = this.truncateString(this.description)
 
         this.movieshowArray.splice(i, 1);
     },
     methods: {
+        async sendRating() {
+            const ratemovieshow: rateMovieShow = {
+                movielistId: this.movielistId,
+                userId: JSON.parse(localStorage.getItem('user') || '{}'),
+                externMovieIds: this.likedMovieShow
+            }
+
+            console.log(ratemovieshow)
+            await rateMovies(ratemovieshow);
+        },
         LikeItem() {
             if (this.MovieShow.id != null) {
                 this.likedMovieShow.push(this.MovieShow.id)
@@ -104,21 +124,18 @@ export default defineComponent({
                 if (this.movieshowArray.length != 0) {
                     this.NextItem(this.MovieShow.id)
                 } else {
-                    //api call maken met likedarray
-                    this.closeModal()
+                    this.sendRating();
+                    this.closeModal();
                 }
             }
         },
         DisLikeItem() {
             if (this.MovieShow.id != null) {
-                this.dislikedMovieShow.push(this.MovieShow.id)
-
-                this.disliked = !this.disliked
 
                 if (this.movieshowArray.length != 0) {
                     this.NextItem(this.MovieShow.id)
                 } else {
-                    //api call maken met dislikedarray
+                    this.sendRating();
                     this.closeModal()
                 }
             }
@@ -131,15 +148,26 @@ export default defineComponent({
 
             this.MovieShow = item[0]
 
-            this.description = this.truncateString(this.description);
-
             var timer = null
             if (timer) {
                 clearTimeout(timer);
                 timer = null;
             }
+
+            const btnlike = (document.getElementById("like") as HTMLButtonElement)!
+            const btndislike = (document.getElementById("dislike") as HTMLButtonElement)!
+            btnlike.disabled = true;
+            btndislike.disabled = true;
+            btnlike.style.opacity = '0.5';
+            btndislike.style.opacity = '0.5';
+
             timer = setTimeout(async () => {
                 this.show = !this.show
+
+                btnlike.disabled = false;
+                btndislike.disabled = false;
+                btnlike.style.opacity = '1';
+                btndislike.style.opacity = '1';
             }, 1000);
         },
         closeModal() {

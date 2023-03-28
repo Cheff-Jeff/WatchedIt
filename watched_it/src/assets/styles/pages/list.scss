@@ -5,9 +5,17 @@ section.wrapper {
     padding-top: 55px;
     height: 100vh;
     padding-bottom: 20px;
-    overflow-y: scroll;
+    overflow: hidden;
     position: relative;
     z-index: 20;
+
+    .btn-stick-bottom {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding-left: 60px;
+        padding-right: 60px;
+    }
 
     .section-title {
         height: auto;
@@ -55,7 +63,7 @@ section.wrapper {
                 fill: $linkBackground;
                 transform: rotate(-90deg);
                 stroke: $outline;
-                stroke-width: 4px;
+                stroke-width: 5px;
                 stroke-linejoin: round;
                 paint-order: stroke;
                 filter: drop-shadow(1px 3px 2px rgb(0 0 0 / 0.3));

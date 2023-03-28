@@ -42,6 +42,23 @@ export interface searchMovieShow {
   media_type: string,
 }
 
+export interface collectionList {
+  id: number,
+  title: string,
+  addMovieDeadLine: string,
+  voteDeadLine: string,
+  watchDateTime: string,
+  itemCount: number,
+  movies: [],
+  users: [],
+}
+
+export interface rateMovieShow {
+  movielistId: number,
+  userId: number,
+  externMovieIds: []
+}
+
 export interface favorites {
   id:  number,
   name: string,
@@ -52,3 +69,4 @@ export interface favorites {
 export interface genre {id: number, name: string}
 export interface provider {logo: string, name: string}
 export interface actor {name: string, photo: string}
+
