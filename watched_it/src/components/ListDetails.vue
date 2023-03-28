@@ -1,10 +1,10 @@
 <script setup lang="ts">
-
+import Details from './Title-Details.vue';
 </script>
 
 
 <template>
-    <section class="wrapper2">
+    <section v-auto-animate class="wrapper2">
         <div class="top-info-box">
             <div class="close-icon">
                 <svg v-on:click="closeModal()" class="icon-right" xmlns="http://www.w3.org/2000/svg"
@@ -29,8 +29,8 @@
                 <div class="row">
                     <div class="col-6">
                         <img v-if="resultmovieshow.poster" class="result-img"
-                                :src="'https://image.tmdb.org/t/p/w1280' + resultmovieshow.poster">
-                            <img v-else class="tesult-img" src="../assets/stockBackground.png">
+                            :src="'https://image.tmdb.org/t/p/w1280' + resultmovieshow.poster">
+                        <img v-else class="tesult-img" src="../assets/stockBackground.png">
                     </div>
                     <div class="col-6 flex">
                         <div>
@@ -39,7 +39,7 @@
                             <span>{{ resultmovieshow.overview }}</span>
                         </div>
                         <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
-                            <button class="mdc-button mdc-button--raised">
+                            <button class="mdc-button mdc-button--raised" @click="showDetails(resultmovieshow.id, resultmovieshow.movie)">
                                 <span class="mdc-button__ripple"></span>
                                 <span class="mdc-button__touch"></span>
                                 <span class="mdc-button__label">View more</span>
@@ -57,10 +57,19 @@
                             <span v-for="item in userdetails" :key="item.id">{{ item.name }} </span>
                         </div>
                     </div>
+                    <div class="add-friend-btn">
+                        <div class="mdc-touch-target-wrapper btn-wrap details-btn">
+                            <button id="add-friend" class="mdc-button mdc-button--raised" v-on:click="togglePopup()">
+                                <span class="mdc-button__ripple"></span>
+                                <span class="mdc-button__touch"></span>
+                                <span class="mdc-button__label">Add friend</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-6">
                     <div class="dates">
-                        <span>Add deadline: {{ currentList.addMovieDeadLine }}</span> <br />
+                        <span>Add movie till: {{ currentList.addMovieDeadLine }}</span> <br />
                         <span>Vote deadline: {{ currentList.voteDeadLine }}</span> <br />
                         <span>Watch date: {{ currentList.watchDateTime }}</span>
                     </div>
@@ -71,13 +80,14 @@
                             <span class="mdc-button__touch"></span>
                             <span class="mdc-button__label">Vote</span>
                         </button>
+                        <p class="error">{{ votedError }}</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="movie-count">
-                <span>Amount of movies: {{ currentList.itemCount }}</span>
-            </div>
+        <div class="movie-count">
+            <span>Amount of movies: {{ currentList.itemCount }}</span>
         </div>
 
         <div class="movies-container">
@@ -95,7 +105,7 @@
                                 <span>{{ item.overview }}</span>
                             </div>
                             <div class="mdc-touch-target-wrapper btn-wrap white details-btn">
-                                <button class="mdc-button mdc-button--raised">
+                                <button class="mdc-button mdc-button--raised" @click="showDetails(item.id, item.movie)">
                                     <span class="mdc-button__ripple"></span>
                                     <span class="mdc-button__touch"></span>
                                     <span class="mdc-button__label">View more</span>
@@ -107,7 +117,45 @@
             </div>
         </div>
 
+        <div v-if="modalToggle" class="modal-wrap">
+            <div class="modal-delete">
+                <div class="head">
+                    <h5>Add friend to list</h5>
+                </div>
+                <div class="body">
+                    <div class="row user-wrapper" v-for="item in friendDetails" :key="item.id"
+                        v-on:click="addFriendToList(item)">
+                        <div class="col-3">
+                            <span class="profile" v-html="avatar(item.name)" />
+                        </div>
+                        <div class="col-9">
+                            <span>{{ item.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="mdc-touch-target-wrapper btn-wrap white" @click="togglePopup()">
+                        <button class="mdc-button mdc-button--raised">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="details" id="Overlay">
+            <Details v-if="detailsToggle" :id="details.id.toString()" :banner="details.banner"
+                :voteAvrage="Number(details.VoteAvrage)" :title="details.title" :director="details.director"
+                :date="details.date" :genres="details.genres" :language="details.language" :poster="details.poster"
+                :overview="details.overview" :providers="details.providers" :actors="details.actors"
+                :title-type="details.titleType" @mounted="detailStyle()" @close="closeOverlay()" @rerender="reRender()" />
+        </section>
+
     </section>
+
+    
 
     <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
         :movielistId="currentList.id">
@@ -117,8 +165,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchMovie, fetchShow, fetchUser, getHasUserVoted, getMovieVotesResult } from '@/assets/javascript/api';
+import { fetchMovie, fetchShow, fetchUser, getHasUserVoted, getMovieVotesResult, fetchFriends, addFriendToList } from '@/assets/javascript/api';
 import CardSwipePopUp from './CardSwipePopUp.vue';
+import { createAvatar } from '@dicebear/core';
+import { avataaars } from '@dicebear/collection';
+import { FriendToList } from '../assets/javascript/Models/ExternApiInterface';
+import { genre, provider, actor } from '@/assets/javascript/Models/ExternApiInterface'
 
 export default defineComponent({
     data() {
@@ -129,11 +181,40 @@ export default defineComponent({
 
             userdetails: [] as any,
 
+            friendDetails: [] as any,
+
             resultmovieshow: {
+                id: 0 as number,
+                movie: '',
                 poster: '',
                 title: '',
                 overview: ''
             },
+
+            votedError: '',
+            modalToggle: false,
+
+
+            detailsToggle: false,
+            pageHeight: 'auto',
+            scroll: 0 as number,
+            scrollHeight: 0,
+
+            details: {
+                id: 0,
+                banner: '',
+                VoteAvrage: '',
+                title: '',
+                director: '',
+                date: '',
+                genres: [] as genre[],
+                language: '',
+                poster: '',
+                overview: '',
+                providers: [] as provider[],
+                actors: [] as actor[],
+                titleType: ''
+            }
         }
     },
     components: {
@@ -148,19 +229,21 @@ export default defineComponent({
     async mounted() {
         await this.btnDisplayCheck();
 
-        if(this.currentList.addMovieDeadLine < new Date().toLocaleString()){
+        if (this.currentList.voteDeadLine < new Date().toLocaleDateString()) {
             const result = await getMovieVotesResult(this.currentList.id);
 
             let resultitem = [] as any;
 
             if (result?.data.movie) {
                 resultitem = await fetchMovie(result?.data.externId);
+                this.resultmovieshow.movie = 'movie'
+
             } else {
                 resultitem = await fetchShow(result?.data.externId);
+                this.resultmovieshow.movie = 'tv'
             }
 
             this.resultmovieshow = resultitem._value.data
-            console.log(this.resultmovieshow)
 
             const btn = (document.getElementById("vote") as HTMLButtonElement)!
             btn.style.display = 'none'
@@ -179,13 +262,16 @@ export default defineComponent({
         for (let i = 0; i < this.currentList.movies.length; i++) {
             if (this.currentList.movies[i].movie) {
                 details = await fetchMovie(this.currentList.movies[i].externId);
+                details.value.data.movie = "movie"
             } else {
                 details = await fetchShow(this.currentList.movies[i].externId);
+                details.value.data.movie = "tv"
             }
 
             details._value.data.overview = this.truncateString(details._value.data.overview)
             this.movieshowdetails.push(details._value.data)
         }
+        console.log(this.movieshowdetails)
     },
     methods: {
         openVotePopUp() {
@@ -202,6 +288,8 @@ export default defineComponent({
                 const btn = (document.getElementById("vote") as HTMLButtonElement)!
                 btn.disabled = true;
                 btn.style.opacity = '0.4';
+
+                this.votedError = 'you have already voted'
             }
         },
         truncateString(str: string) {
@@ -221,6 +309,90 @@ export default defineComponent({
                 this.compToRender = ''
                 this.btnDisplayCheck();
             }, 500);
+        },
+        async togglePopup() {
+            this.modalToggle = !this.modalToggle;
+
+            const result = await fetchFriends(JSON.parse(localStorage.getItem('user') || '{}'));
+            this.friendDetails = result.value!.data;
+
+        },
+        async addFriendToList(item: any) {
+            const friend: FriendToList = {
+                MovieListId: this.currentList.id,
+                phoneNumber: item.phone
+            };
+
+            for (let j = 0; j < this.userdetails.length; j++) {
+                if (item.name == this.userdetails[j].name) {
+                    //melding geven friend is already in list
+                    console.log("in list")
+                }
+            }
+
+            await addFriendToList(friend);
+        },
+        avatar(name: string | null) {
+            let avatar: any = ''
+
+            if (name) {
+                avatar = createAvatar(avataaars, {
+                    seed: name,
+                    randomizeIds: true,
+                    backgroundColor: ['5DE9F4']
+                });
+            }
+            else {
+                avatar = createAvatar(avataaars, {
+                    randomizeIds: true,
+                    backgroundColor: ['5DE9F4']
+                });
+            }
+            return avatar.toString();
+        },
+        async showDetails(id: number, type: string) {
+            const result = await fetchMovie(id.toString())
+            if (result.value?.code == 200) {
+                this.details = {
+                    id: result.value.data.id,
+                    banner: result.value.data.backdrop,
+                    VoteAvrage: result.value.data.vote_average.toString(),
+                    title: result.value.data.title,
+                    director: result.value.data.director,
+                    date: result.value.data.first_air_date,
+                    genres: result.value.data.genres,
+                    language: result.value.data.language,
+                    poster: result.value.data.poster,
+                    overview: result.value.data.overview,
+                    providers: result.value.data.providers,
+                    actors: result.value.data.cast,
+                    titleType: type
+                }
+            }
+            this.scroll = document.documentElement.scrollTop
+            this.detailsToggle = true
+        },
+        detailStyle() {
+            if (this.detailsToggle) {
+                window.scrollTo(0, 0)
+                const overlay = document.getElementById('Overlay');
+                this.pageHeight = overlay!.offsetHeight.toString() + "px"
+            }
+        },
+        closeOverlay() {
+            if (this.detailsToggle) {
+                this.pageHeight = "none"
+                this.detailsToggle = false
+                setTimeout(() => {
+                    window.scrollTo(0, this.scroll)
+                }, 5);
+            }
+        },
+        reRender() {
+            this.detailsToggle = false
+            this.$nextTick(() => {
+                this.detailsToggle = true
+            })
         }
     }
 })

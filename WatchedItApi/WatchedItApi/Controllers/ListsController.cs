@@ -40,7 +40,7 @@ namespace WatchedItApi.Controllers
         [HttpPost("addmovielist")]
         [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddMovieList(MovieList movielist)
+        public async Task<IActionResult> AddMovieList([FromForm] MovieList movielist)
         {
             if (movielist != null)
             {
@@ -84,8 +84,8 @@ namespace WatchedItApi.Controllers
                 .FirstOrDefaultAsync(ml => ml.Id == request.MovieListId);
 
             bool doubleMovie = false;
-            
-            if (mymovielist != null)
+
+            if (mymovielist != null && DateTime.Parse(mymovielist.addMovieDeadLine) > DateTime.Now)
             {
                 if(mymovielist.Movies != null)
                 {
