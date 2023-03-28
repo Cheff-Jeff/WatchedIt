@@ -2,7 +2,7 @@ import axios from "axios"
 import { ref } from 'vue';
 import type { Ref } from 'vue'
 import { Friend, User, favoriteDto } from './Models/UserInterface';
-import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow, newList, MovieShowToList } from "./Models/ExternApiInterface";
+import { TrendingMovie, TrendingShow, titleDetails, searchMovieShow, collectionList, rateMovieShow, newList, MovieShowToList, FriendToList } from "./Models/ExternApiInterface";
 
 export const fetchUsers = async () => {
   const result: Ref<User[] | null> = ref(null)
@@ -853,6 +853,30 @@ export const addMovieShowToList = async (movieshowtolist: MovieShowToList) => {
 
   try {
     await axios.post(`${process.env.VUE_APP_API_HOST}/Lists/addmovietolist`, movieshowtolist, {
+      headers: { 'Content-type': 'multipart/form-data' }
+    }).then((response) => {
+      if (response.status == 200) {
+        result = {
+          code: response.status,
+          data: response.data
+        }
+      }
+    })
+  } catch (error: any) {
+    result = {
+      code: error.response.status,
+      data: error.response.data
+    }
+  }
+
+  return result
+}
+
+export const addFriendToList = async (addfriendtoList: FriendToList) => {
+  let result: { code: number, data: FriendToList } | null = null
+
+  try {
+    await axios.post(`${process.env.VUE_APP_API_HOST}/Lists/addusertolist`, addfriendtoList, {
       headers: { 'Content-type': 'multipart/form-data' }
     }).then((response) => {
       if (response.status == 200) {

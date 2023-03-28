@@ -84,3 +84,8 @@ export interface MovieShowToList {
   movie: boolean
 }
 
+export interface FriendToList {
+  MovieListId: number,
+  phoneNumber: string,
+}
+

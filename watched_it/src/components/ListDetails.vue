@@ -4,7 +4,7 @@
 
 
 <template>
-    <section class="wrapper2">
+    <section v-auto-animate class="wrapper2">
         <div class="top-info-box">
             <div class="close-icon">
                 <svg v-on:click="closeModal()" class="icon-right" xmlns="http://www.w3.org/2000/svg"
@@ -57,6 +57,15 @@
                             <span v-for="item in userdetails" :key="item.id">{{ item.name }} </span>
                         </div>
                     </div>
+                    <div class="add-friend-btn">
+                        <div class="mdc-touch-target-wrapper btn-wrap details-btn">
+                            <button id="add-friend" class="mdc-button mdc-button--raised" v-on:click="togglePopup()">
+                                <span class="mdc-button__ripple"></span>
+                                <span class="mdc-button__touch"></span>
+                                <span class="mdc-button__label">Add friend</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-6">
                     <div class="dates">
@@ -75,10 +84,10 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="movie-count">
-                <span>Amount of movies: {{ currentList.itemCount }}</span>
-            </div>
+        <div class="movie-count">
+            <span>Amount of movies: {{ currentList.itemCount }}</span>
         </div>
 
         <div class="movies-container">
@@ -107,6 +116,34 @@
                 </div>
             </div>
         </div>
+
+        <div v-if="modalToggle" class="modal-wrap">
+            <div class="modal-delete">
+                <div class="head">
+                    <h5>Add friend to list</h5>
+                </div>
+                <div class="body">
+                    <div class="row user-wrapper" v-for="item in friendDetails" :key="item.id"
+                        v-on:click="addFriendToList(item)">
+                        <div class="col-3">
+                            <span class="profile" v-html="avatar(item.name)" />
+                        </div>
+                        <div class="col-9">
+                            <span>{{ item.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="mdc-touch-target-wrapper btn-wrap white" @click="togglePopup()">
+                        <button class="mdc-button mdc-button--raised">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
@@ -117,8 +154,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { fetchMovie, fetchShow, fetchUser, getHasUserVoted, getMovieVotesResult } from '@/assets/javascript/api';
+import { fetchMovie, fetchShow, fetchUser, getHasUserVoted, getMovieVotesResult, fetchFriends, addFriendToList } from '@/assets/javascript/api';
 import CardSwipePopUp from './CardSwipePopUp.vue';
+import { createAvatar } from '@dicebear/core';
+import { avataaars } from '@dicebear/collection';
+import { FriendToList } from '../assets/javascript/Models/ExternApiInterface';
 
 export default defineComponent({
     data() {
@@ -129,6 +169,8 @@ export default defineComponent({
 
             userdetails: [] as any,
 
+            friendDetails: [] as any,
+
             resultmovieshow: {
                 poster: '',
                 title: '',
@@ -136,6 +178,7 @@ export default defineComponent({
             },
 
             votedError: '',
+            modalToggle: false
         }
     },
     components: {
@@ -224,6 +267,46 @@ export default defineComponent({
                 this.compToRender = ''
                 this.btnDisplayCheck();
             }, 500);
+        },
+        async togglePopup() {
+            this.modalToggle = !this.modalToggle;
+
+            const result = await fetchFriends(JSON.parse(localStorage.getItem('user') || '{}'));
+            this.friendDetails = result.value!.data;
+
+        },
+        async addFriendToList(item: any) {
+            const friend: FriendToList = {
+                MovieListId: this.currentList.id,
+                phoneNumber: item.phone
+            };
+
+            for (let j = 0; j < this.userdetails.length; j++) {
+                if (item.name == this.userdetails[j].name) {
+                    //melding geven friend is already in list
+                    console.log("in list")
+                }
+            }
+
+            await addFriendToList(friend);
+        },
+        avatar(name: string | null) {
+            let avatar: any = ''
+
+            if (name) {
+                avatar = createAvatar(avataaars, {
+                    seed: name,
+                    randomizeIds: true,
+                    backgroundColor: ['5DE9F4']
+                });
+            }
+            else {
+                avatar = createAvatar(avataaars, {
+                    randomizeIds: true,
+                    backgroundColor: ['5DE9F4']
+                });
+            }
+            return avatar.toString();
         },
     }
 })

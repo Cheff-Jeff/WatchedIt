@@ -80,7 +80,7 @@ onMounted(() => {
                                     <span class="mdc-notched-outline">
                                         <span class="mdc-notched-outline__leading"></span>
                                         <span class="mdc-notched-outline__notch">
-                                            <span class="mdc-floating-label" id="my-label-id">Your Name</span>
+                                            <span class="mdc-floating-label" id="my-label-id">Title</span>
                                         </span>
                                         <span class="mdc-notched-outline__trailing"></span>
                                     </span>
@@ -166,6 +166,8 @@ import { getCollectionList, addNewList } from '../assets/javascript/api';
 import ListDetails from '@/components/ListDetails.vue';
 import { newList } from '../assets/javascript/Models/ExternApiInterface';
 
+import { errTitleEmp } from '@/assets/javascript/validation';
+
 export default defineComponent({
     data() {
         return {
@@ -181,7 +183,12 @@ export default defineComponent({
                 addmovieDate: '',
                 voteDeadline: '',
                 watchDate: ''
-            }
+            },
+
+            titleError: '',
+            addmovieDateError: '',
+            voteDeadlineError: '',
+            watchDateError: ''
         }
     },
     components: {
@@ -203,7 +210,6 @@ export default defineComponent({
             this.modalToggle = !this.modalToggle;
         },
         async submitNewList() {
-            
             const newList: newList = {
                 title: this.listDetails.title,
                 userId: JSON.parse(localStorage.getItem('user') || '{}'),
@@ -223,6 +229,9 @@ export default defineComponent({
         },
         convertStringToLocaleTime(input: string) {
             return input.split("-").reverse().join("-");
+        },
+        checkTitle() {
+            this.titleError = this.titleError.length == 0 ? errTitleEmp() : ''
         }
     }
 })
