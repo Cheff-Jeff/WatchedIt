@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
+import { MDCRipple } from '@material/ripple';
+import { onMounted } from 'vue';
 
 const props = defineProps({
     currentTitle: {
@@ -7,6 +9,13 @@ const props = defineProps({
         required: true
     }
 })
+
+onMounted(() => {
+    const btn = document.querySelector('.mdc-button');
+    if (btn) {
+        const buttonRipple = new MDCRipple(btn);
+    }
+});
 </script>
 
 <template>
@@ -82,6 +91,13 @@ const props = defineProps({
                         </li>
                     </ul>
                 </nav>
+                <div class="mdc-touch-target-wrapper btn-wrap white">
+                    <button class="mdc-button mdc-button--raised" @click="signoff">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__touch"></span>
+                        <span class="mdc-button__label">Sign off</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -90,6 +106,7 @@ const props = defineProps({
 <script lang="ts">
 import { searchMovies } from '@/assets/javascript/api';
 import { defineComponent } from 'vue';
+import router from '@/router';
 export default defineComponent({
     data() {
         return {
@@ -110,6 +127,10 @@ export default defineComponent({
         },
         openMenu() {
             this.menuToggle = 'open'
+        },
+        signoff(){
+            localStorage.removeItem('user')
+            this.$router.push('/')
         }
     },
 })
@@ -118,4 +139,5 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
 @import '@/assets/styles/components/simpleheader.scss';
+@import "@/assets/styles/components/buttons.scss";
 </style>

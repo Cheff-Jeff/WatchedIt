@@ -115,7 +115,7 @@ import { User } from '@/assets/javascript/Models/UserInterface';
 export default defineComponent({
   data() {
     return {
-      err: 'test',
+      err: '',
       deleteId: '',
       deleteName: '',
       modalToggle: '',

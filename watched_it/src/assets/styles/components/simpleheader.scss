@@ -176,7 +176,7 @@
                 ul {
                     list-style: none;
                     margin: 0;
-                    padding-left: 10px;
+                    padding-left: 20px;
 
                     li {
                         margin: 20px 0 20px;
@@ -202,6 +202,13 @@
                     }
                 }
             }
+        }
+        .btn-wrap{
+            width: 60% !important;
+            display: block;
+            margin-bottom: 0px;
+            margin-top: 70px;
+            margin-left: 20px;
         }
     }
 }
