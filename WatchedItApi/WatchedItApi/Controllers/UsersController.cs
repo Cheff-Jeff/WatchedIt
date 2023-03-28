@@ -125,32 +125,36 @@ namespace WatchedItApi.Controllers
         {
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
             User? user2 = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user != null && user2 == null)
+            
+            if (user != null)
             {
-                if (dto.Name != null && dto.Email != null)
+                if (user2 == null || user2.Id == user.Id)
                 {
-                    _context.Entry(user).State = EntityState.Modified;
-
-                    User? newInfo = new User(dto);
-                    if (dto.Password != null)
+                    if (dto.Name != null && dto.Email != null)
                     {
-                        newInfo.encrypt();
-                    }
-                    else
-                    {
-                        newInfo.keepOldInfo(user.Salt, user.Password);
-                    }
+                        _context.Entry(user).State = EntityState.Modified;
 
-                    user.Name = newInfo.Name;
-                    user.Email = newInfo.Email;
-                    user.Phone = newInfo.Phone;
-                    user.Password = newInfo.Password;
-                    user.Salt = newInfo.Salt;
+                        User? newInfo = new User(dto);
+                        if (dto.Password != null)
+                        {
+                            newInfo.encrypt();
+                        }
+                        else
+                        {
+                            newInfo.keepOldInfo(user.Salt, user.Password);
+                        }
 
-                    await _context.SaveChangesAsync();
-                    return NoContent();
+                        user.Name = newInfo.Name;
+                        user.Email = newInfo.Email;
+                        user.Phone = newInfo.Phone;
+                        user.Password = newInfo.Password;
+                        user.Salt = newInfo.Salt;
+
+                        await _context.SaveChangesAsync();
+                        return NoContent();
+                    }
+                    return BadRequest("Information not complete");
                 }
-                return BadRequest("Information not complete");
             }
             return BadRequest("Not Found");   
         }
