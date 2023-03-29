@@ -28,7 +28,7 @@ defineExpose({ user });
 <template>
   <SimpleHeader currentTitle="Account" />
   <section class="section-pagewrap">
-    <div class="container">
+    <div class="container bg">
       <section class="greed" v-if="user">
         <div class="row">
           <div class="col-8">

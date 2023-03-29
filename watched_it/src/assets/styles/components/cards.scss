@@ -118,3 +118,12 @@
     margin: 3px 0 0px 0px;
   }
 }
+.loading-wrap{
+  padding-bottom: 10px;
+  background: $background;
+  svg{
+    display: block;
+    margin: auto;
+    width: 30px;
+  }
+}

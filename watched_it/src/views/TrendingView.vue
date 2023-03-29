@@ -29,7 +29,7 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
             <h1>Trending shows</h1>
         </div>
 
-        <div class="card-container">
+        <div class="card-container bg">
             <div class="card" v-for="show in trendingShowList" :key="show.id">
                 <router-link :to="{name:'details',  params: { type: 'show', id: show.id }}">
                     <div class="movie-image-container">

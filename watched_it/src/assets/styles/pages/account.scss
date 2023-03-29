@@ -1,6 +1,7 @@
 @import "../fonts/roboto.scss";
 section.section-pagewrap{
-  min-height: 100vh;
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * 100);
   width: 100%;
   background: $background;
   padding-top: 55px;

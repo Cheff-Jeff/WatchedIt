@@ -27,6 +27,17 @@ import Details from '@/components/Title-Details.vue';
           </div>
         </div>
       </section>
+      <div class="loading-wrap" v-if="loadingMore">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+          <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#000" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+          </circle>
+          <circle cx="50" cy="50" r="23" stroke-width="8" stroke="#000" stroke-dasharray="36.12831551628262 36.12831551628262" stroke-dashoffset="36.12831551628262" fill="none" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;-360 50 50"></animateTransform>
+          </circle>
+        </svg>
+        <p class="text-center">Loading more...</p>
+      </div>
     </div>
     <section class="details" id="Overlay">
       <Details v-if="detailsToggle"
@@ -68,6 +79,7 @@ export default defineComponent({
       pageHeight: 'auto',
       scroll: 0 as number,
       scrollHeight: 0,
+      loadingMore: false,
       details: {
         id: 0,
         banner: '',
@@ -100,18 +112,23 @@ export default defineComponent({
   },
   methods: {
     async nextPage(){
+      this.loadingMore = true
       if(this.pages <= this.totalPages){
         const response = await fetchCommingSoon(this.pages.toString())
         if(response.value?.code == 200){
-          const newMovies: TrendingMovie[] = response.value.data
+          const newMovies: TrendingMovie[] = response.value?.data
           for(let i = 0; i < newMovies.length; i++){
             this.movies.push(newMovies[i]);
           }
+          this.loadingMore = false
         }
+      }
+      else{
+        this.loadingMore = false
       }
     },
     scrollCheck() {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
         if(this.pages == 1)
         {
           this.pages++
