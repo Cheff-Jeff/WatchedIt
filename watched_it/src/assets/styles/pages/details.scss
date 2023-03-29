@@ -159,6 +159,16 @@
     letter-spacing: 2px;
   }
 
+  .share-icon {
+    width: 90%;
+    fill: $outline;
+    border-radius: 50%;
+    border: 2px solid $outline;
+    padding: 5px;
+    margin-bottom: 5px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
   .cast-wrap {
     display: flex;
     flex-direction: row;
