@@ -45,6 +45,7 @@ export interface searchMovieShow {
 export interface collectionList {
   id: number,
   title: string,
+  userId: number,
   addMovieDeadLine: string,
   voteDeadLine: string,
   watchDateTime: string,
@@ -69,4 +70,23 @@ export interface favorites {
 export interface genre {id: number, name: string}
 export interface provider {logo: string, name: string}
 export interface actor {name: string, photo: string}
+
+export interface newList {
+  title: string,
+  userId: number,
+  addMovieDeadLine: string,
+  voteDeadLine: string,
+  watchDateTime: string,
+}
+
+export interface MovieShowToList {
+  MovieListId: number,
+  externId: number,
+  movie: boolean
+}
+
+export interface FriendToList {
+  MovieListId: number,
+  phoneNumber: string,
+}
 

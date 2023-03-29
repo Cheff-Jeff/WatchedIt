@@ -40,7 +40,7 @@ namespace WatchedItApi.Controllers
         [HttpPost("addmovielist")]
         [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddMovieList(MovieList movielist)
+        public async Task<IActionResult> AddMovieList([FromForm] MovieList movielist)
         {
             if (movielist != null)
             {
@@ -84,8 +84,8 @@ namespace WatchedItApi.Controllers
                 .FirstOrDefaultAsync(ml => ml.Id == request.MovieListId);
 
             bool doubleMovie = false;
-            
-            if (mymovielist != null)
+
+            if (mymovielist != null && DateTime.Parse(mymovielist.addMovieDeadLine) > DateTime.Now)
             {
                 if(mymovielist.Movies != null)
                 {
@@ -176,7 +176,7 @@ namespace WatchedItApi.Controllers
         [HttpPost("addusertolist")]
         [ProducesResponseType(typeof(MovieList), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddUserToList([FromForm] MovieListDto request)
+        public async Task<IActionResult> AddUserToList([FromForm]MovieListDto request)
         {
             MovieList? mymovielist = await _context.MovieLists
                 .Include(u => u.Users)
@@ -189,21 +189,28 @@ namespace WatchedItApi.Controllers
 
                 if (user != null)
                 {
-                    mymovielist.Users.Add(user);
-                    await _context.SaveChangesAsync();
+                    UserVote myuserVote = await _context.UserVotes.FirstOrDefaultAsync(uv => uv.MovieListId == request.MovieListId && uv.userId == user.Id);
 
-                    //user aan votedlist toevoegen
-                    UserVote userVote = new UserVote
+                    if (myuserVote == null)
                     {
-                        MovieListId = mymovielist.Id,
-                        userId = user.Id,
-                        voted = false
-                    };
+                        mymovielist.Users.Add(user);
+                        await _context.SaveChangesAsync();
 
-                    await _context.UserVotes.AddAsync(userVote);
-                    await _context.SaveChangesAsync();
+                        //user aan votedlist toevoegen
+                        UserVote userVote = new UserVote
+                        {
+                            MovieListId = mymovielist.Id,
+                            userId = user.Id,
+                            voted = false
+                        };
 
-                    return Ok("user added");
+                        await _context.UserVotes.AddAsync(userVote);
+                        await _context.SaveChangesAsync();
+
+                        return Ok("user added");
+                    }
+
+                    return BadRequest("user is already in list");
                 }
 
                 return BadRequest("user not found");
@@ -226,10 +233,14 @@ namespace WatchedItApi.Controllers
                 User? user = await _context.Users
                     .FirstOrDefaultAsync(u => u.Phone == request.phoneNumber);
 
-                if (user != null)
+                UserVote uservote = await _context.UserVotes
+                            .FirstOrDefaultAsync(uv => uv.MovieListId == request.MovieListId && uv.userId == user.Id);
+
+                if (user != null && uservote != null)
                 {
                     mymovielist.Users.Remove(user);
-
+                    await _context.SaveChangesAsync();
+                    _context.UserVotes.Remove(uservote);
                     await _context.SaveChangesAsync();
 
                     return Ok("user removed");

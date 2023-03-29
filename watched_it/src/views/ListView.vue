@@ -1,11 +1,28 @@
 <script setup lang="ts">
 import SimpleHeader from '@/components/SimpleHeader.vue';
+
+import { MDCTextField } from '@material/textfield';
+import { MDCRipple } from '@material/ripple';
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    const inputs = document.getElementsByClassName('mdc-text-field');
+    const btn = document.querySelector('.mdc-button');
+    if (inputs) {
+        for (let input of inputs) {
+            let textField = new MDCTextField(input);
+        }
+    }
+    if (btn) {
+        const buttonRipple = new MDCRipple(btn);
+    }
+});
 </script>
 
 <template>
     <SimpleHeader :currentTitle="'Watch list'" />
 
-    <section class="wrapper">
+    <section v-auto-animate class="wrapper">
         <div class="list-container">
             <div class="card" v-for="list in collectionList" :key="list.id" v-on:click="getClickedList(list)">
                 <div class="movie-image-container">
@@ -37,25 +54,120 @@ import SimpleHeader from '@/components/SimpleHeader.vue';
         </div>
 
         <div class="btn-stick-bottom">
-            <div class="col-md-12">
-                <div class="mdc-touch-target-wrapper btn-wrap">
-                    <button class="mdc-button mdc-button--raised">
-                        <span class="mdc-button__ripple"></span>
-                        <span class="mdc-button__touch"></span>
-                        <span class="mdc-button__label">Add list</span>
-                    </button>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mdc-touch-target-wrapper btn-wrap" v-on:click="togglePopup()">
+                        <button class="mdc-button mdc-button--raised">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Add list</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
+        <div v-if="modalToggle" class="modal-wrap">
+            <div class="modal-delete">
+                <div class="head">
+                    <h5>Add list</h5>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Title</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.title">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Add movie/show till</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.addmovieDate">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Vote deadline</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.voteDeadline">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-wrapper">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label" id="my-label-id">Watch time</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input type="date" class="mdc-text-field__input" aria-labelledby="my-label-id" required
+                                        v-model="listDetails.watchDate">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="mdc-touch-target-wrapper btn-wrap white" @click="togglePopup()">
+                        <button class="mdc-button mdc-button--raised">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Cancel</span>
+                        </button>
+                    </div>
+                    <div class="mdc-touch-target-wrapper btn-wrap">
+                        <button class="mdc-button mdc-button--raised" v-on:click="submitNewList()">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__touch"></span>
+                            <span class="mdc-button__label">Save</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
+
+    </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getCollectionList } from '../assets/javascript/api';
+import { getCollectionList, addNewList, fetchUser } from '../assets/javascript/api';
 import ListDetails from '@/components/ListDetails.vue';
+import { newList } from '../assets/javascript/Models/ExternApiInterface';
+
+import { errTitleEmp } from '@/assets/javascript/validation';
+
 export default defineComponent({
     data() {
         return {
@@ -63,6 +175,20 @@ export default defineComponent({
             collectionList: [] as any,
 
             getCurrentList: [] as any,
+
+            modalToggle: false,
+
+            listDetails: {
+                title: '',
+                addmovieDate: '',
+                voteDeadline: '',
+                watchDate: ''
+            },
+
+            titleError: '',
+            addmovieDateError: '',
+            voteDeadlineError: '',
+            watchDateError: ''
         }
     },
     components: {
@@ -72,20 +198,53 @@ export default defineComponent({
         this.collectionList = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
     },
     methods: {
-        getClickedList(list: []) {
+        async getClickedList(list: []) {
             this.getCurrentList = list;
+            if (this.getCurrentList.users[0] == null) {
+                this.getCurrentList.users.splice(0, 1)
+                let user = await fetchUser(JSON.parse(localStorage.getItem('user') || '{}'));
+                this.getCurrentList.users.push(user.value!.data);
+            }
 
             this.compToRender = 'ListDetails'
         },
         closeListDetails() {
             this.compToRender = ''
         },
+        togglePopup() {
+            this.modalToggle = !this.modalToggle;
+        },
+        async submitNewList() {
+            const newList: newList = {
+                title: this.listDetails.title,
+                userId: JSON.parse(localStorage.getItem('user') || '{}'),
+                addMovieDeadLine: this.convertStringToLocaleTime(this.listDetails.addmovieDate),
+                voteDeadLine: this.convertStringToLocaleTime(this.listDetails.voteDeadline),
+                watchDateTime: this.convertStringToLocaleTime(this.listDetails.watchDate)
+            }
+
+            const result = await addNewList(newList)
+
+            if (result?.code == 200) {
+                window.location.reload()
+            }
+            else {
+                //melding er ging iets mis
+            }
+        },
+        convertStringToLocaleTime(input: string) {
+            return input.split("-").reverse().join("-");
+        },
+        checkTitle() {
+            this.titleError = this.titleError.length == 0 ? errTitleEmp() : ''
+        }
     }
 })
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/styles/colors.scss";
-@import '../assets/styles/pages/list.scss';
 @import "@/assets/styles/components/buttons.scss";
+@import "@/assets/styles/components/input.scss";
+@import "@/assets/styles/pages/list.scss";
 </style>
