@@ -164,7 +164,7 @@ defineExpose({ details, favorite, favoriteId, route })
           <div class="row btn-container">
             <div class="col-md-12" v-for="item in movieshowList" :key="item.id">
               <div class="mdc-touch-target-wrapper btn-wrap"
-                @click="addMovieToList(Number(details?.id), item.id, route.params.type.toString())">
+                @click="addMovieToList(Number(details?.id), item.id, route.params.type.toString(), item)">
                 <button class="mdc-button mdc-button--raised">
                   <span class="mdc-button__ripple"></span>
                   <span class="mdc-button__touch"></span>
@@ -182,7 +182,6 @@ defineExpose({ details, favorite, favoriteId, route })
               <span class="mdc-button__label">Cancel</span>
             </button>
           </div>
-          <p>{{ addMovieError }}</p>
         </div>
       </div>
     </div>
@@ -207,8 +206,6 @@ export default defineComponent({
         voteDeadline: '',
         watchDate: ''
       },
-
-      addMovieError: ''
     }
   },
   async mounted() {
@@ -217,7 +214,7 @@ export default defineComponent({
 
     
     for (let i = 0; i < result._value.length; i++) {
-      if(result._value[i].addMovieDeadLine > new Date().toLocaleDateString()){
+      if(result._value[i].addMovieDeadLine.replace('-', '').replace('-', '') > new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '')){
         this.movieshowList.push(result._value[i])
       }
     }
@@ -226,7 +223,7 @@ export default defineComponent({
     togglePopup() {
       this.modalToggle = !this.modalToggle;
     },
-    async addMovieToList(externId: number, movielistid: number, titleType: string) {
+    async addMovieToList(externId: number, movielistid: number, titleType: string, item: any) {
       const isMovie = titleType == "movie" ? true : false;
 
       const addmovieshowtoList: MovieShowToList = {
@@ -238,10 +235,20 @@ export default defineComponent({
       const result = await addMovieShowToList(addmovieshowtoList);
 
       if (result?.code == 200) {
-        this.addMovieError = `Movie/Show added to selected list`
+        this.movieshowList.splice(item)
+
+        var alertitem1: any = {
+          msg: 'Movie/show added to list',
+          type: 'good'
+        }
+        this.$emit('notify', alertitem1.msg, alertitem1.type);
       }
       else {
-        this.addMovieError = `Movie/Show is already in selected list`
+        var alertitem2: any = {
+          msg: 'Movie/show already in list',
+          type: 'error'
+        }
+        this.$emit('notify', alertitem2.msg, alertitem2.type);
       }
     },
     async newFavorite(titleId: number, titleType: string) {

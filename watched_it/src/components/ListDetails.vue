@@ -4,7 +4,7 @@ import Details from './Title-Details.vue';
 
 
 <template>
-    <section v-auto-animate class="wrapper2">
+    <section v-auto-animate class="wrapper2" id="background">
         <div class="top-info-box">
             <div class="close-icon">
                 <svg v-on:click="closeModal()" class="icon-right" xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ import Details from './Title-Details.vue';
                     <div class="users-container">
                         <p>Contributers:</p>
                         <div class="user">
-                            <span v-for="item in userdetails" :key="item.id">{{ item.name }} </span>
+                            <span v-for="item in contributersList" :key="item.id">{{ item.name }} </span>
                         </div>
                     </div>
                     <div id="add-friend" class="add-friend-btn">
@@ -142,24 +142,23 @@ import Details from './Title-Details.vue';
                             <span class="mdc-button__label">Cancel</span>
                         </button>
                     </div>
-                    <p class="error">{{ addfriendError }}</p>
                 </div>
             </div>
         </div>
 
-        <section class="details" id="Overlay">
-            <Details v-if="detailsToggle" :id="details.id.toString()" :banner="details.banner"
-                :voteAvrage="Number(details.VoteAvrage)" :title="details.title" :director="details.director"
-                :date="details.date" :genres="details.genres" :language="details.language" :poster="details.poster"
-                :overview="details.overview" :providers="details.providers" :actors="details.actors"
-                :title-type="details.titleType" @mounted="detailStyle()" @close="closeOverlay()" @rerender="reRender()" />
-        </section>
+
 
     </section>
 
+    <section class="details" id="Overlay">
+        <Details v-if="detailsToggle" :id="details.id.toString()" :banner="details.banner"
+            :voteAvrage="Number(details.VoteAvrage)" :title="details.title" :director="details.director"
+            :date="details.date" :genres="details.genres" :language="details.language" :poster="details.poster"
+            :overview="details.overview" :providers="details.providers" :actors="details.actors"
+            :title-type="details.titleType" @mounted="detailStyle()" @close="closeOverlay()" @rerender="reRender()" v-on:alert="alert"/>
+    </section>
 
-
-    <component :is="compToRender" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
+    <component :is="compToRender" v-on:alert="alert" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
         :movielistId="currentList.id">
     </component>
 </template>
@@ -181,7 +180,7 @@ export default defineComponent({
 
             movieshowdetails: [] as any,
 
-            userdetails: [] as any,
+            contributersList: [] as any,
 
             friendDetails: [] as any,
 
@@ -194,7 +193,6 @@ export default defineComponent({
             },
 
             votedError: '',
-            addfriendError: '',
             modalToggle: false,
 
 
@@ -229,9 +227,7 @@ export default defineComponent({
     async mounted() {
         await this.btnDisplayCheck();
 
-
-
-        if (this.currentList.voteDeadLine < new Date().toLocaleDateString()) {
+        if (this.currentList.voteDeadLine.replace('-', '').replace('-', '') < new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '')) {
             const result = await getMovieVotesResult(this.currentList.id);
 
             let resultitem = [] as any;
@@ -255,7 +251,7 @@ export default defineComponent({
             resultContainer.style.display = 'block'
         }
 
-        this.userdetails = this.currentList.users;
+        this.contributersList = this.currentList.users;
 
         let details = [] as any;
 
@@ -273,12 +269,18 @@ export default defineComponent({
         }
     },
     methods: {
+        alert(alertitem: any){
+            this.$emit('alert', alertitem);
+        },
         openVotePopUp() {
-            this.$emit('notify', 'list is empty', 'error');
             if (this.currentList.movies.length >= 1) {
                 this.compToRender = 'CardSwipePopUp'
             } else {
-                //melding
+                var alertitem: any = {
+                    msg: 'No movie/show in list',
+                    type: 'error'
+                }
+                this.$emit('alert', alertitem);
             }
         },
         async btnDisplayCheck() {
@@ -289,7 +291,7 @@ export default defineComponent({
 
             const result = await getHasUserVoted(this.currentList.id, JSON.parse(localStorage.getItem('user') || '{}'));
 
-            if (this.currentList.voteDeadLine < new Date().toLocaleDateString() || result?.data == true) {
+            if (this.currentList.voteDeadLine.replace('-', '').replace('-', '') < new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '') || result?.data == true) {
                 const btn = (document.getElementById("vote") as HTMLButtonElement)!
                 btn.disabled = true;
                 btn.style.opacity = '0.4';
@@ -321,8 +323,13 @@ export default defineComponent({
             const result = await fetchFriends(JSON.parse(localStorage.getItem('user') || '{}'));
             this.friendDetails = result.value!.data;
 
+            const background = (document.getElementById("background") as HTMLButtonElement)!
+            background.style.overflow = 'hidden'
+            background.scrollTo(0, 0)
+
             if (this.modalToggle == false) {
                 this.$forceUpdate();
+                background.style.overflow = 'auto'
             }
 
         },
@@ -335,11 +342,14 @@ export default defineComponent({
             const result = await addFriendToList(friend);
 
             if (result?.code == 200) {
-                this.addfriendError = ''
-                this.userdetails.push(item)
+                this.contributersList.push(item)
 
             } else {
-                this.addfriendError = 'friend is already in list'
+                var alertitem: any = {
+                    msg: 'Already in list',
+                    type: 'error'
+                }
+                this.$emit('alert', alertitem);
             }
         },
         avatar(name: string | null) {

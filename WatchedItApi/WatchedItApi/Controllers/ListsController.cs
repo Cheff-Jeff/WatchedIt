@@ -85,7 +85,7 @@ namespace WatchedItApi.Controllers
 
             bool doubleMovie = false;
 
-            if (mymovielist != null && DateTime.Parse(mymovielist.addMovieDeadLine) > DateTime.Now)
+            if (mymovielist != null)
             {
                 if(mymovielist.Movies != null)
                 {

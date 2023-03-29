@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import SimpleHeader from '@/components/SimpleHeader.vue';
 
+import { onMounted, onUpdated } from 'vue';
 import { MDCTextField } from '@material/textfield';
 import { MDCRipple } from '@material/ripple';
-import { onMounted } from 'vue';
 
-onMounted(() => {
+
+onUpdated(() => {
     const inputs = document.getElementsByClassName('mdc-text-field');
     const btn = document.querySelector('.mdc-button');
     if (inputs) {
@@ -155,7 +156,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <component :is="compToRender" v-on:closeListDetails="closeListDetails" :currentList="getCurrentList"></component>
+        <component :is="compToRender" v-on:closeListDetails="closeListDetails" v-on:alert="alert" :currentList="getCurrentList"></component>
 
     </section>
 </template>
@@ -198,6 +199,9 @@ export default defineComponent({
         this.collectionList = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
     },
     methods: {
+        alert(alertitem: any){
+            this.$emit('notify', alertitem.msg, alertitem.type);
+        },
         async getClickedList(list: []) {
             this.getCurrentList = list;
             if (this.getCurrentList.users[0] == null) {

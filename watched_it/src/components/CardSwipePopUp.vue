@@ -86,7 +86,8 @@ export default defineComponent({
         }
     },
     emits: [
-        "closeCardSwipePopUp"
+        "closeCardSwipePopUp",
+        "alert"
     ],
     props: {
         votelist: {
@@ -171,6 +172,12 @@ export default defineComponent({
             }, 1000);
         },
         closeModal() {
+            var alertitem: any = {
+                msg: 'Votes have been send',
+                type: 'good'
+            }
+            this.$emit('alert', alertitem)
+
             this.$emit('closeCardSwipePopUp', true)
         },
         truncateString(str: string) {
