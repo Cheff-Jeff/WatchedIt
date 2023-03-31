@@ -226,7 +226,7 @@ export default defineComponent({
 
 
     for (let i = 0; i < result._value.length; i++) {
-      if (result._value[i].addMovieDeadLine.replace('-', '').replace('-', '') > new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '')) {
+      if (result._value[i].addMovieDeadLine.replace('-', '').replace('-', '') < new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '')) {
         this.movieshowList.push(result._value[i])
       }
     }

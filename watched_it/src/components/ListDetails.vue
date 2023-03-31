@@ -371,26 +371,49 @@ export default defineComponent({
             return avatar.toString();
         },
         async showDetails(id: number, type: string) {
-            const result = await fetchMovie(id.toString())
-            if (result.value?.code == 200) {
-                this.details = {
-                    id: result.value.data.id,
-                    banner: result.value.data.backdrop,
-                    VoteAvrage: result.value.data.vote_average.toString(),
-                    title: result.value.data.title,
-                    director: result.value.data.director,
-                    date: result.value.data.first_air_date,
-                    genres: result.value.data.genres,
-                    language: result.value.data.language,
-                    poster: result.value.data.poster,
-                    overview: result.value.data.overview,
-                    providers: result.value.data.providers,
-                    actors: result.value.data.cast,
-                    titleType: type
+            if(type != 'tv'){
+                const result = await fetchMovie(id.toString())
+                if (result.value?.code == 200) {
+                    this.details = {
+                        id: result.value.data.id,
+                        banner: result.value.data.backdrop,
+                        VoteAvrage: result.value.data.vote_average.toString(),
+                        title: result.value.data.title,
+                        director: result.value.data.director,
+                        date: result.value.data.first_air_date,
+                        genres: result.value.data.genres,
+                        language: result.value.data.language,
+                        poster: result.value.data.poster,
+                        overview: result.value.data.overview,
+                        providers: result.value.data.providers,
+                        actors: result.value.data.cast,
+                        titleType: type
+                    }
                 }
+                this.scroll = document.documentElement.scrollTop
+                this.detailsToggle = true
+            }else{
+                const result = await fetchShow(id.toString())
+                if (result.value?.code == 200) {
+                    this.details = {
+                        id: result.value.data.id,
+                        banner: result.value.data.backdrop,
+                        VoteAvrage: result.value.data.vote_average.toString(),
+                        title: result.value.data.title,
+                        director: result.value.data.director,
+                        date: result.value.data.first_air_date,
+                        genres: result.value.data.genres,
+                        language: result.value.data.language,
+                        poster: result.value.data.poster,
+                        overview: result.value.data.overview,
+                        providers: result.value.data.providers,
+                        actors: result.value.data.cast,
+                        titleType: type
+                    }
+                }
+                this.scroll = document.documentElement.scrollTop
+                this.detailsToggle = true
             }
-            this.scroll = document.documentElement.scrollTop
-            this.detailsToggle = true
         },
         detailStyle() {
             if (this.detailsToggle) {

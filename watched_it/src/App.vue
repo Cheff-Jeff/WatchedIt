@@ -52,7 +52,6 @@ export default defineComponent({
   methods: {
     async downloadApp(){
       if(this.deferredPrompt){
-        console.log(this.deferredPrompt)
         this.deferredPrompt.prompt();
       }
       else{
