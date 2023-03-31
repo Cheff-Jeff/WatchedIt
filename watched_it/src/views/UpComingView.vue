@@ -6,7 +6,7 @@ import Details from '@/components/Title-Details.vue';
 <template>
   <SimpleHeader current-title="Upcoming" />
   <div class="animate-wrap" v-auto-animate>
-    <div class="container page-wrap" id="wrapper" :style="{'max-height' : pageHeight}">
+    <div class="container page-wrap" id="wrapper" :style="{ 'max-height': pageHeight }">
       <section class="topBar">
         <h1>Upcoming movies.</h1>
       </section>
@@ -15,7 +15,8 @@ import Details from '@/components/Title-Details.vue';
           <div class="col-6" v-for="title in movies" :key="title.id">
             <div class="card" @click="showDetails(title.id, 'movie')">
               <div class="movie-image-container">
-                <img v-if="title.poster_path" class="movie-image"  :src="`https://image.tmdb.org/t/p/w500${title.poster_path}`">
+                <img v-if="title.poster_path" class="movie-image"
+                  :src="`https://image.tmdb.org/t/p/w500${title.poster_path}`">
                 <img v-else class="movie-image" src="../assets/stockBackground.png">
               </div>
               <div class="info-box">
@@ -28,37 +29,30 @@ import Details from '@/components/Title-Details.vue';
         </div>
       </section>
       <div class="loading-wrap" v-if="loadingMore">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-          <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#000" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
-            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100"
+          preserveAspectRatio="xMidYMid">
+          <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#000"
+            stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1"
+              values="0 50 50;360 50 50"></animateTransform>
           </circle>
-          <circle cx="50" cy="50" r="23" stroke-width="8" stroke="#000" stroke-dasharray="36.12831551628262 36.12831551628262" stroke-dashoffset="36.12831551628262" fill="none" stroke-linecap="round">
-            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;-360 50 50"></animateTransform>
+          <circle cx="50" cy="50" r="23" stroke-width="8" stroke="#000"
+            stroke-dasharray="36.12831551628262 36.12831551628262" stroke-dashoffset="36.12831551628262" fill="none"
+            stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1"
+              values="0 50 50;-360 50 50"></animateTransform>
           </circle>
         </svg>
         <p class="text-center">Loading more...</p>
       </div>
     </div>
     <section class="details" id="Overlay">
-      <Details v-if="detailsToggle"
-        :id="details.id.toString()"
-        :banner="details.banner"
-        :voteAvrage="Number(details.VoteAvrage)"
-        :title="details.title"
-        :director="details.director"
-        :date="details.date"
-        :genres="details.genres"
-        :language="details.language"
-        :poster="details.poster"
-        :overview="details.overview"
-        :providers="details.providers"
-        :actors="details.actors"
-        :title-type="details.titleType"
-        @mounted="detailStyle()"
-        @close="closeOverlay()"
-        @rerender="reRender()"
-      />
-    </section>  
+      <Details v-if="detailsToggle" :id="details.id.toString()" :banner="details.banner"
+        :voteAvrage="Number(details.VoteAvrage)" :title="details.title" :director="details.director" :date="details.date"
+        :genres="details.genres" :language="details.language" :poster="details.poster" :overview="details.overview"
+        :providers="details.providers" :actors="details.actors" :title-type="details.titleType" @mounted="detailStyle()"
+        @close="closeOverlay()" @rerender="reRender()" v-on:alert="alert" />
+    </section>
   </div>
 </template>
 
@@ -99,47 +93,49 @@ export default defineComponent({
   },
   async beforeMount() {
     const response = await fetchCommingSoon(this.pages.toString())
-    if(response.value?.code == 200){
+    if (response.value?.code == 200) {
       this.movies = response.value.data
       this.totalPages = response.value.pages
     }
   },
-  created () {
+  created() {
     window.addEventListener('scroll', this.scrollCheck);
   },
-  unmounted () {
+  unmounted() {
     window.removeEventListener('scroll', this.scrollCheck);
   },
   methods: {
-    async nextPage(){
+    alert(alertitem: any) {
+      this.$emit('notify', alertitem.msg, alertitem.type);
+    },
+    async nextPage() {
       this.loadingMore = true
-      if(this.pages <= this.totalPages){
+      if (this.pages <= this.totalPages) {
         const response = await fetchCommingSoon(this.pages.toString())
-        if(response.value?.code == 200){
+        if (response.value?.code == 200) {
           const newMovies: TrendingMovie[] = response.value?.data
-          for(let i = 0; i < newMovies.length; i++){
+          for (let i = 0; i < newMovies.length; i++) {
             this.movies.push(newMovies[i]);
           }
           this.loadingMore = false
         }
       }
-      else{
+      else {
         this.loadingMore = false
       }
     },
     scrollCheck() {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        if(this.pages == 1)
-        {
+        if (this.pages == 1) {
           this.pages++
         }
         this.nextPage()
         this.pages++
       }
     },
-    async showDetails(id: number, type: string){
+    async showDetails(id: number, type: string) {
       const result = await fetchMovie(id.toString())
-      if(result.value?.code == 200){
+      if (result.value?.code == 200) {
         this.details = {
           id: result.value.data.id,
           banner: result.value.data.backdrop,
@@ -159,27 +155,25 @@ export default defineComponent({
       this.scroll = document.documentElement.scrollTop
       this.detailsToggle = true
     },
-    detailStyle(){
-      if(this.detailsToggle)
-      {
+    detailStyle() {
+      if (this.detailsToggle) {
         window.scrollTo(0, 0)
         const overlay = document.getElementById('Overlay');
         this.pageHeight = overlay!.offsetHeight.toString() + "px"
       }
     },
-    closeOverlay(){
-      if(this.detailsToggle)
-      {
+    closeOverlay() {
+      if (this.detailsToggle) {
         this.pageHeight = "none"
         this.detailsToggle = false
-        setTimeout(()=>{
+        setTimeout(() => {
           window.scrollTo(0, this.scroll)
         }, 5);
       }
     },
-    reRender(){
+    reRender() {
       this.detailsToggle = false
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.detailsToggle = true
       })
     }

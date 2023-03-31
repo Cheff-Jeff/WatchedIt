@@ -197,7 +197,9 @@ export default defineComponent({
     result = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
 
     for (let i = 0; i < result._value.length; i++) {
-      if (result._value[i].addMovieDeadLine.replace('-', '').replace('-', '') > new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '')) {
+      var date = new Date(result._value[i].addMovieDeadLine.split("-").reverse().join("-"))
+
+      if (date > new Date()) {
         this.movieshowList.push(result._value[i])
       }
     }
@@ -239,8 +241,6 @@ export default defineComponent({
       const result = await addMovieShowToList(addmovieshowtoList);
 
       if (result?.code == 200) {
-        this.movieshowList.splice(item)
-
         var alertitem1: any = {
           msg: 'Movie/show added to list',
           type: 'good'

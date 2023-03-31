@@ -227,7 +227,9 @@ export default defineComponent({
     async mounted() {
         await this.btnDisplayCheck();
 
-        if (this.currentList.voteDeadLine.replace('-', '').replace('-', '') < new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '')) {
+        var date = new Date(this.currentList.voteDeadLine.split("-").reverse().join("-"))
+
+        if (date < new Date()) {
             const result = await getMovieVotesResult(this.currentList.id);
 
             let resultitem = [] as any;
@@ -291,7 +293,7 @@ export default defineComponent({
 
             const result = await getHasUserVoted(this.currentList.id, JSON.parse(localStorage.getItem('user') || '{}'));
 
-            if (this.currentList.voteDeadLine.replace('-', '').replace('-', '') < new Date().toLocaleDateString('en-GB').replace('/', '').replace('/', '') || result?.data == true) {
+            if (result?.data == true) {
                 const btn = (document.getElementById("vote") as HTMLButtonElement)!
                 btn.disabled = true;
                 btn.style.opacity = '0.4';
