@@ -202,10 +202,11 @@ section.wrapper2 {
             font-size: 12px;
             letter-spacing: 0;
         }
-    }
+    } 
 
     .movies-container {
         overflow-y: scroll;
+        
         display: block;
         max-height: 345px;
         padding-bottom: 10px;
@@ -264,6 +265,10 @@ section.wrapper2 {
                 }
             }
         }
+    }
+
+    .movies-container::-webkit-scrollbar {
+        display: none;
     }
 
     .modal-wrap {
@@ -370,6 +375,10 @@ section.wrapper2 {
                 }
             }
 
+            .body::-webkit-scrollbar {
+                display: none;
+            }
+
 
             p {
                 font-size: 15px;
@@ -405,6 +414,10 @@ section.wrapper2 {
     }
 
     
+}
+
+section.wrapper2::-webkit-scrollbar {
+    display: none;
 }
 
 .details {

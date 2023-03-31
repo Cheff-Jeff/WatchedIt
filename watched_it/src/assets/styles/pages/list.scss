@@ -6,7 +6,7 @@ section.wrapper {
     height: 100vh; /* Fallback for browsers that do not support Custom Properties */
     height: calc(var(--vh, 1vh) * 100);
     padding-bottom: 20px;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     position: relative;
     z-index: 20;
@@ -112,6 +112,10 @@ section.wrapper {
             }
         }
     }
+}
+
+section.wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 .info-box {
@@ -239,3 +243,4 @@ section.wrapper {
         }
     }
 }
+

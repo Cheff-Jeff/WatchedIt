@@ -155,11 +155,12 @@ import Details from './Title-Details.vue';
             :voteAvrage="Number(details.VoteAvrage)" :title="details.title" :director="details.director"
             :date="details.date" :genres="details.genres" :language="details.language" :poster="details.poster"
             :overview="details.overview" :providers="details.providers" :actors="details.actors"
-            :title-type="details.titleType" @mounted="detailStyle()" @close="closeOverlay()" @rerender="reRender()" v-on:alert="alert"/>
+            :title-type="details.titleType" @mounted="detailStyle()" @close="closeOverlay()" @rerender="reRender()"
+            v-on:alert="alert" />
     </section>
 
-    <component :is="compToRender" v-on:alert="alert" v-on:closeCardSwipePopUp="closeCardSwipePopUp" :votelist="movieshowdetails"
-        :movielistId="currentList.id">
+    <component :is="compToRender" v-on:alert="alert" v-on:closeCardSwipePopUp="closeCardSwipePopUp"
+        :votelist="movieshowdetails" :movielistId="currentList.id">
     </component>
 </template>
 
@@ -271,7 +272,7 @@ export default defineComponent({
         }
     },
     methods: {
-        alert(alertitem: any){
+        alert(alertitem: any) {
             this.$emit('alert', alertitem);
         },
         openVotePopUp() {
@@ -373,7 +374,7 @@ export default defineComponent({
             return avatar.toString();
         },
         async showDetails(id: number, type: string) {
-            if(type != 'tv'){
+            if (type != 'tv') {
                 const result = await fetchMovie(id.toString())
                 if (result.value?.code == 200) {
                     this.details = {
@@ -394,7 +395,7 @@ export default defineComponent({
                 }
                 this.scroll = document.documentElement.scrollTop
                 this.detailsToggle = true
-            }else{
+            } else {
                 const result = await fetchShow(id.toString())
                 if (result.value?.code == 200) {
                     this.details = {

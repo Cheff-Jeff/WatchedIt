@@ -40,7 +40,7 @@ onMounted(() => {
             <ul>
                 <li v-for="result in searchResult" :key="result.id">
                     <router-link :to="{ name: 'details', params: { type: `${result.media_type}`, id: result.id } }">
-                            {{ result.title }}
+                            {{ result.title }} ({{ result.release_date }})
                     </router-link>
                 </li>
             </ul>

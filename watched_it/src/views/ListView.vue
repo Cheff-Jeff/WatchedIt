@@ -156,7 +156,8 @@ onUpdated(() => {
             </div>
         </div>
 
-        <component :is="compToRender" v-on:closeListDetails="closeListDetails" v-on:alert="alert" :currentList="getCurrentList"></component>
+        <component :is="compToRender" v-on:closeListDetails="closeListDetails" v-on:alert="alert"
+            :currentList="getCurrentList"></component>
 
     </section>
 </template>
@@ -199,7 +200,7 @@ export default defineComponent({
         this.collectionList = await getCollectionList(JSON.parse(localStorage.getItem('user') || '{}'));
     },
     methods: {
-        alert(alertitem: any){
+        alert(alertitem: any) {
             this.$emit('notify', alertitem.msg, alertitem.type);
         },
         async getClickedList(list: []) {
@@ -251,4 +252,15 @@ export default defineComponent({
 @import "@/assets/styles/components/buttons.scss";
 @import "@/assets/styles/components/input.scss";
 @import "@/assets/styles/pages/list.scss";
-</style>
+
+.element {
+    overflow: -moz-scrollbars-none;
+}
+
+.element::-webkit-scrollbar {
+    width: 0 !important
+}
+
+.element {
+    -ms-overflow-style: none;
+}</style>

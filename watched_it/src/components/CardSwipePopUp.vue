@@ -169,7 +169,7 @@ export default defineComponent({
                 btndislike.disabled = false;
                 btnlike.style.opacity = '1';
                 btndislike.style.opacity = '1';
-            }, 1000);
+            }, 1100);
         },
         closeModal() {
             var alertitem: any = {

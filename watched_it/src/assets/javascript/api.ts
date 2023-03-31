@@ -532,18 +532,28 @@ export const searchMovies = async (searchPhrase: string) => {
             }
 
             let media_type: string;
+            let release_Date: string;
             if (response.data.results[i]["media_type"] == 'tv') {
               media_type = 'show'
+              release_Date = response.data.results[i]["first_air_date"]
             } else {
               media_type = response.data.results[i]["media_type"]
+              release_Date = response.data.results[i]["release_date"]
+              
+              
             }
 
             const searchmovieshow: searchMovieShow = {
               id: response.data.results[i]["id"],
               title: title,
               media_type: media_type,
+              release_date: release_Date
             }
-            moviesshows.push(searchmovieshow)
+
+            if(searchmovieshow.release_date != '' && searchmovieshow.media_type != 'person' ){
+              moviesshows.push(searchmovieshow)
+            }
+            console.log(moviesshows)
           }
 
           result.value = moviesshows

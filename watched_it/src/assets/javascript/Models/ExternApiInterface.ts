@@ -40,6 +40,7 @@ export interface searchMovieShow {
   id: number,
   title: string,
   media_type: string,
+  release_date: string
 }
 
 export interface collectionList {
