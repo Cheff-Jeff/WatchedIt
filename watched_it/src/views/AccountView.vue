@@ -9,7 +9,6 @@ let user: User | undefined;
 
 if (id) {
   const result = await fetchUser(id);
-  console.log(result);
   user = result.value?.data;
 }
 
@@ -208,11 +207,6 @@ export default defineComponent({
   methods: {
     download() {
       this.$emit("download");
-    },
-    scrollCheck() {
-      console.log(document.body.scrollWidth);
-      console.log(document.body.scrollLeft);
-      console.log(document.body.clientWidth);
     },
   },
 });

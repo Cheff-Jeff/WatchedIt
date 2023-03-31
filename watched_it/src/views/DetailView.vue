@@ -227,7 +227,6 @@ export default defineComponent({
 
     for (let i = 0; i < result._value.length; i++) {
       var date = new Date(result._value[i].addMovieDeadLine.split("-").reverse().join("-"))
-
       if (date > new Date()) {
         this.movieshowList.push(result._value[i])
       }

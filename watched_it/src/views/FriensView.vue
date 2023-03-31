@@ -19,8 +19,6 @@
         const buttonRipple = new MDCRipple(btn);
       }
     }
-    console.log(friends)
-    console.log(friends?.length)
   });
 </script>
 
@@ -180,8 +178,6 @@ export default defineComponent({
       }
     },
     togglePopup(id: string | undefined, name: string | null){
-      console.log(id)
-      console.log(name)
       if(!this.modalToggle && this.modalToggle == ''){
         if(id && name){
           this.deleteId = id
